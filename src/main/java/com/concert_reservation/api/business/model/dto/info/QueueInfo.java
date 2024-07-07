@@ -2,6 +2,8 @@ package com.concert_reservation.api.business.model.dto.info;
 
 import com.concert_reservation.api.business.model.entity.Queue;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import lombok.*;
 
 @Data
@@ -12,7 +14,7 @@ public class QueueInfo {
     private Long queueId;
     private String userId;
     private Long concertId;
-    private Timestamp queueTime;
+    private LocalDateTime queueTime;
     private int position;
 
     public static QueueInfo from(Queue queue) {

@@ -1,5 +1,13 @@
 package com.concert_reservation.api.business.repo;
 
-public interface ConcertRepository {
+import java.time.LocalDate;
+import java.util.List;
 
+import com.concert_reservation.api.business.model.entity.Concert;
+import com.concert_reservation.api.business.model.entity.Seat;
+
+public interface ConcertRepository {
+	List<Concert> findAll();
+	Concert findById(Long concertId);
+	List<Seat> findAvailableSeatsByConcertId(Long concertId, LocalDate date);
 }

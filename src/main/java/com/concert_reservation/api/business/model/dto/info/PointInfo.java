@@ -11,7 +11,7 @@ import lombok.*;
 public class PointInfo {
     private Long pointId;
     private String userId;
-    private BigDecimal amount;
+    private Long amount;
 
     public static PointInfo from(Point point) {
         return PointInfo.builder()
