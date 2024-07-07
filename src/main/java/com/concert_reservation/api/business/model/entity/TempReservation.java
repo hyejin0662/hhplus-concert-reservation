@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,7 +32,7 @@ public class TempReservation {
     @JoinColumn(name = "seat_id")
     private Seat seat;
 
-    private Timestamp tempReservationTime;
-    private Timestamp expirationTime;
+    private LocalDateTime tempReservationTime;
+    private LocalDateTime expirationTime;
 
 }
