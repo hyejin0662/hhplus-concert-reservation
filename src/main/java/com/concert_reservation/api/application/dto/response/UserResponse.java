@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponse {
-    private Long userId;
+    private String userId;
     private String name;
     private int balance;
 }

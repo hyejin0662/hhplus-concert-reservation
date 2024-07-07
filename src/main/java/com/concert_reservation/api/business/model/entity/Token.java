@@ -1,12 +1,18 @@
 package com.concert_reservation.api.business.model.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
+
+import com.concert_reservation.common.type.TokenStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,5 +34,8 @@ public class Token {
     private User user;
 
     private String concertCode;
-    private Timestamp expirationTime;
+    private LocalDateTime waitingAt;
+    private LocalDateTime expirationAt;
+    @Enumerated(value = EnumType.STRING)
+    private TokenStatus tokenStatus;
 }

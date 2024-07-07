@@ -4,6 +4,8 @@ import com.concert_reservation.api.business.model.entity.Concert;
 import com.concert_reservation.api.business.model.entity.Queue;
 import com.concert_reservation.api.business.model.entity.User;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import lombok.*;
 
 @Getter
@@ -13,7 +15,7 @@ import lombok.*;
 public class QueueCommand {
     private String userId;
     private Long concertId;
-    private Timestamp queueTime;
+    private LocalDateTime queueTime;
     private int position;
 
     public Queue toEntity(User user, Concert concert) {

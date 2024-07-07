@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 public class PointCommand {
     private String userId;
-    private BigDecimal amount;
+    private Long amount;
 
     public Point toEntity(User user) {
         return Point.builder()

@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler(ConcertException.class)
-	public WebResponseData<Object> lectureExceptionHandler(ConcertException e) {
+	@ExceptionHandler(CustomException.class)
+	public WebResponseData<Object> customExceptionHandler(CustomException e) {
 		log.error(e.getGlobalResponseCode() + "에러가 발생했습니다.");
 		return WebResponseData.error(e.getGlobalResponseCode());
 	}

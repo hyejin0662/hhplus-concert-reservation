@@ -4,6 +4,8 @@ import com.concert_reservation.api.business.model.entity.Seat;
 import com.concert_reservation.api.business.model.entity.TempReservation;
 import com.concert_reservation.api.business.model.entity.User;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import lombok.*;
 
 @Getter
@@ -13,8 +15,8 @@ import lombok.*;
 public class TempReservationCommand {
     private String userId;
     private Long seatId;
-    private Timestamp tempReservationTime;
-    private Timestamp expirationTime;
+    private LocalDateTime tempReservationTime;
+    private LocalDateTime expirationTime;
 
     public TempReservation toEntity(User user, Seat seat) {
         return TempReservation.builder()
