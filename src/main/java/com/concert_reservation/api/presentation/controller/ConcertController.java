@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.concert_reservation.api.application.dto.request.AvailableSeatsRequest;
 import com.concert_reservation.api.application.dto.request.BookingRequest;
 import com.concert_reservation.api.application.dto.request.PaymentRequest;
-import com.concert_reservation.api.application.dto.request.QueueTokenRequest;
+
 import com.concert_reservation.api.application.dto.request.UserRequest;
 import com.concert_reservation.api.application.dto.response.BookingResponse;
 import com.concert_reservation.api.application.dto.response.ConcertsResponse;
 import com.concert_reservation.api.application.dto.response.PaymentResponse;
-import com.concert_reservation.api.application.dto.response.QueueResponse;
+
 import com.concert_reservation.api.application.dto.response.SeatResponse;
 import com.concert_reservation.api.application.dto.response.UserResponse;
 import com.concert_reservation.api.business.service.ConcertService;
@@ -37,10 +37,10 @@ public class ConcertController {
 
 	private final ConcertService concertService;
 
-	@PostMapping("/queue")
-	public QueueResponse queue() {
-		return concertService.createQueue();
-	}
+	// @PostMapping("/queue")
+	// public QueueResponse queue() {
+	// 	return concertService.createQueue();
+	// }
 
 	@GetMapping("/concerts")
 	public ConcertsResponse concerts() {
@@ -53,11 +53,11 @@ public class ConcertController {
 		return concertService.getAvailableSeats(parsedDate, availableSeatsRequest.getConcertId());
 	}
 
-	@PostMapping("/booking")
-	public BookingResponse booking(@RequestHeader("Queue-Token") QueueTokenRequest queueTokenRequest,
-		@RequestBody BookingRequest bookingRequest) {
-		return concertService.bookSeats(queueTokenRequest, bookingRequest);
-	}
+	// @PostMapping("/booking")
+	// public BookingResponse booking(@RequestHeader("Queue-Token") QueueTokenRequest queueTokenRequest,
+	// 	@RequestBody BookingRequest bookingRequest) {
+	// 	return concertService.bookSeats(queueTokenRequest, bookingRequest);
+	// }
 
 	@PostMapping("/payment")
 	public PaymentResponse getPaymentResponse(@RequestHeader("Queue-Token") String queueToken,

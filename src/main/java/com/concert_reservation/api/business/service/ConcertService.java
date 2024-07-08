@@ -5,21 +5,19 @@ import java.util.List;
 
 import com.concert_reservation.api.application.dto.request.BookingRequest;
 import com.concert_reservation.api.application.dto.request.PaymentRequest;
-import com.concert_reservation.api.application.dto.request.QueueTokenRequest;
 import com.concert_reservation.api.application.dto.request.UserRequest;
 import com.concert_reservation.api.application.dto.response.BookingResponse;
 import com.concert_reservation.api.application.dto.response.ConcertsResponse;
 import com.concert_reservation.api.application.dto.response.PaymentResponse;
-import com.concert_reservation.api.application.dto.response.QueueResponse;
 import com.concert_reservation.api.application.dto.response.SeatResponse;
 import com.concert_reservation.api.application.dto.response.UserResponse;
 
 public interface ConcertService {
 
-	QueueResponse createQueue();
+	// QueueResponse createQueue();
 	ConcertsResponse getConcerts();
 	List<SeatResponse> getAvailableSeats(LocalDate date, Long concertId);
-	BookingResponse bookSeats(QueueTokenRequest queueTokenRequest, BookingRequest bookingRequest);
+	// BookingResponse bookSeats(QueueTokenRequest queueTokenRequest, BookingRequest bookingRequest);
 	PaymentResponse processPayment(String queueToken, PaymentRequest paymentRequest);
 	UserResponse getUserBalance(long id);
 	UserResponse chargeUserBalance(UserRequest userRequest);

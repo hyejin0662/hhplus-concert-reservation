@@ -1,6 +1,6 @@
 package com.concert_reservation.api.application.facade;
 
-import com.concert_reservation.api.business.service.impl.ConcertServiceImpl;
+// import com.concert_reservation.api.business.service.impl.ConcertServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ConcertFacade {
 
-  private final ConcertServiceImpl concertServiceImpl;
+  // private final ConcertServiceImpl concertServiceImpl;
 
 }
