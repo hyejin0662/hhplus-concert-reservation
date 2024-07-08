@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QueueTokenRequest {
-	private String token;
+public class TokenRequest {
+	private String userId;
+	private String concertCode;
 }

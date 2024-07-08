@@ -16,7 +16,6 @@ public class ConcertRepositoryImpl implements ConcertRepository {
 
   private final ConcertJpaRepository concertJpaRepository;
 
-
   @Override
   public List<Concert> findAll() {
     return concertJpaRepository.findAll();
@@ -29,9 +28,7 @@ public class ConcertRepositoryImpl implements ConcertRepository {
 
   @Override
   public List<Seat> findAvailableSeatsByConcertId(Long concertId, LocalDate date) {
-    // 실제 좌석 정보를 가져오는 쿼리를 구현해야 합니다.
     return concertJpaRepository.findAvailableSeatsByConcertIdAndDate(concertId, date);
   }
 }
-
 
