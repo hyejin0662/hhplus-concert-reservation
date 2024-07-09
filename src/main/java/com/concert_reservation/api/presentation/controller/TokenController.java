@@ -1,5 +1,6 @@
 package com.concert_reservation.api.presentation.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,4 +40,10 @@ public class TokenController {
         return tokenFacade.getToken(concertCode);
     }
 
+
+    @PostMapping("/create")
+    public ResponseEntity<TokenResponse> createWaiting(@RequestBody TokenRequest tokenRequest) {
+        TokenResponse tokenResponse = tokenFacade.createWaiting(tokenRequest);
+        return ResponseEntity.ok(tokenResponse);
+    }
 }
