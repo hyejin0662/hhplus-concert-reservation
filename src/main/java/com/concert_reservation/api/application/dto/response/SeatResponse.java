@@ -1,5 +1,6 @@
 package com.concert_reservation.api.application.dto.response;
 
+import com.concert_reservation.api.business.model.dto.info.SeatInfo;
 import com.concert_reservation.api.business.model.entity.Concert;
 import com.concert_reservation.api.business.model.entity.Seat;
 

@@ -8,6 +8,8 @@ import com.concert_reservation.api.application.dto.response.TokenResponse;
 import com.concert_reservation.api.business.model.dto.command.TokenCommand;
 import com.concert_reservation.api.business.model.dto.info.TokenInfo;
 import com.concert_reservation.api.business.service.TokenService;
+import com.concert_reservation.api.business.service.impl.TokenServiceImpl;
+import com.concert_reservation.api.business.service.impl.WaitingCountServiceImpl;
 import com.concert_reservation.common.mapper.DtoConverter;
 
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 public class TokenFacade {
 
     private final TokenService tokenService;
+    private final TokenServiceImpl tokenServiceImpl;
+    private final WaitingCountServiceImpl waitingCountService;
 
     public TokenResponse createToken(TokenRequest tokenRequest) {
         TokenCommand tokenCommand = DtoConverter.convert(tokenRequest, TokenCommand.class);
@@ -34,5 +38,9 @@ public class TokenFacade {
     @Scheduled(fixedRate = 2000)// 2초마다
     public void updateTokenStatusToProcessing() {
         tokenService.updateTokenStatusToProcessing();
+    }
+
+    public TokenResponse createWaiting(TokenRequest tokenRequest) {
+        return TokenResponse.from(waitingCountService.createWaiting(tokenRequest));
     }
 }

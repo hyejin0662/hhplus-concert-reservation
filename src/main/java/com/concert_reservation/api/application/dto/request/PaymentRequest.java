@@ -6,12 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentRequest {
     private Long bookingId;
-    private Long concertId;
-    private Long userId;
-    private String seats;
+    private String paymentMethod;
+    private Long amount;
 }
