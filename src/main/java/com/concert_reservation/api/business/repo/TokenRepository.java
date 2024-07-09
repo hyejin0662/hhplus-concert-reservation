@@ -1,5 +1,6 @@
 package com.concert_reservation.api.business.repo;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.concert_reservation.api.business.model.entity.Concert;
@@ -14,4 +15,8 @@ public interface TokenRepository {
 	void updateStatusProcessing(Token token);
 
 	Optional<Token> findFirstByTokenStatusOrderByWaitingAtAsc();
+
+	Optional<Token> findById(Long tokenId);
+	List<Token> findAll();
+	void deleteById(Long tokenId);
 }

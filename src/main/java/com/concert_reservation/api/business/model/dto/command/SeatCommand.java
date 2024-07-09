@@ -6,18 +6,12 @@ import lombok.*;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class SeatCommand {
+    private Long seatId;
     private Long concertId;
     private int seatNumber;
     private boolean isReserved;
-
-    public Seat toEntity(Concert concert) {
-        return Seat.builder()
-                .concert(concert)
-                .seatNumber(this.seatNumber)
-                .isReserved(this.isReserved)
-                .build();
-    }
 }

@@ -5,16 +5,13 @@ import lombok.*;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserCommand {
+    private String userId;
     private String name;
     private String email;
-
-    public User toEntity() {
-        return User.builder()
-                .name(this.name)
-                .email(this.email)
-                .build();
-    }
+    private String phoneNumber;
+    private Long balance;
 }

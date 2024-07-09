@@ -7,26 +7,36 @@ import com.concert_reservation.api.business.model.entity.Booking;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class BookingInfo {
 	private Long bookingId;
-	private String userId;
-	private Long seatId;
+	private UserInfo user;
+	private SeatInfo seat;
 	private LocalDateTime bookingTime;
-	private boolean isConfirmed;
 
 	public static BookingInfo from(Booking booking) {
 		return BookingInfo.builder()
 			.bookingId(booking.getBookingId())
-			.userId(booking.getUser().getUserId())
-			.seatId(booking.getSeat().getSeatId())
+			.user(UserInfo.from(booking.getUser()))
+			.seat(SeatInfo.from(booking.getSeat()))
 			.bookingTime(booking.getBookingTime())
-			.isConfirmed(booking.isConfirmed())
+			.build();
+	}
+
+	public Booking toEntity() {
+		return Booking.builder()
+			.bookingId(this.bookingId)
+			.user(this.user.toEntity())
+			.seat(this.seat.toEntity())
+			.bookingTime(this.bookingTime)
 			.build();
 	}
 }

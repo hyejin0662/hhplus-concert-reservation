@@ -24,13 +24,12 @@ public class Concert {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long concertId;
-  private String name;
-  private LocalDateTime date;
+  private String concertName;
 
   @OneToMany(mappedBy = "concert")
   private List<Seat> seats;
 
   // TODO : concert와 양방향으로 알아야하는지
   @OneToMany(mappedBy = "concert")
-  private List<ConcertOption> options; // 추가된 부분
+  private List<ConcertOption> concertOptions; // 추가된 부분
 }

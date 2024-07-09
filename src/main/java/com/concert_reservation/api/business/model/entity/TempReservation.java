@@ -1,6 +1,8 @@
 package com.concert_reservation.api.business.model.entity;
 
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,14 +27,15 @@ public class TempReservation {
     private Long tempReservationId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "seat_id")
+    @JoinColumn(name = "seat_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Seat seat;
 
     private LocalDateTime tempReservationTime;
-    private LocalDateTime expirationTime;
+    private LocalDateTime tokenExpirationTime;
+    private boolean isConfirmed;
 
 }

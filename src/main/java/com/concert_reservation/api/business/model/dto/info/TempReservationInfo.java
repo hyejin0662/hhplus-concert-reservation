@@ -6,24 +6,38 @@ import java.time.LocalDateTime;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class TempReservationInfo {
     private Long tempReservationId;
-    private String userId;
-    private Long seatId;
+    private UserInfo user;
+    private SeatInfo seat;
     private LocalDateTime tempReservationTime;
-    private LocalDateTime expirationTime;
+    private LocalDateTime tokenExpirationTime;
+    private boolean isConfirmed;
 
     public static TempReservationInfo from(TempReservation tempReservation) {
         return TempReservationInfo.builder()
-                .tempReservationId(tempReservation.getTempReservationId())
-                .userId(tempReservation.getUser().getUserId())
-                .seatId(tempReservation.getSeat().getSeatId())
-                .tempReservationTime(tempReservation.getTempReservationTime())
-                .expirationTime(tempReservation.getExpirationTime())
-                .build();
+            .tempReservationId(tempReservation.getTempReservationId())
+            .user(UserInfo.from(tempReservation.getUser()))
+            .seat(SeatInfo.from(tempReservation.getSeat()))
+            .tempReservationTime(tempReservation.getTempReservationTime())
+            .tokenExpirationTime(tempReservation.getTokenExpirationTime())
+            .isConfirmed(tempReservation.isConfirmed())
+            .build();
+    }
+
+    public TempReservation toEntity() {
+        return TempReservation.builder()
+            .tempReservationId(this.tempReservationId)
+            .user(this.user.toEntity())
+            .seat(this.seat.toEntity())
+            .tempReservationTime(this.tempReservationTime)
+            .tokenExpirationTime(this.tokenExpirationTime)
+            .isConfirmed(this.isConfirmed)
+            .build();
     }
 }

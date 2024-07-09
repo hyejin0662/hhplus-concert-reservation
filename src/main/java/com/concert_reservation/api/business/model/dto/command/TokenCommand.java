@@ -9,24 +9,16 @@ import java.time.LocalDateTime;
 
 import lombok.*;
 
+
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TokenCommand {
+    private Long tokenId;
     private String userId;
-    private String concertCode;
     private LocalDateTime waitingAt;
     private LocalDateTime expirationAt;
     private TokenStatus tokenStatus;
-
-    public Token toEntity(User user) {
-        return Token.builder()
-            .user(user)
-            .concertCode(this.concertCode)
-            .waitingAt(this.waitingAt)
-            .expirationAt(this.expirationAt)
-            .tokenStatus(this.tokenStatus)
-            .build();
-    }
 }

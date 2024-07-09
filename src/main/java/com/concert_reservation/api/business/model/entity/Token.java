@@ -1,8 +1,10 @@
 package com.concert_reservation.api.business.model.entity;
 
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 
 import com.concert_reservation.common.type.TokenStatus;
 
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,12 +33,16 @@ public class Token {
     private Long tokenId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
-    private String concertCode;
     private LocalDateTime waitingAt;
+
     private LocalDateTime expirationAt;
+
     @Enumerated(value = EnumType.STRING)
     private TokenStatus tokenStatus;
+
+    @OneToOne(mappedBy = "token")
+    private WaitingCount waitingCount;
 }

@@ -10,20 +10,12 @@ import lombok.*;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BookingCommand {
+    private Long bookingId;
     private String userId;
     private Long seatId;
     private LocalDateTime bookingTime;
-    private boolean isConfirmed;
-
-    public Booking toEntity(User user, Seat seat) {
-        return Booking.builder()
-            .user(user)
-            .seat(seat)
-            .bookingTime(this.bookingTime)
-            .isConfirmed(this.isConfirmed)
-            .build();
-    }
 }

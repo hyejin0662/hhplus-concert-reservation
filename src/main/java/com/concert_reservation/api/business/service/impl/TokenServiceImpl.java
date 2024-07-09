@@ -11,7 +11,7 @@ import com.concert_reservation.api.business.model.dto.command.TokenCommand;
 import com.concert_reservation.api.business.model.dto.info.TokenInfo;
 import com.concert_reservation.api.business.model.entity.Token;
 import com.concert_reservation.api.business.model.entity.User;
-import com.concert_reservation.api.business.repo.CountRepository;
+import com.concert_reservation.api.business.repo.WaitingCountRepository;
 import com.concert_reservation.api.business.repo.TokenRepository;
 import com.concert_reservation.api.business.repo.UserRepository;
 import com.concert_reservation.api.business.service.TokenService;
@@ -28,7 +28,7 @@ public class TokenServiceImpl implements TokenService {
 
 	private final TokenRepository tokenRepository;
 	private final UserRepository userRepository;
-	private final CountRepository countRepository;
+	private final WaitingCountRepository waitingCountRepository;
 
 	@Override
 	@Transactional
@@ -49,7 +49,7 @@ public class TokenServiceImpl implements TokenService {
 			.build();
 
 		Token savedToken = tokenRepository.save(token); // save한 것은 곧 대기열 진입
-		countRepository.countPlus();// 대기열 숫자증가
+		waitingCountRepository.countPlus();// 대기열 숫자증가
 
 		return DtoConverter.convert(savedToken, TokenInfo.class);
 	}
@@ -60,6 +60,8 @@ public class TokenServiceImpl implements TokenService {
 			.orElseThrow(() -> new CustomException(GlobalResponseCode.TOKEN_NOT_FOUND));
 		return DtoConverter.convert(token, TokenInfo.class);
 	}
+
+
 
   @Override
   @Transactional
@@ -79,7 +81,7 @@ public class TokenServiceImpl implements TokenService {
 		  return;
 	  }
 
-    int count = countRepository.getCount();
+    int count = waitingCountRepository.getCount();
 
     if (count <= 50) {
 

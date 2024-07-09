@@ -10,20 +10,14 @@ import lombok.*;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TempReservationCommand {
+    private Long tempReservationId;
     private String userId;
     private Long seatId;
     private LocalDateTime tempReservationTime;
-    private LocalDateTime expirationTime;
-
-    public TempReservation toEntity(User user, Seat seat) {
-        return TempReservation.builder()
-                .user(user)
-                .seat(seat)
-                .tempReservationTime(this.tempReservationTime)
-                .expirationTime(this.expirationTime)
-                .build();
-    }
+    private LocalDateTime tokenExpirationTime;
+    private boolean isConfirmed;
 }
