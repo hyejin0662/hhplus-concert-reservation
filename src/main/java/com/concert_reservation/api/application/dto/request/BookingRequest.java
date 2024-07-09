@@ -16,8 +16,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BookingRequest {
 	private String userId;
-	private Long concertOptionId;
-	private String email;
+	private String userName;
+	private Long concertId;
+	private String phoneNumber;
 	// private String seats;
 	private Seat seat;
 	private List<Seat> seats;

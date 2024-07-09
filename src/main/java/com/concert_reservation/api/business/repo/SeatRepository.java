@@ -7,4 +7,7 @@ import com.concert_reservation.api.business.model.entity.Seat;
 public interface SeatRepository {
 	List<Seat> findReservedSeatsBySeatIdIn(List<Long> ids);
 	void saveAll(List<Seat> seats);
+
+	List<Seat> findSeatsByConcertIdAndSeatIdInAndIsReserved(Long concertId, List<Seat> seatIds, boolean isReserved);
+
 }

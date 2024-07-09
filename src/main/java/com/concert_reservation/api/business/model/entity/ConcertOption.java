@@ -4,10 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,17 +18,14 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Concert {
+public class ConcertOption {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long concertId;
+  private Long optionId;
   private String name;
-  private LocalDateTime date;
+  private String value;
 
-  @OneToMany(mappedBy = "concert")
-  private List<Seat> seats;
-
-  // TODO : concert와 양방향으로 알아야하는지
-  @OneToMany(mappedBy = "concert")
-  private List<ConcertOption> options; // 추가된 부분
+  @ManyToOne
+  @JoinColumn(name = "concert_id")
+  private Concert concert;
 }

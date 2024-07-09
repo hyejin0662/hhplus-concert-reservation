@@ -24,4 +24,12 @@ public class SeatRepositoryImpl implements SeatRepository {
   public void saveAll(List<Seat> seats) {
     seatJpaRepository.saveAll(seats);
   }
+
+  @Override
+  public List<Seat> findSeatsByConcertIdAndSeatIdInAndIsReserved(Long concertId, List<Seat> seatIds,
+      boolean isReserved) {
+    return seatJpaRepository.findSeatsByConcertIdAndSeatIdInAndIsReserved(concertId,seatIds,isReserved);
+  }
+
+
 }

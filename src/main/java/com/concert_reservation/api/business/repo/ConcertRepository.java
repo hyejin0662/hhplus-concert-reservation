@@ -5,9 +5,10 @@ import java.util.List;
 
 import com.concert_reservation.api.business.model.entity.Concert;
 import com.concert_reservation.api.business.model.entity.Seat;
+import java.util.Optional;
 
 public interface ConcertRepository {
 	List<Concert> findAll();
-	Concert findById(Long concertId);
+	Optional<Concert> findById(Long concertId);
 	List<Seat> findAvailableSeatsByConcertId(Long concertId, LocalDate date);
 }

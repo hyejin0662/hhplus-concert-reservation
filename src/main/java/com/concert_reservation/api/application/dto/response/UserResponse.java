@@ -12,5 +12,5 @@ import lombok.Setter;
 public class UserResponse {
     private String userId;
     private String name;
-    private int balance;
+    private Long balance;
 }
