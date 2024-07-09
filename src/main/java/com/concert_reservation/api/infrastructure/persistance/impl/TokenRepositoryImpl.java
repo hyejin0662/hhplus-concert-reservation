@@ -1,5 +1,6 @@
 package com.concert_reservation.api.infrastructure.persistance.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.concert_reservation.api.business.model.entity.Token;
@@ -35,6 +36,21 @@ public class TokenRepositoryImpl implements TokenRepository {
   @Override
   public Optional<Token> findFirstByTokenStatusOrderByWaitingAtAsc() {
     return tokenJpaRepository.findFirstByTokenStatusOrderByWaitingAtAsc();
+  }
+
+  @Override
+  public Optional<Token> findById(Long tokenId) {
+    return tokenJpaRepository.findById(tokenId);
+  }
+
+  @Override
+  public List<Token> findAll() {
+    return tokenJpaRepository.findAll();
+  }
+
+  @Override
+  public void deleteById(Long tokenId) {
+    tokenJpaRepository.deleteById(tokenId);
   }
 
 }

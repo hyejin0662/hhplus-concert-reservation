@@ -25,4 +25,14 @@ public class UserRepositoryImpl implements UserRepository {
     return Optional.empty();
   }
 
+  @Override
+  public User save(User user) {
+    return userJpaRepository.save(user);
+  }
+
+  @Override
+  public void deleteById(String userId) {
+    userJpaRepository.deleteById(userId);
+  }
+
 }

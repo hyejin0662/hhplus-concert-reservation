@@ -1,6 +1,7 @@
 package com.concert_reservation.api.infrastructure.persistance.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.concert_reservation.api.business.model.entity.Seat;
 import com.concert_reservation.api.business.repo.SeatRepository;
@@ -31,5 +32,25 @@ public class SeatRepositoryImpl implements SeatRepository {
     return seatJpaRepository.findSeatsByConcertIdAndSeatIdInAndIsReserved(concertId,seatIds,isReserved);
   }
 
+
+  @Override
+  public Optional<Seat> findById(Long seatId) {
+    return seatJpaRepository.findById(seatId);
+  }
+
+  @Override
+  public List<Seat> findAll() {
+    return seatJpaRepository.findAll();
+  }
+
+  @Override
+  public Seat save(Seat seat) {
+    return seatJpaRepository.save(seat);
+  }
+
+  @Override
+  public void deleteById(Long seatId) {
+    seatJpaRepository.deleteById(seatId);
+  }
 
 }
