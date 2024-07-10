@@ -1,7 +1,5 @@
 package com.concert_reservation.api.application.dto.response;
 
-import com.concert_reservation.api.business.model.dto.info.SeatInfo;
-import com.concert_reservation.api.business.model.entity.Concert;
 import com.concert_reservation.api.business.model.entity.Seat;
 
 import lombok.AllArgsConstructor;
@@ -19,12 +17,11 @@ public class SeatResponse {
     private Long seatId;
     private int seatNumber;
     private boolean isReserved;
+    private String concertId;
 
-    public static SeatResponse from(Seat seat) {
+    public static SeatResponse from(Long seatId) {
         return SeatResponse.builder()
-            .seatId(seat.getSeatId())
-            .seatNumber(seat.getSeatNumber())
-            .isReserved(seat.isReserved())
+            .seatId(seatId)
             .build();
     }
 
@@ -33,6 +30,7 @@ public class SeatResponse {
             .seatId(this.seatId)
             .seatNumber(this.seatNumber)
             .isReserved(this.isReserved)
+            .concertId(this.concertId)
             .build();
     }
 }

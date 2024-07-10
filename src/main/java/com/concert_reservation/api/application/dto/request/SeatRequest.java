@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AvailableSeatsRequest {
-	private Long concertId;
+public class SeatRequest {
+	private String concertId;
 	private LocalDate date;
 }

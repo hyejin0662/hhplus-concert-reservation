@@ -1,9 +1,9 @@
 package com.concert_reservation.api.business.model.dto.command;
 
-import com.concert_reservation.api.business.model.entity.Point;
-import com.concert_reservation.api.business.model.entity.User;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import com.concert_reservation.api.business.model.entity.Point;
+import com.concert_reservation.common.mapper.DtoConverter;
 
 import lombok.*;
 
@@ -19,4 +19,8 @@ public class PointCommand {
     private Long amount;
     private LocalDateTime paymentTime;
     private String paymentMethod;
+
+    public Point toEntity() {
+        return DtoConverter.convert(this, Point.class);
+    }
 }

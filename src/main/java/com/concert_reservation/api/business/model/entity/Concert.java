@@ -1,13 +1,16 @@
 package com.concert_reservation.api.business.model.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Table(name = "Concert")
 @Getter
 @Setter
 @Builder
@@ -23,13 +27,12 @@ import lombok.Setter;
 public class Concert {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+
   private Long concertId;
+
+  @Column(nullable = false)
   private String concertName;
 
-  @OneToMany(mappedBy = "concert")
-  private List<Seat> seats;
-
-  // TODO : concert와 양방향으로 알아야하는지
-  @OneToMany(mappedBy = "concert")
-  private List<ConcertOption> concertOptions; // 추가된 부분
+  @Column(nullable = false)
+  private LocalDateTime concertDate;
 }

@@ -41,8 +41,8 @@ public class TokenServiceImpl implements TokenService {
 		var expirationTime = LocalDateTime.now().plusMinutes(5);
 
 		Token token = Token.builder()
-			.user(user)
-			.concertCode(tokenCode)
+			.userId(user.getUserId())
+			.tokenId(Long.valueOf(tokenCode))
 			.waitingAt(LocalDateTime.now())
 			.expirationAt(expirationTime)
 			.tokenStatus(TokenStatus.WAITING)

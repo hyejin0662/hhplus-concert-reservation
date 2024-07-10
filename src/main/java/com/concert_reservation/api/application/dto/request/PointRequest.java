@@ -1,7 +1,8 @@
 package com.concert_reservation.api.application.dto.request;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,8 +11,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaymentRequest {
+public class PointRequest {
     private Long bookingId;
+    private String userId;
     private String paymentMethod;
     private Long amount;
+    private Long balance;
+    private LocalDateTime paymentTime;
 }

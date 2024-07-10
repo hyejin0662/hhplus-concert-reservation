@@ -13,7 +13,7 @@ import lombok.*;
 @Builder
 public class PointInfo {
     private Long pointId;
-    private UserInfo user;
+    private String userId;
     private Long balance;
     private Long amount;
     private LocalDateTime paymentTime;
@@ -22,7 +22,7 @@ public class PointInfo {
     public static PointInfo from(Point point) {
         return PointInfo.builder()
             .pointId(point.getPointId())
-            .user(UserInfo.from(point.getUser()))
+            .userId(point.getUserId())
             .balance(point.getBalance())
             .amount(point.getAmount())
             .paymentTime(point.getPaymentTime())
@@ -33,7 +33,7 @@ public class PointInfo {
     public Point toEntity() {
         return Point.builder()
             .pointId(this.pointId)
-            .user(this.user.toEntity())
+            .userId(this.userId)
             .balance(this.balance)
             .amount(this.amount)
             .paymentTime(this.paymentTime)

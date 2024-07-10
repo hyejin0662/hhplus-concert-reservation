@@ -13,27 +13,23 @@ import lombok.*;
 @Builder
 public class SeatInfo {
     private Long seatId;
-    private ConcertInfo concert;
+    private String concertId;
     private int seatNumber;
     private boolean isReserved;
-    private List<BookingInfo> bookings;
-    private List<TempReservationInfo> tempReservations;
 
     public static SeatInfo from(Seat seat) {
         return SeatInfo.builder()
             .seatId(seat.getSeatId())
-            .concert(ConcertInfo.from(seat.getConcert()))
+            .concertId(seat.getConcertId())
             .seatNumber(seat.getSeatNumber())
             .isReserved(seat.isReserved())
-            .bookings(seat.getBookings().stream().map(BookingInfo::from).collect(Collectors.toList()))
-            .tempReservations(seat.getTempReservations().stream().map(TempReservationInfo::from).collect(Collectors.toList()))
             .build();
     }
 
     public Seat toEntity() {
         return Seat.builder()
             .seatId(this.seatId)
-            .concert(this.concert.toEntity())
+            .concertId(this.concertId)
             .seatNumber(this.seatNumber)
             .isReserved(this.isReserved)
             .build();

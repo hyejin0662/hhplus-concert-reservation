@@ -17,15 +17,11 @@ import lombok.*;
 public class ConcertInfo {
     private Long concertId;
     private String concertName;
-    private List<SeatInfo> seats;
-    private List<ConcertOptionInfo> concertOptions;
 
     public static ConcertInfo from(Concert concert) {
         return ConcertInfo.builder()
             .concertId(concert.getConcertId())
             .concertName(concert.getConcertName())
-            .seats(concert.getSeats().stream().map(SeatInfo::from).collect(Collectors.toList()))
-            .concertOptions(concert.getConcertOptions().stream().map(ConcertOptionInfo::from).collect(Collectors.toList()))
             .build();
     }
 

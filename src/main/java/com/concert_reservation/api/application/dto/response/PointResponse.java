@@ -21,13 +21,14 @@ public class PointResponse {
     private String paymentMethod;
     private UserResponse user;
 
-    public static PointResponse from(Point point) {
+    public static PointResponse from(PointInfo point) {
         return PointResponse.builder()
             .pointId(point.getPointId())
             .balance(point.getBalance())
             .amount(point.getAmount())
             .paymentMethod(point.getPaymentMethod())
-            .user(UserResponse.from(point.getUser()))
+            // TODO : Required type: UserInfo, Provided: String 라는 오류가 발생합니다. 파라미터 수정해줘.
+            .user(UserResponse.from(point.getUserId()))
             .build();
     }
 
@@ -37,7 +38,7 @@ public class PointResponse {
             .balance(this.balance)
             .amount(this.amount)
             .paymentMethod(this.paymentMethod)
-            .user(this.user.toEntity())
+            .userId(this.user.getUserId())
             .build();
     }
 }

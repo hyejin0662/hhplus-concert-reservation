@@ -53,4 +53,14 @@ public class SeatRepositoryImpl implements SeatRepository {
     seatJpaRepository.deleteById(seatId);
   }
 
+  @Override
+  public List<Seat> findByConcertIdAndIsReservedFalse(Long concertId) {
+    return null;
+  }
+
+  @Override
+  public List<Seat> findByConcertIdAndSeatNumberInAndIsReservedFalse(Long concertId, List<Integer> seatNumbers) {
+    return null;
+  }
+
 }

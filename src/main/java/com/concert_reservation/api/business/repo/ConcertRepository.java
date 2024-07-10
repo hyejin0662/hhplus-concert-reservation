@@ -1,6 +1,7 @@
 package com.concert_reservation.api.business.repo;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.concert_reservation.api.application.dto.request.ConcertRequest;
@@ -15,5 +16,10 @@ public interface ConcertRepository {
 	Concert save(Concert concert);
 	void deleteById(Long concertId);
 
-	List<Concert> findConcerts(ConcertRequest concertRequest);
+	List<Seat> findAvailableSeatsByConcertIdAndDate(Long concertId, LocalDateTime date);
+
+	// List<Concert> findConcerts(ConcertRequest concertRequest);
+
+	// List<Concert> findConcerts(ConcertRequest concertRequest);
+
 }

@@ -1,11 +1,13 @@
 package com.concert_reservation.api.business.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.concert_reservation.api.application.dto.request.TokenRequest;
+import com.concert_reservation.api.application.dto.response.WaitingCountResponse;
 import com.concert_reservation.api.business.model.entity.Token;
 import com.concert_reservation.api.business.model.entity.WaitingCount;
 import com.concert_reservation.api.business.repo.BookingRepository;
@@ -35,7 +37,7 @@ public class WaitingCountServiceImpl implements WaitingCountService {
     @Override
     public WaitingCount createWaiting(TokenRequest tokenRequest) {
         Token token = Token.builder()
-                .user(userRepository.findById(tokenRequest.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found")))
+                .userId((tokenRequest.getUserId()))
                 .waitingAt(LocalDateTime.now())
                 .expirationAt(LocalDateTime.now().plusMinutes(15))
                 .tokenStatus(TokenStatus.WAITING)
@@ -44,13 +46,30 @@ public class WaitingCountServiceImpl implements WaitingCountService {
         tokenRepository.save(token);
 
         WaitingCount waitingCount = WaitingCount.builder()
-                .token(token)
-                .user(token.getUser())
                 .count(waitingCountRepository.countByConcertId(tokenRequest.getConcertId()) + 1)
                 .build();
 
         return waitingCountRepository.saveWaitingCount(waitingCount);
     }
 
+    @Override
+    public WaitingCountResponse getWaitingCount(Long countId) {
+        return null;
+    }
+
+    @Override
+    public List<WaitingCountResponse> getAllWaitingCounts() {
+        return null;
+    }
+
+    @Override
+    public void incrementWaitingCount(Long countId) {
+
+    }
+
+    @Override
+    public void decrementWaitingCount(Long countId) {
+
+    }
 
 }

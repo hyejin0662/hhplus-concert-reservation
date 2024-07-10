@@ -1,5 +1,8 @@
 package com.concert_reservation.api.application.dto.response;
 
+import com.concert_reservation.api.business.model.dto.info.WaitingCountInfo;
+import com.concert_reservation.api.business.model.entity.Token;
+import com.concert_reservation.api.business.model.entity.User;
 import com.concert_reservation.api.business.model.entity.WaitingCount;
 
 import lombok.AllArgsConstructor;
@@ -16,15 +19,13 @@ import lombok.Setter;
 public class WaitingCountResponse {
     private Long countId;
     private Long count;
-    private TokenResponse token;
-    private UserResponse user;
+    private Long tokenId;
+    private String userId;
 
-    public static WaitingCountResponse from(WaitingCount waitingCount) {
+    public static WaitingCountResponse from(WaitingCountInfo waitingCount) {
         return WaitingCountResponse.builder()
             .countId(waitingCount.getCountId())
             .count(waitingCount.getCount())
-            .token(TokenResponse.from(waitingCount.getToken()))
-            .user(UserResponse.from(waitingCount.getUser()))
             .build();
     }
 
@@ -32,8 +33,6 @@ public class WaitingCountResponse {
         return WaitingCount.builder()
             .countId(this.countId)
             .count(this.count)
-            .token(this.token.toEntity())
-            .user(this.user.toEntity())
             .build();
     }
 }

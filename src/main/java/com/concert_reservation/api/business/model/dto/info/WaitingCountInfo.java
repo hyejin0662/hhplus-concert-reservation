@@ -14,25 +14,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class WaitingCountInfo {
-    private Long contId;
-    private TokenInfo token;
-    private UserInfo user;
+    private Long countId;
     private Long count;
 
     public static WaitingCountInfo from(WaitingCount waitingCount) {
         return WaitingCountInfo.builder()
-            .contId(waitingCount.getContId())
-            .token(TokenInfo.from(waitingCount.getToken()))
-            .user(UserInfo.from(waitingCount.getUser()))
+            .countId(waitingCount.getCountId())
             .count(waitingCount.getCount())
             .build();
     }
 
     public WaitingCount toEntity() {
         return WaitingCount.builder()
-            .contId(this.contId)
-            .token(this.token.toEntity())
-            .user(this.user.toEntity())
+            .countId(this.countId)
             .count(this.count)
             .build();
     }

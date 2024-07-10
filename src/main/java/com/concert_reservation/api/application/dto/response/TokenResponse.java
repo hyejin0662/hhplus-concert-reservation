@@ -19,29 +19,31 @@ import lombok.Setter;
 @Builder
 public class TokenResponse {
 	private Long tokenId;
-	private String concertCode;
+	private String userId;
 	private LocalDateTime waitingAt;
 	private LocalDateTime expirationAt;
 	private TokenStatus tokenStatus;
-	private UserResponse user;
+	private Long waitingCountId;
 
-	public static TokenResponse from(Token token) {
+	public static TokenResponse from(TokenInfo token) {
 		return TokenResponse.builder()
 			.tokenId(token.getTokenId())
+			.userId(token.getUserId())
 			.waitingAt(token.getWaitingAt())
 			.expirationAt(token.getExpirationAt())
-			.tokenStatus(TokenStatus.valueOf(token.getTokenStatus().toString()))
-			.user(UserResponse.from(token.getUser()))
+			.tokenStatus(token.getTokenStatus())
+			.waitingCountId(token.getWaitingCountId())
 			.build();
 	}
 
 	public Token toEntity() {
 		return Token.builder()
 			.tokenId(this.tokenId)
+			.userId(this.userId)
 			.waitingAt(this.waitingAt)
 			.expirationAt(this.expirationAt)
-			.tokenStatus(TokenStatus.valueOf(this.tokenStatus.toString()))
-			.user(this.user.toEntity())
+			.tokenStatus(this.tokenStatus)
+			.waitingCountId(this.waitingCountId)
 			.build();
 	}
 }

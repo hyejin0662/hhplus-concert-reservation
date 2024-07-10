@@ -1,14 +1,12 @@
 package com.concert_reservation.api.business.model.dto.command;
 
 import com.concert_reservation.api.business.model.entity.Token;
-import com.concert_reservation.api.business.model.entity.User;
+import com.concert_reservation.common.mapper.DtoConverter;
 import com.concert_reservation.common.type.TokenStatus;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import lombok.*;
-
 
 @Getter
 @Setter
@@ -21,4 +19,9 @@ public class TokenCommand {
     private LocalDateTime waitingAt;
     private LocalDateTime expirationAt;
     private TokenStatus tokenStatus;
+    private Long waitingCountId;
+
+    public Token toEntity() {
+        return DtoConverter.convert(this, Token.class);
+    }
 }

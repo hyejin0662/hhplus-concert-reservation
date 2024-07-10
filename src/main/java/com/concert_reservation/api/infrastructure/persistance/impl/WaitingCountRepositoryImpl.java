@@ -2,6 +2,7 @@ package com.concert_reservation.api.infrastructure.persistance.impl;
 
 import org.springframework.stereotype.Repository;
 
+import com.concert_reservation.api.business.model.entity.WaitingCount;
 import com.concert_reservation.api.business.repo.WaitingCountRepository;
 import com.concert_reservation.api.infrastructure.persistance.orm.WaitingCountJpaRepository;
 
@@ -33,6 +34,11 @@ public class WaitingCountRepositoryImpl implements WaitingCountRepository {
 	@Override
 	public Long countByConcertId(Long concertId) {
 		return waitingCountJpaRepository.countByConcertId(concertId);
+	}
+
+	@Override
+	public WaitingCount saveWaitingCount(WaitingCount waitingCount) {
+		return null;
 	}
 
 }

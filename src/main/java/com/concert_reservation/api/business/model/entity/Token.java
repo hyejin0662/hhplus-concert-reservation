@@ -1,5 +1,6 @@
 package com.concert_reservation.api.business.model.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,33 +17,44 @@ import java.time.LocalDateTime;
 import com.concert_reservation.common.type.TokenStatus;
 
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "Token")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Token {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tokenId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User user;
+    @Column(nullable = false)
+    private String userId;
 
+    @Column(nullable = false)
     private LocalDateTime waitingAt;
 
+    @Column(nullable = false)
     private LocalDateTime expirationAt;
 
     @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     private TokenStatus tokenStatus;
 
-    @OneToOne(mappedBy = "token")
-    private WaitingCount waitingCount;
+    @Column(nullable = false)
+    private Long waitingCountId;
+
+    public void updateTokenStatus(TokenStatus tokenStatus) {
+        this.tokenStatus = tokenStatus;
+    }
+
+    public void extendExpirationAt(LocalDateTime newExpiration) {
+        this.expirationAt = newExpiration;
+    }
 }

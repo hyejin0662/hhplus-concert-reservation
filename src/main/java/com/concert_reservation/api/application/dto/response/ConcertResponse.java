@@ -1,7 +1,5 @@
 package com.concert_reservation.api.application.dto.response;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,11 +22,10 @@ public class ConcertResponse {
     private String concertName;
     private List<SeatResponse> seats;
 
-    public static ConcertResponse from(ConcertInfo concertinfo) {
+    public static ConcertResponse from(ConcertInfo concert) {
         return ConcertResponse.builder()
-            .concertId(concertinfo.getConcertId())
-            .concertName(concertinfo.getConcertName())
-            .seats(concertinfo.getSeats().stream().map(SeatResponse::from).collect(Collectors.toList()))
+            .concertId(concert.getConcertId())
+            .concertName(concert.getConcertName())
             .build();
     }
 

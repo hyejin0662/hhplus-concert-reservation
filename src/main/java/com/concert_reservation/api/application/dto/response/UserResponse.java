@@ -1,6 +1,5 @@
 package com.concert_reservation.api.application.dto.response;
 
-import com.concert_reservation.api.business.model.dto.command.UserCommand;
 import com.concert_reservation.api.business.model.dto.info.UserInfo;
 import com.concert_reservation.api.business.model.entity.User;
 
@@ -8,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -22,12 +22,19 @@ public class UserResponse {
     private String email;
     private Long balance;
 
-    public static UserResponse from(User user) {
+
+    public static UserResponse from(String userId) {
         return UserResponse.builder()
-            .userId(user.getUserId())
-            .name(user.getName())
-            .phoneNumber(user.getPhoneNumber())
-            .email(user.getEmail())
+            .userId(userId)
+            .build();
+    }
+    public static UserResponse from(UserInfo userInfo) {
+        return UserResponse.builder()
+            .userId(userInfo.getUserId())
+            .name(userInfo.getName())
+            .phoneNumber(userInfo.getPhoneNumber())
+            .email(userInfo.getEmail())
+            .balance(userInfo.getBalance())
             .build();
     }
 

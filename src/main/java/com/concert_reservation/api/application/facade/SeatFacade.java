@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.concert_reservation.api.application.dto.request.AvailableSeatsRequest;
+import com.concert_reservation.api.application.dto.request.SeatRequest;
 import com.concert_reservation.api.application.dto.response.SeatResponse;
 import com.concert_reservation.api.business.service.impl.SeatServiceImpl;
 
@@ -16,10 +16,10 @@ import lombok.RequiredArgsConstructor;
 public class SeatFacade {
     private final SeatServiceImpl seatServiceImpl;
 
-    public List<SeatResponse> getAvailableSeats(AvailableSeatsRequest availableSeatsRequest) {
-        return seatServiceImpl.getAvailableSeats(availableSeatsRequest)
-                              .stream()
-                              .map(SeatResponse::from)
-                              .collect(Collectors.toList());
-    }
+    // public List<SeatResponse> getAvailableSeats(SeatRequest seatRequest) {
+    //     return seatServiceImpl.getAvailableSeats(seatRequest)
+    //                           .stream()
+    //                           .map(SeatResponse::from)
+    //                           .collect(Collectors.toList());
+    // }
 }

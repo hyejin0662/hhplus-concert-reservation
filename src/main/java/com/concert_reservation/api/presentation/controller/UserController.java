@@ -1,33 +1,42 @@
 package com.concert_reservation.api.presentation.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.concert_reservation.api.application.dto.request.UserRequest;
+import com.concert_reservation.api.application.dto.response.UserResponse;
 import com.concert_reservation.api.application.facade.UserFacade;
-import com.concert_reservation.api.business.service.UserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserFacade userFacade;
 
-    @GetMapping("/{userId}/balance")
-    public ResponseEntity<Long> getUserBalance(@PathVariable String userId) {
-        Long balance = userFacade.getUserBalance(userId);
-        return ResponseEntity.ok(balance);
+    @PostMapping
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest) {
+        UserResponse response = userFacade.createUser(userRequest);
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/{userId}/balance")
-    public ResponseEntity<Long> chargeUserBalance(@PathVariable String userId, @RequestBody Long amount) {
-        Long balance = userFacade.chargeUserBalance(userId, amount);
-        return ResponseEntity.ok(balance);
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponse> getUser(@PathVariable String userId) {
+        UserResponse response = userFacade.getUser(userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserResponse> updateUser(@PathVariable String userId, @Valid @RequestBody UserRequest userRequest) {
+        UserResponse response = userFacade.updateUser(userId, userRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
+        userFacade.deleteUser(userId);
+        return ResponseEntity.noContent().build();
     }
 }

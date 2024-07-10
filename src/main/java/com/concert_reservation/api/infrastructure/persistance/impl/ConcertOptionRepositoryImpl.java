@@ -2,17 +2,22 @@ package com.concert_reservation.api.infrastructure.persistance.impl;
 
 import com.concert_reservation.api.business.model.entity.ConcertOption;
 import com.concert_reservation.api.business.repo.ConcertOptionRepository;
+import com.concert_reservation.api.infrastructure.persistance.orm.ConcertOptionJpaRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
+
 @Repository
+@RequiredArgsConstructor
 public class ConcertOptionRepositoryImpl implements ConcertOptionRepository {
 
-    @Autowired
-    private ConcertOptionJpaRepository concertOptionJpaRepository;
+
+    private final ConcertOptionJpaRepository concertOptionJpaRepository;
 
     @Override
     public Optional<ConcertOption> findById(Long concertOptionId) {

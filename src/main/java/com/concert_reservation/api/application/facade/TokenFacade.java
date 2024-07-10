@@ -22,16 +22,16 @@ public class TokenFacade {
     private final TokenServiceImpl tokenServiceImpl;
     private final WaitingCountServiceImpl waitingCountService;
 
-    public TokenResponse createToken(TokenRequest tokenRequest) {
-        TokenCommand tokenCommand = DtoConverter.convert(tokenRequest, TokenCommand.class);
-        TokenInfo tokenInfo = tokenService.createToken(tokenCommand);
-        return DtoConverter.convert(tokenInfo, TokenResponse.class);
-    }
-
-    public TokenResponse getToken(String concertCode) {
-        TokenInfo tokenInfo = tokenService.getToken(concertCode);
-        return DtoConverter.convert(tokenInfo, TokenResponse.class);
-    }
+    // public TokenResponse createToken(TokenRequest tokenRequest) {
+    //     TokenCommand tokenCommand = DtoConverter.convert(tokenRequest, TokenCommand.class);
+    //     TokenInfo tokenInfo = tokenService.createToken(tokenCommand);
+    //     return DtoConverter.convert(tokenInfo, TokenResponse.class);
+    // }
+    //
+    // public TokenResponse getToken(String concertCode) {
+    //     TokenInfo tokenInfo = tokenService.getToken(concertCode);
+    //     return DtoConverter.convert(tokenInfo, TokenResponse.class);
+    // }
 
 
     // count 조회하고 업데이트를 하는 것이 한 트랜젝션에 묶여야함
@@ -40,7 +40,7 @@ public class TokenFacade {
         tokenService.updateTokenStatusToProcessing();
     }
 
-    public TokenResponse createWaiting(TokenRequest tokenRequest) {
-        return TokenResponse.from(waitingCountService.createWaiting(tokenRequest));
-    }
+    // public TokenResponse createWaiting(TokenInfo tokenInfo) {
+    //     return TokenResponse.from(waitingCountService.createWaiting(tokenInfo));
+    // }
 }
