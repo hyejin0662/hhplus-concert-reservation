@@ -68,13 +68,14 @@
 | 예약 여부     | is_reserved   | boolean   | YES      |
 
 ### Reservation Table (예약 테이블)
-| 필드명            | 영문명            | 타입      | NOT NULL |
-|-------------------|-------------------|-----------|----------|
-| 예약 ID           | reservation_id    | bigint    | YES      |
-| 유저 ID           | user_id           | varchar   | YES      |
-| 좌석 ID           | seat_id           | bigint    | YES      |
-| 예약 시간         | reservation_time  | timestamp | YES      |
-| 예약 확정 여부    | is_confirmed      | boolean   | YES      |
+| 필드명       | 영문명            | 타입        | NOT NULL |
+|-----------|-------------------|-----------|----------|
+| 예약 ID     | reservation_id    | bigint    | YES      |
+| 콘서트 옵션 Id | concertOptionId | bigint        | YES      |
+| 유저 ID     | user_id           | varchar   | YES      |
+| 좌석 ID     | seat_id           | bigint    | YES      |
+| 예약 시간     | reservation_time  | timestamp | YES      |
+| 예약 확정 여부  | is_confirmed      | boolean   | YES      |
 
 ### Point Table (포인트 테이블)
 | 필드명        | 영문명     | 타입      | NOT NULL |
@@ -426,5 +427,8 @@
 # 마일스톤
 
 https://github.com/hyejin0662/hhplus-concert-reservation/milestones
+
+# swagger
+http://localhost:8082/swagger-ui/index.html
 
 </details>

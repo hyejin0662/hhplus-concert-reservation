@@ -1,5 +1,7 @@
 package com.concert_reservation.common.type;
 
 public enum BookingStatus {
-    COMPLETE, INCOMPLETE
+    CONFIRMED,
+    PENDING,  // 임시 예약
+    CANCELLED;
 }

@@ -2,22 +2,20 @@ package com.concert_reservation.api.business.model.dto.command;
 
 import com.concert_reservation.api.business.model.entity.Concert;
 import com.concert_reservation.api.business.model.entity.Seat;
+import com.concert_reservation.common.mapper.DtoConverter;
+
+import java.time.LocalDateTime;
 import lombok.*;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class SeatCommand {
-    private Long concertId;
-    private int seatNumber;
-    private boolean isReserved;
+    private Long concertOptionId;
 
-    public Seat toEntity(Concert concert) {
-        return Seat.builder()
-                .concert(concert)
-                .seatNumber(this.seatNumber)
-                .isReserved(this.isReserved)
-                .build();
+    public Seat toEntity() {
+        return DtoConverter.convert(this, Seat.class);
     }
 }

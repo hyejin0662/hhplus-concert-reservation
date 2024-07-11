@@ -1,6 +1,4 @@
-package com.concert_reservation.api.application.dto.response;
-
-import java.util.List;
+package com.concert_reservation.api.application.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConcertsResponse {
-    private List<ConcertResponse> concerts;
+public class ConcertRequest {
+    private String concertName;
 }

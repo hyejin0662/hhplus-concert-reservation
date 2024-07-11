@@ -10,6 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequest {
-    private Long userId;
-    private int balance;
+    private String userId;
+    private String name;
+    private String phoneNumber;
+    private String email;
+    private Long balance;
 }
