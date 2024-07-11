@@ -9,4 +9,8 @@ public interface ConcertOptionRepository {
     List<ConcertOption> findAll();
     ConcertOption save(ConcertOption concertOption);
     void deleteById(Long concertOptionId);
+
+	// List<ConcertOption> findAllByConcertId(Long concertId);
+
+	List<ConcertOption> findAllByConcertId(Long concertId);
 }

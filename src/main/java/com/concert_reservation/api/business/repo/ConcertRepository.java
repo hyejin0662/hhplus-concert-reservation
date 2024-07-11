@@ -11,15 +11,11 @@ import java.util.Optional;
 
 public interface ConcertRepository {
 	List<Concert> findAll();
+
 	Optional<Concert> findById(Long concertId);
-	List<Seat> findAvailableSeatsByConcertId(Long concertId, LocalDate date);
+
 	Concert save(Concert concert);
+
 	void deleteById(Long concertId);
-
-	List<Seat> findAvailableSeatsByConcertIdAndDate(Long concertId, LocalDateTime date);
-
-	// List<Concert> findConcerts(ConcertRequest concertRequest);
-
-	// List<Concert> findConcerts(ConcertRequest concertRequest);
 
 }

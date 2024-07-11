@@ -13,4 +13,6 @@ public interface BookingRepository {
 	Optional<Booking> findById(Long bookingId);
 	List<Booking> findAll();
 	void deleteById(Long bookingId);
+
+	Optional<Booking> findByUserId(String userId);
 }
