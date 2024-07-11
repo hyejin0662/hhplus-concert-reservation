@@ -26,7 +26,6 @@ public class SeatResponse {
             .seatId(seatInfo.getSeatId())
             .seatNumber(seatInfo.getSeatNumber())
             .isReserved(seatInfo.isReserved())
-            .concertResponse(ConcertResponse.from(seatInfo.getConcertInfo()))
             .build();
     }
 
@@ -35,7 +34,6 @@ public class SeatResponse {
             .seatId(this.seatId)
             .seatNumber(this.seatNumber)
             .isReserved(this.isReserved)
-            .concert(this.concertResponse.toEntity())
             .build();
     }
 }

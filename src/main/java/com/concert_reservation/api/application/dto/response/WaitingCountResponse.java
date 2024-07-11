@@ -19,8 +19,6 @@ import lombok.Setter;
 public class WaitingCountResponse {
     private Long countId;
     private Long count;
-    private Long tokenId;
-    private String userId;
 
     public static WaitingCountResponse from(WaitingCountInfo waitingCount) {
         return WaitingCountResponse.builder()
@@ -29,10 +27,5 @@ public class WaitingCountResponse {
             .build();
     }
 
-    public WaitingCount toEntity() {
-        return WaitingCount.builder()
-            .countId(this.countId)
-            .count(this.count)
-            .build();
-    }
+
 }

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.concert_reservation.api.business.model.dto.info.TokenInfo;
 import com.concert_reservation.api.business.model.entity.Token;
+import com.concert_reservation.api.business.model.entity.User;
 import com.concert_reservation.common.type.TokenStatus;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +24,6 @@ public class TokenResponse {
 	private LocalDateTime waitingAt;
 	private LocalDateTime expirationAt;
 	private TokenStatus tokenStatus;
-	private Long waitingCountId;
 
 	public static TokenResponse from(TokenInfo token) {
 		return TokenResponse.builder()
@@ -32,18 +32,19 @@ public class TokenResponse {
 			.waitingAt(token.getWaitingAt())
 			.expirationAt(token.getExpirationAt())
 			.tokenStatus(token.getTokenStatus())
-			.waitingCountId(token.getWaitingCountId())
 			.build();
 	}
 
 	public Token toEntity() {
+		User user = new User();
+		user.setUserId(this.userId);
+
 		return Token.builder()
 			.tokenId(this.tokenId)
-			.userId(this.userId)
+			.user(user)
 			.waitingAt(this.waitingAt)
 			.expirationAt(this.expirationAt)
 			.tokenStatus(this.tokenStatus)
-			.waitingCountId(this.waitingCountId)
 			.build();
 	}
 }
