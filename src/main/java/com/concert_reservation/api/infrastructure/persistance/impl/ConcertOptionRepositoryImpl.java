@@ -4,7 +4,6 @@ import com.concert_reservation.api.business.model.entity.ConcertOption;
 import com.concert_reservation.api.business.repo.ConcertOptionRepository;
 import com.concert_reservation.api.infrastructure.persistance.orm.ConcertOptionJpaRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -37,5 +36,10 @@ public class ConcertOptionRepositoryImpl implements ConcertOptionRepository {
     @Override
     public void deleteById(Long concertOptionId) {
         concertOptionJpaRepository.deleteById(concertOptionId);
+    }
+
+    @Override
+    public List<ConcertOption> findAllByConcertId(Long concertId) {
+        return concertOptionJpaRepository.findAllByConcertId(concertId);
     }
 }

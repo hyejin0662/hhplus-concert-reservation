@@ -16,22 +16,6 @@ public class SeatRepositoryImpl implements SeatRepository {
 
   private final SeatJpaRepository seatJpaRepository;
 
-  @Override
-  public List<Seat> findReservedSeatsBySeatIdIn(List<Long> ids) {
-    return seatJpaRepository.findReservedSeatsBySeatIdIn(ids);
-  }
-
-  @Override
-  public void saveAll(List<Seat> seats) {
-    seatJpaRepository.saveAll(seats);
-  }
-
-  @Override
-  public List<Seat> findSeatsByConcertIdAndSeatIdInAndIsReserved(Long concertId, List<Seat> seatIds,
-      boolean isReserved) {
-    return seatJpaRepository.findSeatsByConcertIdAndSeatIdInAndIsReserved(concertId,seatIds,isReserved);
-  }
-
 
   @Override
   public Optional<Seat> findById(Long seatId) {
@@ -51,16 +35,6 @@ public class SeatRepositoryImpl implements SeatRepository {
   @Override
   public void deleteById(Long seatId) {
     seatJpaRepository.deleteById(seatId);
-  }
-
-  @Override
-  public List<Seat> findByConcertIdAndIsReservedFalse(Long concertId) {
-    return null;
-  }
-
-  @Override
-  public List<Seat> findByConcertIdAndSeatNumberInAndIsReservedFalse(Long concertId, List<Integer> seatNumbers) {
-    return null;
   }
 
 }

@@ -28,10 +28,6 @@ public class ConcertRepositoryImpl implements ConcertRepository {
     return concertJpaRepository.findById(concertId);
   }
 
-  @Override
-  public List<Seat> findAvailableSeatsByConcertId(Long concertId, LocalDate date) {
-    return null;
-  }
 
   // @Override
   // public List<Seat> findAvailableSeatsByConcertId(Long concertId, LocalDate date) {
@@ -47,10 +43,7 @@ public class ConcertRepositoryImpl implements ConcertRepository {
   public void deleteById(Long concertId) {
     concertJpaRepository.deleteById(concertId);
   }
-  @Override
-  public List<Seat> findAvailableSeatsByConcertIdAndDate(Long concertId, LocalDateTime date) {
-    return concertJpaRepository.findAvailableSeatsByConcertIdAndConcertDate(concertId, date);
-  }
+
 
 }
 

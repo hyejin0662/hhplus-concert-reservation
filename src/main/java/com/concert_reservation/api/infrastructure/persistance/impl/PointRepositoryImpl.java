@@ -17,8 +17,8 @@ public class PointRepositoryImpl implements PointRepository {
   private final PointJpaRepository pointJpaRepository;
 
   @Override
-  public Point findPointsByUserId(String userId) {
-    return pointJpaRepository.findPointsByUserId(userId);
+  public Optional<Point> findPointByUserIdOptional(String userId) {
+    return pointJpaRepository.findPointByUserId(userId);
   }
 
 

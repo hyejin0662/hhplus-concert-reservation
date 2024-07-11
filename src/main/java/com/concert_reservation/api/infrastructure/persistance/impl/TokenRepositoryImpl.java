@@ -1,13 +1,14 @@
 package com.concert_reservation.api.infrastructure.persistance.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import com.concert_reservation.api.business.model.entity.Token;
-import com.concert_reservation.api.business.repo.ConcertRepository;
 import com.concert_reservation.api.business.repo.TokenRepository;
-import com.concert_reservation.api.infrastructure.persistance.orm.ConcertJpaRepository;
 import com.concert_reservation.api.infrastructure.persistance.orm.TokenJpaRepository;
+import com.concert_reservation.common.type.TokenStatus;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -51,6 +52,17 @@ public class TokenRepositoryImpl implements TokenRepository {
   @Override
   public void deleteById(Long tokenId) {
     tokenJpaRepository.deleteById(tokenId);
+  }
+
+  @Override
+  public List<Token> findAllByTokenStatusAndExpirationAtBefore(TokenStatus tokenStatus, LocalDateTime now) {
+    return tokenJpaRepository.findAllByTokenStatusAndExpirationAtBefore(tokenStatus, now);
+
+  }
+
+  @Override
+  public List<Token> saveAll(List<Token> tokensToBeExpired) {
+    return tokenJpaRepository.saveAll(tokensToBeExpired);
   }
 
 }

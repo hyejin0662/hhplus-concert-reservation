@@ -42,5 +42,10 @@ public class BookingRepositoryImpl implements BookingRepository {
     bookingJpaRepository.deleteById(bookingId);
   }
 
+  @Override
+  public Optional<Booking> findByUserId(String userId) {
+    return bookingJpaRepository.findByUserUserId(userId);
+  }
+
 }
 
