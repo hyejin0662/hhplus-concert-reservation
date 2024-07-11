@@ -52,6 +52,11 @@ public class Point {
     }
 
     public void subtractAmount(Long amount) {
+
+        if(this.amount < amount){
+            throw new RuntimeException("Insufficient funds");
+        }
+
         this.amount -= amount;
     }
 }

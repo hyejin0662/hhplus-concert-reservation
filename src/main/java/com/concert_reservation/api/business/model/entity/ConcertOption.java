@@ -1,6 +1,7 @@
 package com.concert_reservation.api.business.model.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -11,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +33,7 @@ public class ConcertOption {
   private Long concertOptionId;
 
   @Column(nullable = false)
-  private String concertId;
+  private Long concertId;
 
   @Column(nullable = false)
   private String singerName;
@@ -45,11 +47,18 @@ public class ConcertOption {
   @Column(nullable = false)
   private String location;
 
+  @OneToMany(mappedBy = "seatId")
+  private List<Seat> seats;
+
   public void updateCapacity(Long capacity) {
     this.capacity = capacity;
   }
 
   public void updateLocation(String location) {
     this.location = location;
+  }
+
+  public boolean isAfter(LocalDateTime localDateTime) {
+    return this.concertDate!=null && this.concertDate.isAfter(localDateTime);
   }
 }

@@ -34,26 +34,25 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "seat_id", nullable = false)
+    private Seat seat;
 
     @Column(nullable = false)
-    private String userId;
-
-
-    @Column(nullable = false)
-    private Long seatId;
-
-
-    @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
 
     @Column(nullable = false)
     private LocalDateTime bookingTime;
 
-    public static Booking createBooking(String userId, Long seatId, LocalDateTime bookingTime, BookingStatus bookingStatus) {
+    public static Booking createBooking(User user, Seat seat, LocalDateTime bookingTime, BookingStatus bookingStatus) {
         return Booking.builder()
-            .userId(userId)
-            .seatId(seatId)
+            .user(user)
+            .seat(seat)
             .bookingTime(bookingTime)
             .bookingStatus(bookingStatus)
             .build();
@@ -61,5 +60,9 @@ public class Booking {
 
     public void updateBookingStatus(BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
+    }
+
+    public void doConfirm() {
+        this.bookingStatus= BookingStatus.CONFIRMED;
     }
 }

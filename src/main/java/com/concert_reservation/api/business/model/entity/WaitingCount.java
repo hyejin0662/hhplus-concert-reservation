@@ -33,8 +33,9 @@ public class WaitingCount {
 	@Column(nullable = false)
 	private Long count;
 
-	@Column(nullable = false)
-	private Long concertId;
+	public static WaitingCount createDefault() {
+		return new WaitingCount(1L, 0L);
+	}
 
 	public void incrementCount() {
 		this.count++;

@@ -1,5 +1,6 @@
 package com.concert_reservation.api.business.model.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -38,12 +39,27 @@ public class Seat {
     @Column(nullable = false)
     private boolean isReserved;
 
-    @ManyToOne
-    @JoinColumn(name = "concert_id", nullable = false)
-    private Concert concert;
+    @Column(nullable = false)
+    private int price;
+
 
 
     public void setIsReserved(boolean isReserved) {
         this.isReserved = isReserved;
     }
+
+
+    public void updateSeatNumber(int seatNumber) {
+        this.seatNumber = seatNumber;
+    }
+
+    public void updatePrice(int price) {
+        this.price = price;
+    }
+
+    public boolean isNotReserved(){
+        return !isReserved;
+    }
+
+
 }

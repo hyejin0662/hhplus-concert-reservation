@@ -34,11 +34,12 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tokenId;
 
-    @Column(nullable = false)
-    private String userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false)
-    private LocalDateTime waitingAt;
+    private LocalDateTime waitingAt; // 토큰이 시작된 시간
 
     @Column(nullable = false)
     private LocalDateTime expirationAt;
@@ -47,8 +48,6 @@ public class Token {
     @Column(nullable = false)
     private TokenStatus tokenStatus;
 
-    @Column(nullable = false)
-    private Long waitingCountId;
 
     public void updateTokenStatus(TokenStatus tokenStatus) {
         this.tokenStatus = tokenStatus;
@@ -56,5 +55,10 @@ public class Token {
 
     public void extendExpirationAt(LocalDateTime newExpiration) {
         this.expirationAt = newExpiration;
+    }
+
+    public void doExpire() {
+        this.tokenStatus = TokenStatus.COMPLETE;
+
     }
 }
