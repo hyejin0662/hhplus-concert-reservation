@@ -1,11 +1,16 @@
 package com.concert_reservation.api.presentation.controller;
 
+import com.concert_reservation.api.application.dto.request.PaymentRequest;
 import com.concert_reservation.api.application.dto.request.PointRequest;
+import com.concert_reservation.api.application.dto.response.PaymentResponse;
 import com.concert_reservation.api.application.dto.response.PointResponse;
 import com.concert_reservation.api.application.facade.PointFacade;
+import com.concert_reservation.common.model.WebResponseData;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -17,27 +22,30 @@ public class PointController {
     private final PointFacade pointFacade;
 
 
-    @PostMapping
-    public ResponseEntity<PointResponse> createPoint(@Valid @RequestBody PointRequest pointRequest) {
-        PointResponse response = pointFacade.createPoint(pointRequest);
-        return ResponseEntity.ok(response);
+    @PatchMapping("/charge")
+    @Operation(summary = "포인트 충전")
+    public WebResponseData<PointResponse> chargePoint(@Valid @RequestBody PointRequest pointRequest) {
+        PointResponse response = pointFacade.chargePoint(pointRequest);
+        return WebResponseData.ok(response);
     }
+
+
+    @PatchMapping("/deduct")
+    @Operation(summary = "포인트 차감")
+    public WebResponseData<PointResponse> deductPoint(@Valid @RequestBody PointRequest pointRequest) {
+        PointResponse response = pointFacade.deductPoint(pointRequest);
+        return WebResponseData.ok(response);
+    }
+
 
     @GetMapping("/{pointId}")
-    public ResponseEntity<PointResponse> getPoint(@PathVariable Long pointId) {
+    public WebResponseData<PointResponse> getPoint(@PathVariable Long pointId) {
         PointResponse response = pointFacade.getPoint(pointId);
-        return ResponseEntity.ok(response);
+        return WebResponseData.ok(response);
     }
 
-    @PutMapping("/{pointId}")
-    public ResponseEntity<PointResponse> updatePoint(@PathVariable Long pointId, @Valid @RequestBody PointRequest pointRequest) {
-        PointResponse response = pointFacade.updatePoint(pointId, pointRequest);
-        return ResponseEntity.ok(response);
-    }
 
-    @DeleteMapping("/{pointId}")
-    public ResponseEntity<Void> deletePoint(@PathVariable Long pointId) {
-        pointFacade.deletePoint(pointId);
-        return ResponseEntity.noContent().build();
-    }
+
+
+
 }
