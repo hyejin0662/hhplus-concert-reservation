@@ -16,7 +16,6 @@ public class TokenRequest {
 	private LocalDateTime waitingAt;
 	private LocalDateTime expirationAt;
 	private String tokenStatus;
-	private Long waitingCountId;
 	private Long concertId;
 
 }

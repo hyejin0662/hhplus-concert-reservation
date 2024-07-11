@@ -10,11 +10,6 @@ import com.concert_reservation.api.business.model.entity.Seat;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ConcertJpaRepository extends JpaRepository<Concert, Long> {
-	List<Seat> findAvailableSeatsByConcertIdAndConcertDate(Long concertId, LocalDateTime concertDate);
-	//
-	// // List<Concert> findConcerts(ConcertRequest concertRequest);
-	//
-	// List<Concert> findByConcertName(String concertName);
 
 
 }
