@@ -2,6 +2,7 @@ package com.concert_reservation.api.application.dto.request;
 
 import java.time.LocalDate;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SeatRequest {
-	private String concertId;
-	private LocalDate date;
+	private Long concertId;
+	private LocalDateTime date;
 }

@@ -16,10 +16,5 @@ import lombok.RequiredArgsConstructor;
 public class SeatFacade {
     private final SeatServiceImpl seatServiceImpl;
 
-    // public List<SeatResponse> getAvailableSeats(SeatRequest seatRequest) {
-    //     return seatServiceImpl.getAvailableSeats(seatRequest)
-    //                           .stream()
-    //                           .map(SeatResponse::from)
-    //                           .collect(Collectors.toList());
-    // }
+
 }

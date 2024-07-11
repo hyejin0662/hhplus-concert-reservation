@@ -2,6 +2,7 @@ package com.concert_reservation.api.presentation.controller;
 
 import com.concert_reservation.api.application.dto.request.SeatRequest;
 import com.concert_reservation.api.application.dto.response.SeatResponse;
+import com.concert_reservation.api.application.facade.ConcertFacade;
 import com.concert_reservation.api.application.facade.SeatFacade;
 
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,11 @@ import java.util.List;
 @RequestMapping("/api/seats")
 @RequiredArgsConstructor
 public class SeatController {
-    private final SeatFacade seatFacade;
+    private final ConcertFacade concertFacade;
 
-    // @PostMapping("/available")
-    // public ResponseEntity<List<SeatResponse>> getAvailableSeats(@RequestBody SeatRequest seatRequest) {
-    //     List<SeatResponse> seatResponses = seatFacade.getAvailableSeats(seatRequest);
-    //     return ResponseEntity.ok(seatResponses);
-    // }
+     @PostMapping("/available")
+     public ResponseEntity<List<SeatResponse>> getAvailableSeats(@RequestBody SeatRequest seatRequest) {
+         List<SeatResponse> seatResponses = concertFacade.getAvailableSeats(seatRequest);
+         return ResponseEntity.ok(seatResponses);
+     }
 }

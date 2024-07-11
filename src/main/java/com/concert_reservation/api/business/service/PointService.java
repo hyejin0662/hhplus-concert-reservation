@@ -8,7 +8,7 @@ import com.concert_reservation.api.business.model.dto.command.PointCommand;
 import com.concert_reservation.api.business.model.dto.info.PointInfo;
 
 public interface PointService {
-	PointResponse processPayment(Long bookingId);
+	PointInfo processPayment(Long bookingId);
 
 	PointInfo createPoint(PointCommand pointCommand);
 	PointInfo getPoint(Long pointId);

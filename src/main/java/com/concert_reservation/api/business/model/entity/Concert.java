@@ -35,4 +35,7 @@ public class Concert {
 
   @Column(nullable = false)
   private LocalDateTime concertDate;
+
+  @OneToMany(mappedBy = "concert")
+  private List<Seat> seats;
 }

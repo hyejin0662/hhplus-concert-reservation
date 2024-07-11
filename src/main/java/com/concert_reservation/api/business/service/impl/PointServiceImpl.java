@@ -30,7 +30,7 @@ public class PointServiceImpl implements PointService {
   private final PointRepository pointRepository;
 
   @Override
-  public PointResponse processPayment(Long bookingId) {
+  public PointInfo processPayment(Long bookingId) {
     return null;
   }
 

@@ -1,5 +1,6 @@
 package com.concert_reservation.api.business.model.dto.info;
 
+import com.concert_reservation.api.business.model.entity.Concert;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,14 +14,15 @@ import lombok.*;
 @Builder
 public class SeatInfo {
     private Long seatId;
-    private String concertId;
+//    private String concertId;
+    private ConcertInfo concertInfo;
     private int seatNumber;
     private boolean isReserved;
 
     public static SeatInfo from(Seat seat) {
         return SeatInfo.builder()
             .seatId(seat.getSeatId())
-            .concertId(seat.getConcertId())
+            .concertInfo(ConcertInfo.from(seat.getConcert()))
             .seatNumber(seat.getSeatNumber())
             .isReserved(seat.isReserved())
             .build();
@@ -29,7 +31,7 @@ public class SeatInfo {
     public Seat toEntity() {
         return Seat.builder()
             .seatId(this.seatId)
-            .concertId(this.concertId)
+            .concert(this.concertInfo.toEntity())
             .seatNumber(this.seatNumber)
             .isReserved(this.isReserved)
             .build();

@@ -33,13 +33,14 @@ public class Seat {
     private Long seatId;
 
     @Column(nullable = false)
-    private String concertId;
-
-    @Column(nullable = false)
     private int seatNumber;
 
     @Column(nullable = false)
     private boolean isReserved;
+
+    @ManyToOne
+    @JoinColumn(name = "concert_id", nullable = false)
+    private Concert concert;
 
 
     public void setIsReserved(boolean isReserved) {
