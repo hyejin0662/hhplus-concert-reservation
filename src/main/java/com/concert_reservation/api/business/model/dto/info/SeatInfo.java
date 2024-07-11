@@ -14,15 +14,13 @@ import lombok.*;
 @Builder
 public class SeatInfo {
     private Long seatId;
-//    private String concertId;
-    private ConcertInfo concertInfo;
     private int seatNumber;
     private boolean isReserved;
+    private ConcertInfo concertInfo;
 
     public static SeatInfo from(Seat seat) {
         return SeatInfo.builder()
             .seatId(seat.getSeatId())
-            .concertInfo(ConcertInfo.from(seat.getConcert()))
             .seatNumber(seat.getSeatNumber())
             .isReserved(seat.isReserved())
             .build();
@@ -31,7 +29,6 @@ public class SeatInfo {
     public Seat toEntity() {
         return Seat.builder()
             .seatId(this.seatId)
-            .concert(this.concertInfo.toEntity())
             .seatNumber(this.seatNumber)
             .isReserved(this.isReserved)
             .build();

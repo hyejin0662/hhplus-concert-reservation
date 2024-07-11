@@ -19,7 +19,6 @@ public class TokenCommand {
     private LocalDateTime waitingAt;
     private LocalDateTime expirationAt;
     private TokenStatus tokenStatus;
-    private Long waitingCountId;
 
     public Token toEntity() {
         return DtoConverter.convert(this, Token.class);

@@ -23,4 +23,6 @@ public class PointCommand {
     public Point toEntity() {
         return DtoConverter.convert(this, Point.class);
     }
+
+
 }
