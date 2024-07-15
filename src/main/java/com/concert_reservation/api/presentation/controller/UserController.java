@@ -8,6 +8,7 @@ import com.concert_reservation.common.model.WebResponseData;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -19,24 +20,28 @@ public class UserController {
     private final UserFacade userFacade;
 
     @PostMapping
+    @Operation(summary = "사용자 생성", description = "새로운 사용자를 생성합니다.")
     public WebResponseData<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest) {
         UserResponse response = userFacade.createUser(userRequest);
         return WebResponseData.ok(response);
     }
 
     @GetMapping("/{userId}")
+    @Operation(summary = "사용자 조회", description = "사용자 ID로 사용자 정보를 조회합니다.")
     public WebResponseData<UserResponse> getUser(@PathVariable String userId) {
         UserResponse response = userFacade.getUser(userId);
         return WebResponseData.ok(response);
     }
 
     @PutMapping("/{userId}")
+    @Operation(summary = "사용자 업데이트", description = "사용자 ID로 사용자 정보를 업데이트합니다.")
     public WebResponseData<UserResponse> updateUser(@PathVariable String userId, @Valid @RequestBody UserRequest userRequest) {
         UserResponse response = userFacade.updateUser(userId, userRequest);
         return WebResponseData.ok(response);
     }
 
     @DeleteMapping("/{userId}")
+    @Operation(summary = "사용자 삭제", description = "사용자 ID로 사용자를 삭제합니다.")
     public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
         userFacade.deleteUser(userId);
         return ResponseEntity.noContent().build();

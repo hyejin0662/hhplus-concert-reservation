@@ -424,11 +424,22 @@
 ```
 
 
+
+
+
+
+</details>
+<details>
+  <summary>마일스톤</summary>
 # 마일스톤
 
 https://github.com/hyejin0662/hhplus-concert-reservation/milestones
-
+</details>
+<details>
+  <summary>swagger</summary>
 # swagger
 http://localhost:8082/swagger-ui/index.html
 
+![img.png](img.png)
+![img_1.png](img_1.png)
 </details>

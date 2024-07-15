@@ -14,19 +14,8 @@ public interface ConcertService {
 	ConcertInfo updateConcert(Long concertId, ConcertCommand concertCommand);
 	void deleteConcert(Long concertId);
 
-	public ConcertInfo getConcertInfo(Long concertId);
-	List<ConcertResponse> getConcerts(ConcertRequest concertRequest);
-	// List<SeatResponse> getAvailableSeats(Long concertId);
+	List<ConcertInfo> getConcerts(ConcertCommand concertCommand);
 
 
-
-
-//	 TokenResponse createWaiting();
-// 	ConcertsResponse getConcerts();
-// 	List<SeatResponse> getAvailableSeats(LocalDate date, Long concertId);
-// 	 BookingResponse bookSeats(TokenRequest tokenRequest, BookingRequest bookingRequest);
-// 	PaymentResponse processPayment(String queueToken, PaymentRequest paymentRequest);
-// 	UserResponse getUserBalance(long id);
-// 	UserResponse chargeUserBalance(UserRequest userRequest);
 
 }

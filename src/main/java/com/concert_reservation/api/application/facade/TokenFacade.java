@@ -1,6 +1,5 @@
 package com.concert_reservation.api.application.facade;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.concert_reservation.api.application.dto.request.TokenRequest;
@@ -8,9 +7,6 @@ import com.concert_reservation.api.application.dto.response.TokenResponse;
 import com.concert_reservation.api.business.model.dto.command.TokenCommand;
 import com.concert_reservation.api.business.model.dto.info.TokenInfo;
 import com.concert_reservation.api.business.service.TokenService;
-import com.concert_reservation.api.business.service.impl.TokenServiceImpl;
-import com.concert_reservation.api.business.service.impl.WaitingCountServiceImpl;
-import com.concert_reservation.common.mapper.DtoConverter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,29 +14,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TokenFacade {
 
-    private final TokenService tokenService;
-    private final TokenServiceImpl tokenServiceImpl;
-    private final WaitingCountServiceImpl waitingCountService;
+	private final TokenService tokenService;
 
-//     public TokenResponse createToken(TokenRequest tokenRequest) {
-//         TokenCommand tokenCommand = DtoConverter.convert(tokenRequest, TokenCommand.class);
-//         TokenInfo tokenInfo = tokenService.createToken(tokenCommand);
-//         return DtoConverter.convert(tokenInfo, TokenResponse.class);
-//     }
-//
-//     public TokenResponse getToken(String concertCode) {
-//         TokenInfo tokenInfo = tokenService.getToken(concertCode);
-//         return DtoConverter.convert(tokenInfo, TokenResponse.class);
-//     }
+	public TokenResponse getToken(String userId) {
+		TokenInfo tokenInfo = tokenService.getToken(userId);
+		return TokenResponse.from(tokenInfo);
+	}
 
-
-    // count 조회하고 업데이트를 하는 것이 한 트랜젝션에 묶여야함
-    @Scheduled(fixedRate = 2000)// 2초마다
-    public void updateTokenStatusToProcessing() {
-        tokenService.updateTokenStatusToProcessing();
-    }
-
-    // public TokenResponse createWaiting(TokenInfo tokenInfo) {
-    //     return TokenResponse.from(waitingCountService.createWaiting(tokenInfo));
-    // }
+	public TokenResponse createToken(TokenRequest tokenRequest) {
+		TokenCommand tokenCommand = TokenCommand.builder()
+			.userId(tokenRequest.getUserId())
+			.build();
+		TokenInfo tokenInfo = tokenService.createToken(tokenCommand);
+		return TokenResponse.from(tokenInfo);
+	}
 }

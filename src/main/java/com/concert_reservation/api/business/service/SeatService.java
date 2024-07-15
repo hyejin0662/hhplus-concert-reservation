@@ -9,8 +9,8 @@ import java.util.List;
 public interface SeatService {
 
 	List<SeatInfo> getAvailableSeats(SeatCommand seatCommand);
-	SeatResponse createSeat(SeatRequest seatRequest);
-	SeatResponse getSeat(Long seatId);
-	SeatResponse updateSeat(Long seatId, SeatRequest seatRequest);
+	SeatInfo createSeat(SeatCommand seatCommand);
+	SeatInfo getSeat(Long seatId);
+	SeatInfo updateSeat(Long seatId, SeatCommand seatCommand);
 	void deleteSeat(Long seatId);
 }

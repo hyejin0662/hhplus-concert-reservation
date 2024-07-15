@@ -1,3 +1,7 @@
+
+server:
+  port: 8055
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/hhplus_concert_reservation
@@ -12,5 +16,4 @@ spring:
       hibernate:
         show-sql: true
         generate-ddl: true
-server:
-  port: 8089
+
