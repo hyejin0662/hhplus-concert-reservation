@@ -1,6 +1,5 @@
 package com.concert_reservation.api.business.service.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
@@ -16,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.concert_reservation.api.business.model.dto.command.TokenCommand;
-import com.concert_reservation.api.business.model.dto.info.TokenInfo;
 import com.concert_reservation.api.business.model.entity.Token;
 import com.concert_reservation.api.business.model.entity.User;
 import com.concert_reservation.api.business.model.entity.WaitingCount;
@@ -29,11 +27,10 @@ import com.concert_reservation.common.type.TokenStatus;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("TokenServiceImpl 클래스 테스트")
-class TokenServiceImplTest {
+@DisplayName("TokenService 클래스 테스트")
+class TokenServiceTest {
 
 	@Mock
 	private TokenRepository tokenRepository;

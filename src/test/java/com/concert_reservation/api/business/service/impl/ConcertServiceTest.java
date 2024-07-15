@@ -21,8 +21,9 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("ConcertServiceImpl 테스트")
-class ConcertServiceImplTest {
+@DisplayName("ConcertService 테스트")
+class ConcertServiceTest {
+
 
 	@Mock
 	private ConcertRepository concertRepository;

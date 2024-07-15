@@ -23,8 +23,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("PointServiceImpl 테스트")
-class PointServiceImplTest {
+@DisplayName("PointService 테스트")
+class PointServiceTest {
 
 	@Mock
 	private PointRepository pointRepository;

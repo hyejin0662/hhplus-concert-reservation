@@ -1,7 +1,7 @@
 package com.concert_reservation.api.business.service.impl;
 
 import com.concert_reservation.api.business.model.entity.Booking;
-import com.concert_reservation.api.infrastructure.persistance.impl.BookingRepositoryImpl;
+import com.concert_reservation.api.business.repo.BookingRepository;
 import com.concert_reservation.api.infrastructure.persistance.orm.BookingJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,14 +21,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("BookingRepositoryImpl 테스트")
-class BookingRepositoryImplTest {
+@DisplayName("BookingService 테스트")
+class BookingServiceTest {
+
 
 	@Mock
 	private BookingJpaRepository bookingJpaRepository;
 
 	@InjectMocks
-	private BookingRepositoryImpl bookingRepositoryImpl;
+	private BookingRepository bookingRepository;
 
 	private Booking booking;
 
@@ -47,7 +48,7 @@ class BookingRepositoryImplTest {
 		when(bookingJpaRepository.save(any(Booking.class))).thenReturn(booking);
 
 		// when
-		Booking savedBooking = bookingRepositoryImpl.save(booking);
+		Booking savedBooking = bookingRepository.save(booking);
 
 		// then
 		assertThat(savedBooking).isNotNull();
@@ -63,7 +64,7 @@ class BookingRepositoryImplTest {
 		when(bookingJpaRepository.saveAll(anyList())).thenReturn(bookings);
 
 		// when
-		List<Booking> savedBookings = bookingRepositoryImpl.saveAll(bookings);
+		List<Booking> savedBookings = bookingRepository.saveAll(bookings);
 
 		// then
 		assertThat(savedBookings).isNotNull();
@@ -78,7 +79,7 @@ class BookingRepositoryImplTest {
 		when(bookingJpaRepository.findById(anyLong())).thenReturn(Optional.of(booking));
 
 		// when
-		Optional<Booking> foundBooking = bookingRepositoryImpl.findById(1L);
+		Optional<Booking> foundBooking = bookingRepository.findById(1L);
 
 		// then
 		assertThat(foundBooking).isPresent();
@@ -94,7 +95,7 @@ class BookingRepositoryImplTest {
 		when(bookingJpaRepository.findAll()).thenReturn(bookings);
 
 		// when
-		List<Booking> allBookings = bookingRepositoryImpl.findAll();
+		List<Booking> allBookings = bookingRepository.findAll();
 
 		// then
 		assertThat(allBookings).isNotNull();
@@ -109,7 +110,7 @@ class BookingRepositoryImplTest {
 		doNothing().when(bookingJpaRepository).deleteById(anyLong());
 
 		// when
-		bookingRepositoryImpl.deleteById(1L);
+		bookingRepository.deleteById(1L);
 
 		// then
 		verify(bookingJpaRepository, times(1)).deleteById(1L);
@@ -122,7 +123,7 @@ class BookingRepositoryImplTest {
 		when(bookingJpaRepository.findByUserUserId(anyString())).thenReturn(Optional.of(booking));
 
 		// when
-		Optional<Booking> foundBooking = bookingRepositoryImpl.findByUserId("user123");
+		Optional<Booking> foundBooking = bookingRepository.findByUserId("user123");
 
 		// then
 		assertThat(foundBooking).isPresent();

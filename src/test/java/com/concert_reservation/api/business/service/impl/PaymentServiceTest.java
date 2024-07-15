@@ -22,8 +22,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("PaymentServiceImpl 테스트")
-class PaymentServiceImplTest {
+@DisplayName(value = "PaymentService 테스트")
+class PaymentServiceTest {
 
 	@Mock
 	private PointRepository pointRepository;

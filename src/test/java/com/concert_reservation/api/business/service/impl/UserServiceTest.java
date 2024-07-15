@@ -1,7 +1,5 @@
 package com.concert_reservation.api.business.service.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.concert_reservation.api.business.model.dto.command.UserCommand;
 import com.concert_reservation.api.business.model.dto.info.UserInfo;
 import com.concert_reservation.api.business.model.entity.User;
@@ -22,8 +20,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("UserServiceImpl 테스트")
-class UserServiceImplTest {
+@DisplayName("UserService 테스트")
+class UserServiceTest {
 
 	@Mock
 	private UserRepository userRepository;
