@@ -27,7 +27,6 @@ public class PointResponse {
             .balance(point.getBalance())
             .amount(point.getAmount())
             .paymentMethod(point.getPaymentMethod())
-            // TODO : Required type: UserInfo, Provided: String 라는 오류가 발생합니다. 파라미터 수정해줘.
             .user(UserResponse.from(point.getUserId()))
             .build();
     }
