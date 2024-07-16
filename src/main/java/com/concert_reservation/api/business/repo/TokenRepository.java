@@ -24,4 +24,6 @@ public interface TokenRepository {
 	List<Token> findAllByTokenStatusAndExpirationAtBefore(TokenStatus tokenStatus, LocalDateTime now);
 
 	List<Token> saveAll(List<Token> tokensToBeExpired);
+
+	int countByTokenStatusAndWaitingAtBefore(TokenStatus tokenStatus, LocalDateTime waitingAt);
 }

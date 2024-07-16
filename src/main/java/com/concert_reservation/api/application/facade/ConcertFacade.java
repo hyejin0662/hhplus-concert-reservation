@@ -1,6 +1,8 @@
 package com.concert_reservation.api.application.facade;
 
 // import com.concert_reservation.api.business.service.impl.ConcertServiceImpl;
+import com.concert_reservation.api.business.service.ConcertService;
+import com.concert_reservation.api.business.service.UserService;
 import com.concert_reservation.api.business.service.impl.UserServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -16,9 +18,9 @@ import com.concert_reservation.api.business.service.impl.ConcertServiceImpl;
 @RequiredArgsConstructor
 public class ConcertFacade {
 
-	private final ConcertServiceImpl concertService;
+	private final ConcertService concertService;
 
-	private final UserServiceImpl userService;
+	private final UserService userService;
 
 
 

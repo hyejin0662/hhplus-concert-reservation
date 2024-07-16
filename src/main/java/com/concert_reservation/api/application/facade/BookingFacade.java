@@ -14,6 +14,7 @@ import com.concert_reservation.api.business.model.dto.command.SeatCommand;
 import com.concert_reservation.api.business.model.dto.info.BookingInfo;
 import com.concert_reservation.api.business.model.dto.info.SeatInfo;
 import com.concert_reservation.api.business.model.dto.info.UserInfo;
+import com.concert_reservation.api.business.service.BookingService;
 import com.concert_reservation.api.business.service.impl.BookingServiceImpl;
 import com.concert_reservation.api.business.service.impl.UserServiceImpl;
 
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BookingFacade {
 
-	private final BookingServiceImpl bookingService;
+	private final BookingService bookingService;
 
 
 	public BookingResponse createBooking(BookingRequest bookingRequest) {

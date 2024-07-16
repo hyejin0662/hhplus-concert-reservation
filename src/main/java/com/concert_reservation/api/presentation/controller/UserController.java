@@ -1,7 +1,12 @@
 package com.concert_reservation.api.presentation.controller;
 
+import com.concert_reservation.api.application.dto.request.PaymentRequest;
+import com.concert_reservation.api.application.dto.request.PointRequest;
 import com.concert_reservation.api.application.dto.request.UserRequest;
+import com.concert_reservation.api.application.dto.response.PaymentResponse;
+import com.concert_reservation.api.application.dto.response.PointResponse;
 import com.concert_reservation.api.application.dto.response.UserResponse;
+import com.concert_reservation.api.application.facade.PaymentFacade;
 import com.concert_reservation.api.application.facade.UserFacade;
 import com.concert_reservation.common.model.WebResponseData;
 
@@ -18,6 +23,37 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserFacade userFacade;
+    private final PaymentFacade paymentFacade;
+
+
+    @PatchMapping("/payment")
+    @Operation(summary = "포인트 결제")
+    public WebResponseData<PaymentResponse> payPoint(@Valid @RequestBody PaymentRequest paymentRequest) {
+        PaymentResponse response = paymentFacade.payPoint(paymentRequest);
+        return WebResponseData.ok(response);
+    }
+
+    @PatchMapping("/points/charge")
+    @Operation(summary = "포인트 충전")
+    public WebResponseData<PointResponse> chargePoint(@Valid @RequestBody PointRequest pointRequest) {
+        PointResponse response = userFacade.chargePoint(pointRequest);
+        return WebResponseData.ok(response);
+    }
+
+
+    @PatchMapping("/points/deduct")
+    @Operation(summary = "포인트 차감")
+    public WebResponseData<PointResponse> deductPoint(@Valid @RequestBody PointRequest pointRequest) {
+        PointResponse response = userFacade.deductPoint(pointRequest);
+        return WebResponseData.ok(response);
+    }
+
+
+    @GetMapping("/points/{pointId}")
+    public WebResponseData<PointResponse> getPoint(@PathVariable Long pointId) {
+        PointResponse response = userFacade.getPoint(pointId);
+        return WebResponseData.ok(response);
+    }
 
     @PostMapping
     @Operation(summary = "사용자 생성", description = "새로운 사용자를 생성합니다.")

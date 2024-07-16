@@ -87,7 +87,6 @@ class BookingControllerTest {
 	@DisplayName("예약 삭제 성공 테스트")
 	void deleteBookingSuccessTest() throws Exception {
 		// given
-		// No need to mock any response, since it's a void method
 
 		// when & then
 		mockMvc.perform(delete("/bookings/1"))

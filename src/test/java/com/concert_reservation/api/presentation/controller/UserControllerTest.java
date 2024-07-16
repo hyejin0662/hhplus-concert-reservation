@@ -1,9 +1,13 @@
 package com.concert_reservation.api.presentation.controller;
 
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.concert_reservation.api.application.dto.request.PointRequest;
 import com.concert_reservation.api.application.dto.request.UserRequest;
+import com.concert_reservation.api.application.dto.response.PointResponse;
 import com.concert_reservation.api.application.dto.response.UserResponse;
+import com.concert_reservation.api.application.facade.PointFacade;
 import com.concert_reservation.api.application.facade.UserFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,14 +20,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -39,6 +42,10 @@ class UserControllerTest {
 
 	private UserRequest userRequest;
 	private UserResponse userResponse;
+
+	@InjectMocks
+	private PointController pointController;
+
 
 	@BeforeEach
 	@DisplayName("각 테스트 전에 공통 데이터 초기화")
@@ -56,6 +63,70 @@ class UserControllerTest {
 		userResponse.setEmail("doe@example.com");
 		userResponse.setPhoneNumber("1234567890");
 		userResponse.setBalance(1000L);
+	}
+
+
+
+
+
+	@Test
+	@DisplayName("포인트 충전 성공 테스트")
+	void chargePointSuccessTest() throws Exception {
+		// given
+		PointRequest pointRequest = new PointRequest();
+		PointResponse pointResponse = new PointResponse();
+		pointResponse.setBalance(1500L);
+
+		when(userFacade.chargePoint(any(PointRequest.class))).thenReturn(pointResponse);
+
+		// when & then
+		mockMvc.perform(patch("/points/charge")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"userId\":\"user123\",\"amount\":500}"))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("$.data.balance", is(1500)));
+
+		verify(userFacade, times(1)).chargePoint(any(PointRequest.class));
+	}
+
+	@Test
+	@DisplayName("포인트 차감 성공 테스트")
+	void deductPointSuccessTest() throws Exception {
+		// given
+		PointRequest pointRequest = new PointRequest();
+		PointResponse pointResponse = new PointResponse();
+		pointResponse.setBalance(500L);
+
+		when(userFacade.deductPoint(any(PointRequest.class))).thenReturn(pointResponse);
+
+		// when & then
+		mockMvc.perform(patch("/points/deduct")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"userId\":\"user123\",\"amount\":500}"))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("$.data.balance", is(500)));
+
+		verify(userFacade, times(1)).deductPoint(any(PointRequest.class));
+	}
+
+	@Test
+	@DisplayName("포인트 조회 성공 테스트")
+	void getPointSuccessTest() throws Exception {
+		// given
+		PointResponse pointResponse = new PointResponse();
+		pointResponse.setBalance(1000L);
+
+		when(userFacade.getPoint(anyLong())).thenReturn(pointResponse);
+
+		// when & then
+		mockMvc.perform(get("/points/1"))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("$.data.balance", is(1000)));
+
+		verify(userFacade, times(1)).getPoint(anyLong());
 	}
 
 	@Test

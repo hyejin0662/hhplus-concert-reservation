@@ -24,16 +24,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PaymentController {
 
-    private final PaymentFacade paymentFacade;
-
-
-    @PatchMapping
-    @Operation(summary = "포인트 결제")
-    public WebResponseData<PaymentResponse> payPoint(@Valid @RequestBody PaymentRequest paymentRequest) {
-        PaymentResponse response = paymentFacade.payPoint(paymentRequest);
-        return WebResponseData.ok(response);
-    }
-
 
 
 }
