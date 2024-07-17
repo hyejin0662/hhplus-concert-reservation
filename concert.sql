@@ -70,3 +70,27 @@ CREATE TABLE ConcertOption_Seat (
                                     FOREIGN KEY (concert_option_id) REFERENCES ConcertOption(concert_option_id),
                                     FOREIGN KEY (seat_id) REFERENCES Seat(seat_id)
 );
+
+INSERT INTO User (user_id, name, email, phone_number, balance) VALUES
+                                                                   ('user1', '김철수', 'chulsoo@example.com', '01012345678', 1000),
+                                                                   ('user2', '이영희', 'younghee@example.com', '01087654321', 500);
+
+INSERT INTO Concert (concert_id, concert_name) VALUES
+                                                   (1, '록 콘서트'),
+                                                   (2, '재즈 콘서트');
+
+INSERT INTO ConcertOption (concert_option_id, concert_id, singer_name, concert_date, capacity, location) VALUES
+                                                                                                             (1, 1, '록 밴드', '2024-08-01 20:00:00', 100, '스타디움'),
+                                                                                                             (2, 2, '재즈 밴드', '2024-08-15 19:00:00', 50, '콘서트 홀');
+
+INSERT INTO Seat (seat_id, seat_number, is_reserved, price) VALUES
+                                                                (1, 1, FALSE, 100),
+                                                                (2, 2, FALSE, 100),
+                                                                (3, 3, FALSE, 150),
+                                                                (4, 4, FALSE, 150);
+
+INSERT INTO Token (token_id, user_id, waiting_at, expiration_at, token_status) VALUES
+    (1, 'user1', '2024-07-01 10:00:00', '2024-07-01 10:30:00', 'WAITING');
+
+INSERT INTO WaitingCount (count_id, count) VALUES
+    (1, 0);
