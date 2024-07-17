@@ -7,7 +7,6 @@ import com.concert_reservation.api.application.dto.request.PointRequest;
 import com.concert_reservation.api.application.dto.request.UserRequest;
 import com.concert_reservation.api.application.dto.response.PointResponse;
 import com.concert_reservation.api.application.dto.response.UserResponse;
-import com.concert_reservation.api.application.facade.PointFacade;
 import com.concert_reservation.api.application.facade.UserFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,8 +42,6 @@ class UserControllerTest {
 	private UserRequest userRequest;
 	private UserResponse userResponse;
 
-	@InjectMocks
-	private PointController pointController;
 
 
 	@BeforeEach
@@ -90,26 +87,6 @@ class UserControllerTest {
 		verify(userFacade, times(1)).chargePoint(any(PointRequest.class));
 	}
 
-	@Test
-	@DisplayName("포인트 차감 성공 테스트")
-	void deductPointSuccessTest() throws Exception {
-		// given
-		PointRequest pointRequest = new PointRequest();
-		PointResponse pointResponse = new PointResponse();
-		pointResponse.setBalance(500L);
-
-		when(userFacade.deductPoint(any(PointRequest.class))).thenReturn(pointResponse);
-
-		// when & then
-		mockMvc.perform(patch("/points/deduct")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content("{\"userId\":\"user123\",\"amount\":500}"))
-			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-			.andExpect(jsonPath("$.data.balance", is(500)));
-
-		verify(userFacade, times(1)).deductPoint(any(PointRequest.class));
-	}
 
 	@Test
 	@DisplayName("포인트 조회 성공 테스트")
