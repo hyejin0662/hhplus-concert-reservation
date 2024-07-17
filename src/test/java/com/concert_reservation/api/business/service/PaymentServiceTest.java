@@ -1,9 +1,10 @@
-package com.concert_reservation.api.business.service.impl;
+package com.concert_reservation.api.business.service;
 
 import com.concert_reservation.api.business.model.dto.command.PaymentCommand;
 import com.concert_reservation.api.business.model.dto.info.PaymentInfo;
 import com.concert_reservation.api.business.model.entity.Point;
 import com.concert_reservation.api.business.repo.PointRepository;
+import com.concert_reservation.api.business.service.PaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class PaymentServiceTest {
 	private PointRepository pointRepository;
 
 	@InjectMocks
-	private PaymentServiceImpl paymentServiceImpl;
+	private PaymentService paymentService;
 
 	private Point point;
 	private PaymentCommand paymentCommand;
@@ -60,7 +61,7 @@ class PaymentServiceTest {
 		when(pointRepository.findPointByUserIdOptional(anyString())).thenReturn(Optional.of(point));
 
 		// when
-		PaymentInfo paymentInfo = paymentServiceImpl.payPoint(paymentCommand);
+		PaymentInfo paymentInfo = paymentService.payPoint(paymentCommand);
 
 		// then
 		assertThat(paymentInfo).isNotNull();
@@ -78,7 +79,7 @@ class PaymentServiceTest {
 
 		// when
 		NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
-			paymentServiceImpl.payPoint(paymentCommand);
+			paymentService.payPoint(paymentCommand);
 		});
 
 		// then
@@ -96,7 +97,7 @@ class PaymentServiceTest {
 
 		// when
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			paymentServiceImpl.payPoint(paymentCommand);
+			paymentService.payPoint(paymentCommand);
 		});
 
 		// then

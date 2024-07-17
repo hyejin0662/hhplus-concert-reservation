@@ -1,4 +1,4 @@
-package com.concert_reservation.api.business.service.impl;
+package com.concert_reservation.api.business.service;
 
 import com.concert_reservation.api.business.model.dto.command.UserCommand;
 import com.concert_reservation.api.business.model.dto.info.UserInfo;
@@ -50,6 +50,8 @@ class UserServiceTest {
 			.balance(1000L)
 			.build();
 	}
+
+
 
 	@Test
 	@DisplayName("사용자 잔액 조회 성공 테스트")

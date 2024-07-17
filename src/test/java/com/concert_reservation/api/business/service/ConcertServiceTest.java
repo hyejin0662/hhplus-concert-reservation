@@ -1,9 +1,10 @@
-package com.concert_reservation.api.business.service.impl;
+package com.concert_reservation.api.business.service;
 
 import com.concert_reservation.api.business.model.dto.command.ConcertCommand;
 import com.concert_reservation.api.business.model.dto.info.ConcertInfo;
 import com.concert_reservation.api.business.model.entity.Concert;
 import com.concert_reservation.api.business.repo.ConcertRepository;
+import com.concert_reservation.api.business.service.ConcertService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class ConcertServiceTest {
 	private ConcertRepository concertRepository;
 
 	@InjectMocks
-	private ConcertServiceImpl concertServiceImpl;
+	private ConcertService concertService;
 
 	private Concert concert;
 	private ConcertCommand concertCommand;
@@ -51,7 +52,7 @@ class ConcertServiceTest {
 		when(concertRepository.findById(anyLong())).thenReturn(Optional.of(concert));
 
 		// when
-		ConcertInfo concertInfo = concertServiceImpl.getConcert(1L);
+		ConcertInfo concertInfo = concertService.getConcert(1L);
 
 		// then
 		assertThat(concertInfo).isNotNull();
@@ -67,7 +68,7 @@ class ConcertServiceTest {
 
 		// when
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			concertServiceImpl.getConcert(1L);
+			concertService.getConcert(1L);
 		});
 
 		// then
@@ -83,7 +84,7 @@ class ConcertServiceTest {
 		when(concertRepository.save(any(Concert.class))).thenReturn(concert);
 
 		// when
-		ConcertInfo updatedConcertInfo = concertServiceImpl.updateConcert(1L, concertCommand);
+		ConcertInfo updatedConcertInfo = concertService.updateConcert(1L, concertCommand);
 
 		// then
 		assertThat(updatedConcertInfo).isNotNull();
@@ -100,7 +101,7 @@ class ConcertServiceTest {
 
 		// when
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			concertServiceImpl.updateConcert(1L, concertCommand);
+			concertService.updateConcert(1L, concertCommand);
 		});
 
 		// then
@@ -115,7 +116,7 @@ class ConcertServiceTest {
 		doNothing().when(concertRepository).deleteById(anyLong());
 
 		// when
-		concertServiceImpl.deleteConcert(1L);
+		concertService.deleteConcert(1L);
 
 		// then
 		verify(concertRepository, times(1)).deleteById(anyLong());
@@ -128,7 +129,7 @@ class ConcertServiceTest {
 		when(concertRepository.findById(anyLong())).thenReturn(Optional.of(concert));
 
 		// when
-		ConcertInfo concertInfo = concertServiceImpl.getConcert(1L);
+		ConcertInfo concertInfo = concertService.getConcert(1L);
 
 		// then
 		assertThat(concertInfo).isNotNull();

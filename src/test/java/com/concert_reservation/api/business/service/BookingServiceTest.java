@@ -1,4 +1,4 @@
-package com.concert_reservation.api.business.service.impl;
+package com.concert_reservation.api.business.service;
 
 import com.concert_reservation.api.business.model.entity.Booking;
 import com.concert_reservation.api.business.repo.BookingRepository;
