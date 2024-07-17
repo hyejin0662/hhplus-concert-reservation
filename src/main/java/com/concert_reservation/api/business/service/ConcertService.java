@@ -14,7 +14,7 @@ public interface ConcertService {
 	ConcertInfo updateConcert(Long concertId, ConcertCommand concertCommand);
 	void deleteConcert(Long concertId);
 
-	List<ConcertInfo> getConcerts(ConcertCommand concertCommand);
+	List<ConcertInfo> getConcerts();
 
 
 

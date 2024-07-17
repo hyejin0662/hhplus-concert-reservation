@@ -23,15 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserFacade userFacade;
-    private final PaymentFacade paymentFacade;
 
-
-    @PatchMapping("/payment")
-    @Operation(summary = "포인트 결제")
-    public WebResponseData<PaymentResponse> payPoint(@Valid @RequestBody PaymentRequest paymentRequest) {
-        PaymentResponse response = paymentFacade.payPoint(paymentRequest);
-        return WebResponseData.ok(response);
-    }
 
     @PatchMapping("/points/charge")
     @Operation(summary = "포인트 충전")
@@ -41,15 +33,8 @@ public class UserController {
     }
 
 
-    @PatchMapping("/points/deduct")
-    @Operation(summary = "포인트 차감")
-    public WebResponseData<PointResponse> deductPoint(@Valid @RequestBody PointRequest pointRequest) {
-        PointResponse response = userFacade.deductPoint(pointRequest);
-        return WebResponseData.ok(response);
-    }
-
-
     @GetMapping("/points/{pointId}")
+    @Operation(summary = "포인트 조회")
     public WebResponseData<PointResponse> getPoint(@PathVariable Long pointId) {
         PointResponse response = userFacade.getPoint(pointId);
         return WebResponseData.ok(response);

@@ -14,7 +14,6 @@ public interface TokenService {
 
 	void completeProcessingTokens(String userId);
 
-	@Transactional
 	void scheduledExpireProcessingTokens();
 
 	void scheduledExpireWaitingTokens();
