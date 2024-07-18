@@ -27,7 +27,7 @@ class UserServiceTest {
 	private UserRepository userRepository;
 
 	@InjectMocks
-	private UserServiceImpl userServiceImpl;
+	private UserService userService;
 
 	private User user;
 	private UserCommand userCommand;
@@ -60,7 +60,7 @@ class UserServiceTest {
 		when(userRepository.findById(anyString())).thenReturn(Optional.of(user));
 
 		// when
-		Long balance = userServiceImpl.getUserBalance("user123");
+		Long balance = userService.getUserBalance("user123");
 
 		// then
 		assertThat(balance).isEqualTo(user.getBalance());
@@ -75,7 +75,7 @@ class UserServiceTest {
 
 		// when
 		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-			userServiceImpl.getUserBalance("user123");
+			userService.getUserBalance("user123");
 		});
 
 		// then
@@ -91,7 +91,7 @@ class UserServiceTest {
 		when(userRepository.save(any(User.class))).thenReturn(user);
 
 		// when
-		UserInfo userInfo = userServiceImpl.chargeUserBalance("user123", 500L);
+		UserInfo userInfo = userService.chargeUserBalance("user123", 500L);
 
 		// then
 		assertThat(userInfo).isNotNull();
@@ -108,7 +108,7 @@ class UserServiceTest {
 
 		// when
 		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-			userServiceImpl.chargeUserBalance("user123", 500L);
+			userService.chargeUserBalance("user123", 500L);
 		});
 
 		// then
@@ -124,7 +124,7 @@ class UserServiceTest {
 		when(userRepository.save(any(User.class))).thenReturn(user);
 
 		// when
-		UserInfo userInfo = userServiceImpl.createUser(userCommand);
+		UserInfo userInfo = userService.createUser(userCommand);
 
 		// then
 		assertThat(userInfo).isNotNull();
@@ -139,7 +139,7 @@ class UserServiceTest {
 		when(userRepository.findById(anyString())).thenReturn(Optional.of(user));
 
 		// when
-		UserInfo userInfo = userServiceImpl.getUser("user123");
+		UserInfo userInfo = userService.getUser("user123");
 
 		// then
 		assertThat(userInfo).isNotNull();
@@ -155,7 +155,7 @@ class UserServiceTest {
 
 		// when
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			userServiceImpl.getUser("user123");
+			userService.getUser("user123");
 		});
 
 		// then
@@ -171,7 +171,7 @@ class UserServiceTest {
 		when(userRepository.save(any(User.class))).thenReturn(user);
 
 		// when
-		UserInfo userInfo = userServiceImpl.updateUser("user123", userCommand);
+		UserInfo userInfo = userService.updateUser("user123", userCommand);
 
 		// then
 		assertThat(userInfo).isNotNull();
@@ -188,7 +188,7 @@ class UserServiceTest {
 
 		// when
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			userServiceImpl.updateUser("user123", userCommand);
+			userService.updateUser("user123", userCommand);
 		});
 
 		// then
@@ -204,7 +204,7 @@ class UserServiceTest {
 		doNothing().when(userRepository).deleteById(anyString());
 
 		// when
-		userServiceImpl.deleteUser("user123");
+		userService.deleteUser("user123");
 
 		// then
 		verify(userRepository, times(1)).deleteById(anyString());

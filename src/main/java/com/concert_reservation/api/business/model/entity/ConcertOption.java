@@ -54,10 +54,6 @@ public class ConcertOption {
     this.capacity = capacity;
   }
 
-  public void updateLocation(String location) {
-    this.location = location;
-  }
-
   public boolean isAfter(LocalDateTime localDateTime) {
     return this.concertDate!=null && this.concertDate.isAfter(localDateTime);
   }

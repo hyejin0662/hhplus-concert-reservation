@@ -40,6 +40,8 @@ public class BookingFacade {
 		bookingService.deleteBooking(bookingId);
 	}
 
+
+
 	public List<SeatResponse> getAvailableSeats(SeatRequest seatRequest) {
 		SeatCommand seatCommand = SeatCommand.builder()
 			.concertOptionId(seatRequest.getConcertOptionId())
