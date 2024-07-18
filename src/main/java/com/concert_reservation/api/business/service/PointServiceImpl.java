@@ -1,4 +1,4 @@
-package com.concert_reservation.api.business.service.impl;
+package com.concert_reservation.api.business.service;
 
 
 import com.concert_reservation.api.business.model.dto.command.PointCommand;

@@ -1,5 +1,6 @@
 package com.concert_reservation.api.application.facade;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.concert_reservation.api.application.dto.request.TokenRequest;
@@ -27,5 +28,24 @@ public class TokenFacade {
 			.build();
 		TokenInfo tokenInfo = tokenService.createToken(tokenCommand);
 		return TokenResponse.from(tokenInfo);
+
+
+	}
+
+	@Scheduled(fixedRate = 2000)// 2초마다
+	public void updateTokenStatusToProcessing() {
+		tokenService.scheduledUpdateTokenStatusToProcessing();
+	}
+
+
+	@Scheduled(fixedRate = 2000)// 2초마다
+	public void scheduledExpireProcessingTokens() {
+		tokenService.scheduledExpireProcessingTokens();
+	}
+
+
+	@Scheduled(fixedRate = 2000)// 2초마다
+	public void scheduledExpireWaitingTokens() {
+		tokenService.scheduledExpireWaitingTokens();
 	}
 }

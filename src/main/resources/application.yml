@@ -1,4 +1,10 @@
 
+
+api:
+  slack:
+    url: https://hooks.slack.com/services/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
+
+
 server:
   port: 8055
 

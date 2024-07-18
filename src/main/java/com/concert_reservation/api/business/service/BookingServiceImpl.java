@@ -1,4 +1,4 @@
-package com.concert_reservation.api.business.service.impl;
+package com.concert_reservation.api.business.service;
 
 
 import static java.time.LocalDateTime.*;
@@ -25,9 +25,10 @@ import com.concert_reservation.api.business.repo.UserRepository;
 import com.concert_reservation.api.business.service.BookingService;
 import com.concert_reservation.common.type.BookingStatus;
 
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -72,7 +73,7 @@ public class BookingServiceImpl implements BookingService {
   }
 
   @Override
-  @org.springframework.transaction.annotation.Transactional(readOnly = true)
+  @Transactional(readOnly = true)
   public List<SeatInfo> getAvailableSeats(SeatCommand seatCommand) {
 
     ConcertOption concertOption = concertOptionRepository.findById(seatCommand.getConcertOptionId())
@@ -85,7 +86,7 @@ public class BookingServiceImpl implements BookingService {
   }
 
   @Override
-  @org.springframework.transaction.annotation.Transactional(readOnly = true)
+  @Transactional(readOnly = true)
   public List<AvailableDatesInfo> getAvailableDates(AvailableDatesCommand command) {
 
     List<ConcertOption> concertOptions = concertOptionRepository.findAllByConcertId(command.getConcertId());

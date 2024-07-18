@@ -5,6 +5,7 @@ import com.concert_reservation.api.application.dto.response.ConcertResponse;
 import com.concert_reservation.api.application.facade.ConcertFacade;
 import com.concert_reservation.common.model.WebResponseData;
 
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,5 +46,12 @@ public class ConcertController {
 	public ResponseEntity<Void> deleteConcert(@PathVariable Long concertId) {
 		concertFacade.deleteConcert(concertId);
 		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping
+	@Operation(summary = "모든 콘서트 조회")
+	public WebResponseData<List<ConcertResponse>> getConcerts() {
+		List<ConcertResponse> responses = concertFacade.getConcerts();
+		return WebResponseData.ok(responses);
 	}
 }

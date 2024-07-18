@@ -49,15 +49,6 @@ public class Booking {
     @Column(nullable = false)
     private LocalDateTime bookingTime;
 
-    public static Booking createBooking(User user, Seat seat, LocalDateTime bookingTime, BookingStatus bookingStatus) {
-        return Booking.builder()
-            .user(user)
-            .seat(seat)
-            .bookingTime(bookingTime)
-            .bookingStatus(bookingStatus)
-            .build();
-    }
-
     public void updateBookingStatus(BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
     }

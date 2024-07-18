@@ -26,4 +26,7 @@ public interface TokenJpaRepository extends JpaRepository<Token, Long> {
 	Optional<Token> findFirstByTokenStatusOrderByWaitingAtAsc();
 
 	List<Token> findAllByTokenStatusAndExpirationAtBefore(TokenStatus tokenStatus, LocalDateTime now);
+
+	@Query("SELECT COUNT(t) FROM Token t WHERE t.tokenStatus = :tokenStatus AND t.waitingAt < :waitingAt")
+	int countByTokenStatusAndWaitingAtBefore(TokenStatus tokenStatus, LocalDateTime waitingAt);
 }

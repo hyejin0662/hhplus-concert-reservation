@@ -1,8 +1,8 @@
-package com.concert_reservation.api.business.service.impl;
+package com.concert_reservation.api.business.service;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.concert_reservation.api.business.service.TokenService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.concert_reservation.api.business.model.dto.command.TokenCommand;
-import com.concert_reservation.api.business.model.dto.info.TokenInfo;
 import com.concert_reservation.api.business.model.entity.Token;
 import com.concert_reservation.api.business.model.entity.User;
 import com.concert_reservation.api.business.model.entity.WaitingCount;
@@ -29,11 +28,10 @@ import com.concert_reservation.common.type.TokenStatus;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("TokenServiceImpl 클래스 테스트")
-class TokenServiceImplTest {
+@DisplayName("TokenService 클래스 테스트")
+class TokenServiceTest {
 
 	@Mock
 	private TokenRepository tokenRepository;
@@ -45,7 +43,7 @@ class TokenServiceImplTest {
 	private WaitingCountRepository waitingCountRepository;
 
 	@InjectMocks
-	private TokenServiceImpl tokenServiceImpl;
+	private TokenService tokenService;
 
 	private Token token;
 	private User user;
@@ -80,7 +78,7 @@ class TokenServiceImplTest {
 
 		// when
 		CustomException exception = assertThrows(CustomException.class, () -> {
-			tokenServiceImpl.createToken(tokenCommand);
+			tokenService.createToken(tokenCommand);
 		});
 
 		// then
@@ -98,7 +96,7 @@ class TokenServiceImplTest {
 
 		// when
 		CustomException exception = assertThrows(CustomException.class, () -> {
-			tokenServiceImpl.getToken("user123");
+			tokenService.getToken("user123");
 		});
 
 		// then
@@ -114,7 +112,7 @@ class TokenServiceImplTest {
 		when(waitingCountRepository.getCount()).thenReturn(40);
 
 		// when
-		tokenServiceImpl.scheduledUpdateTokenStatusToProcessing();
+		tokenService.scheduledUpdateTokenStatusToProcessing();
 
 		// then
 		verify(tokenRepository, times(1)).findFirstByTokenStatusOrderByWaitingAtAsc();
@@ -129,7 +127,7 @@ class TokenServiceImplTest {
 		when(waitingCountRepository.findById(anyLong())).thenReturn(Optional.of(WaitingCount.createDefault()));
 
 		// when
-		tokenServiceImpl.completeProcessingTokens("user123");
+		tokenService.completeProcessingTokens("user123");
 
 		// then
 		verify(tokenRepository, times(1)).findByUserId(anyString());
@@ -145,7 +143,7 @@ class TokenServiceImplTest {
 		when(tokenRepository.findAllByTokenStatusAndExpirationAtBefore(eq(TokenStatus.PROCESSING), any(LocalDateTime.class))).thenReturn(tokensToBeExpired);
 
 		// when
-		tokenServiceImpl.scheduledExpireProcessingTokens();
+		tokenService.scheduledExpireProcessingTokens();
 
 		// then
 		verify(tokenRepository, times(1)).findAllByTokenStatusAndExpirationAtBefore(eq(TokenStatus.PROCESSING), any(LocalDateTime.class));
@@ -161,7 +159,7 @@ class TokenServiceImplTest {
 		when(tokenRepository.findAllByTokenStatusAndExpirationAtBefore(eq(TokenStatus.WAITING), any(LocalDateTime.class))).thenReturn(tokensToBeExpired);
 
 		// when
-		tokenServiceImpl.scheduledExpireWaitingTokens();
+		tokenService.scheduledExpireWaitingTokens();
 
 		// then
 		verify(tokenRepository, times(1)).findAllByTokenStatusAndExpirationAtBefore(eq(TokenStatus.WAITING), any(LocalDateTime.class));

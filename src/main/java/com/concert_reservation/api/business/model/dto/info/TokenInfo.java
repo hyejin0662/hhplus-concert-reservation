@@ -19,6 +19,7 @@ public class TokenInfo {
     private LocalDateTime waitingAt;
     private LocalDateTime expirationAt;
     private TokenStatus tokenStatus;
+    private int waitingNumber;
 
     public static TokenInfo from(Token token) {
         return TokenInfo.builder()
@@ -27,6 +28,7 @@ public class TokenInfo {
             .waitingAt(token.getWaitingAt())
             .expirationAt(token.getExpirationAt())
             .tokenStatus(token.getTokenStatus())
+            .waitingNumber(token.getWaitingNumber())
             .build();
     }
 
@@ -40,6 +42,7 @@ public class TokenInfo {
             .waitingAt(this.waitingAt)
             .expirationAt(this.expirationAt)
             .tokenStatus(this.tokenStatus)
+            .waitingNumber(this.getWaitingNumber())
             .build();
     }
 }

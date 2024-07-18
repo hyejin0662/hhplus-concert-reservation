@@ -48,6 +48,9 @@ public class Token {
     @Column(nullable = false)
     private TokenStatus tokenStatus;
 
+    @Column(nullable = false)
+    private int waitingNumber;
+
 
     public void updateTokenStatus(TokenStatus tokenStatus) {
         this.tokenStatus = tokenStatus;

@@ -1,4 +1,4 @@
-package com.concert_reservation.api.business.service.impl;
+package com.concert_reservation.api.business.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,11 +57,23 @@ public class TokenServiceImpl implements TokenService {
 		return DtoConverter.convert(savedToken, TokenInfo.class);
 	}
 
+
+
 	@Override
 	public TokenInfo getToken(String userId) {
 		Token token = tokenRepository.findByUserId(userId)
 			.orElseThrow(() -> new CustomException(GlobalResponseCode.TOKEN_NOT_FOUND));
 		return DtoConverter.convert(token, TokenInfo.class);
+	}
+	// UserID 를 받았을 때 그 사람의 토큰정보를 파악하고 대기상태/대기번호 등을 조회
+	@Override
+	public TokenInfo getUserTokenInfo(String userId) {
+		Token token = tokenRepository.findByUserId(userId)
+			.orElseThrow(() -> new CustomException(GlobalResponseCode.TOKEN_NOT_FOUND));
+		int waitingNumber = tokenRepository.countByTokenStatusAndWaitingAtBefore(TokenStatus.WAITING, token.getWaitingAt()) + 1;
+		TokenInfo tokenInfo = DtoConverter.convert(token, TokenInfo.class);
+		tokenInfo.setWaitingNumber(waitingNumber);
+		return tokenInfo;
 	}
 
 	/**

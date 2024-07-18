@@ -1,4 +1,4 @@
-package com.concert_reservation.api.presentation.controller;
+package com.concert_reservation.api.interfaces.controller;
 
 import com.concert_reservation.api.application.dto.request.AvailableDatesRequest;
 import com.concert_reservation.api.application.dto.request.BookingRequest;
@@ -9,15 +9,15 @@ import com.concert_reservation.api.application.dto.response.ConcertResponse;
 import com.concert_reservation.api.application.dto.response.SeatResponse;
 import com.concert_reservation.api.application.dto.response.UserResponse;
 import com.concert_reservation.api.application.facade.BookingFacade;
-import com.concert_reservation.common.model.WebResponseData;
 import com.concert_reservation.common.type.BookingStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -25,18 +25,16 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(BookingController.class)
-@DisplayName("BookingController 테스트")
+@SpringBootTest
+@AutoConfigureMockMvc
+@DisplayName("BookingControllerTest 단위 테스트")
 class BookingControllerTest {
 
 	@Autowired
@@ -91,7 +89,6 @@ class BookingControllerTest {
 	@DisplayName("예약 삭제 성공 테스트")
 	void deleteBookingSuccessTest() throws Exception {
 		// given
-		// No need to mock any response, since it's a void method
 
 		// when & then
 		mockMvc.perform(delete("/bookings/1"))

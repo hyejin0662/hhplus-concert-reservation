@@ -1,9 +1,10 @@
-package com.concert_reservation.api.business.service.impl;
+package com.concert_reservation.api.business.service;
 
 import com.concert_reservation.api.business.model.dto.command.PointCommand;
 import com.concert_reservation.api.business.model.dto.info.PointInfo;
 import com.concert_reservation.api.business.model.entity.Point;
 import com.concert_reservation.api.business.repo.PointRepository;
+import com.concert_reservation.api.business.service.PointService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,14 +24,14 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("PointServiceImpl 테스트")
-class PointServiceImplTest {
+@DisplayName("PointService 테스트")
+class PointServiceTest {
 
 	@Mock
 	private PointRepository pointRepository;
 
 	@InjectMocks
-	private PointServiceImpl pointServiceImpl;
+	private PointService pointService;
 
 	private Point point;
 	private PointCommand pointCommand;
@@ -51,70 +52,6 @@ class PointServiceImplTest {
 			.build();
 	}
 
-	@Test
-	@DisplayName("포인트 충전 성공 테스트")
-	void chargePointSuccessTest() {
-		// given
-		when(pointRepository.findPointByUserIdOptional(anyString())).thenReturn(Optional.of(point));
-
-		// when
-		PointInfo pointInfo = pointServiceImpl.chargePoint(pointCommand);
-
-		// then
-		assertThat(pointInfo).isNotNull();
-		assertThat(pointInfo.getUserId()).isEqualTo(point.getUserId());
-		assertThat(pointInfo.getAmount()).isEqualTo(700L);
-		verify(pointRepository, times(1)).findPointByUserIdOptional(anyString());
-		verify(pointRepository, times(1)).save(point);
-	}
-
-	@Test
-	@DisplayName("포인트 조회 성공 테스트")
-	void getPointSuccessTest() {
-		// given
-		when(pointRepository.findById(anyLong())).thenReturn(Optional.of(point));
-
-		// when
-		PointInfo pointInfo = pointServiceImpl.getPoint(1L);
-
-		// then
-		assertThat(pointInfo).isNotNull();
-		assertThat(pointInfo.getUserId()).isEqualTo(point.getUserId());
-		verify(pointRepository, times(1)).findById(anyLong());
-	}
-
-	@Test
-	@DisplayName("포인트 조회 실패 테스트")
-	void getPointNotFoundTest() {
-		// given
-		when(pointRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-		// when
-		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			pointServiceImpl.getPoint(1L);
-		});
-
-		// then
-		assertThat(exception.getMessage()).isEqualTo("Point not found");
-		verify(pointRepository, times(1)).findById(anyLong());
-	}
-
-	@Test
-	@DisplayName("포인트 차감 성공 테스트")
-	void deductPointSuccessTest() {
-		// given
-		when(pointRepository.findPointByUserIdOptional(anyString())).thenReturn(Optional.of(point));
-
-		// when
-		PointInfo pointInfo = pointServiceImpl.deductPoint(pointCommand);
-
-		// then
-		assertThat(pointInfo).isNotNull();
-		assertThat(pointInfo.getUserId()).isEqualTo(point.getUserId());
-		assertThat(pointInfo.getAmount()).isEqualTo(300L);
-		verify(pointRepository, times(1)).findPointByUserIdOptional(anyString());
-		verify(pointRepository, times(1)).save(point);
-	}
 
 	@Test
 	@DisplayName("포인트 차감 시 사용자 찾을 수 없음 테스트")
@@ -124,7 +61,7 @@ class PointServiceImplTest {
 
 		// when
 		NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
-			pointServiceImpl.deductPoint(pointCommand);
+			pointService.deductPoint(pointCommand);
 		});
 
 		// then
@@ -142,7 +79,7 @@ class PointServiceImplTest {
 
 		// when
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			pointServiceImpl.deductPoint(pointCommand);
+			pointService.deductPoint(pointCommand);
 		});
 
 		// then

@@ -65,4 +65,9 @@ public class TokenRepositoryImpl implements TokenRepository {
     return tokenJpaRepository.saveAll(tokensToBeExpired);
   }
 
+  @Override
+  public int countByTokenStatusAndWaitingAtBefore(TokenStatus tokenStatus, LocalDateTime waitingAt) {
+    return tokenJpaRepository.countByTokenStatusAndWaitingAtBefore(tokenStatus, waitingAt);
+  }
+
 }
