@@ -1,9 +1,10 @@
 package com.concert_reservation.api.integration;
 
-
 import com.concert_reservation.api.application.dto.request.PaymentRequest;
 import com.concert_reservation.api.application.dto.response.PaymentResponse;
+import com.concert_reservation.common.model.WebResponseData;
 import com.concert_reservation.common.type.GlobalResponseCode;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -36,7 +38,7 @@ class PaymentIntegrationTest {
 
   @DisplayName("[API][PATCH] 포인트 결제 - 정상 호출")
   @Test
-  @Sql(scripts = "/test-data.sql")
+  @Sql(scripts = "/concert.sql")
   void givenValidRequest_whenPayingWithPoints_thenReturnsOk() throws Exception {
     // Given
     PaymentRequest request = PaymentRequest.builder()
@@ -54,17 +56,19 @@ class PaymentIntegrationTest {
 
     // Then
     String responseContent = resultActions.andReturn().getResponse().getContentAsString();
-    PaymentResponse response = objectMapper.readValue(responseContent, PaymentResponse.class);
+    WebResponseData<PaymentResponse> response = objectMapper.readValue(responseContent, new TypeReference<WebResponseData<PaymentResponse>>() {});
 
     assertThat(response).isNotNull();
-    assertThat(response.getUserId()).isEqualTo("user1");
-    assertThat(response.getAmount()).isEqualTo(100L);
-    assertThat(response.getPaymentMethod()).isEqualTo("Credit Card");
+    assertThat(response.getCode()).isEqualTo(GlobalResponseCode.SUCCESS_CODE);
+    assertThat(response.getData()).isNotNull();
+    assertThat(response.getData().getUserId()).isEqualTo("user1");
+    assertThat(response.getData().getAmount()).isEqualTo(100L);
+    assertThat(response.getData().getPaymentMethod()).isEqualTo("Credit Card");
   }
 
   @DisplayName("[API][PATCH] 포인트 결제 - 실패 호출")
   @Test
-  @Sql(scripts = "/test-data.sql")
+  @Sql(scripts = "/concert.sql")
   void givenInvalidRequest_whenPayingWithPoints_thenThrowsException() throws Exception {
     // Given
     PaymentRequest request = PaymentRequest.builder()
@@ -75,17 +79,22 @@ class PaymentIntegrationTest {
         .build();
 
     // When & Then
-    assertThatThrownBy(() -> mvc.perform(patch("/payments/payment")
+    var resultActions = mvc.perform(patch("/payments/payment")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isBadRequest()))
-        .hasCauseInstanceOf(RuntimeException.class)
-        .hasMessageContaining(GlobalResponseCode.USER_NOT_FOUND.getDescription());
+        .andExpect(status().isBadRequest());
+
+    String responseContent = resultActions.andReturn().getResponse().getContentAsString();
+    WebResponseData<Object> errorResponse = objectMapper.readValue(responseContent, new TypeReference<WebResponseData<Object>>() {});
+
+    assertThat(errorResponse).isNotNull();
+    assertThat(errorResponse.getCode()).isEqualTo(GlobalResponseCode.USER_NOT_FOUND);
+    assertThat(errorResponse.getDescription()).isEqualTo(GlobalResponseCode.USER_NOT_FOUND.getDescription());
   }
 
   @DisplayName("[API][PATCH] 동시성 테스트 - 포인트 결제")
   @Test
-  @Sql(scripts = "/test-data.sql")
+  @Sql(scripts = "/concert.sql")
   void givenConcurrentRequests_whenPayingWithPoints_thenHandlesConcurrencyCorrectly() throws Exception {
     int numberOfThreads = 31; // 30명은 성공하고 1명은 실패해야 함
     ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
@@ -121,12 +130,13 @@ class PaymentIntegrationTest {
         .andExpect(status().isOk());
 
     String responseContent = resultActions.andReturn().getResponse().getContentAsString();
-    PaymentResponse[] responses = objectMapper.readValue(responseContent, PaymentResponse[].class);
+    WebResponseData<List<PaymentResponse>> response = objectMapper.readValue(responseContent, new TypeReference<WebResponseData<List<PaymentResponse>>>() {});
 
-    assertThat(responses).hasSize(30);
-    assertThat(responses[0].getUserId()).isEqualTo("user1");
-    assertThat(responses[0].getAmount()).isEqualTo(100L);
-    assertThat(responses[0].getPaymentMethod()).isEqualTo("Credit Card");
+    assertThat(response).isNotNull();
+    assertThat(response.getData()).hasSize(30);
+    assertThat(response.getData().get(0).getUserId()).isEqualTo("user1");
+    assertThat(response.getData().get(0).getAmount()).isEqualTo(100L);
+    assertThat(response.getData().get(0).getPaymentMethod()).isEqualTo("Credit Card");
 
     executorService.shutdown();
   }
