@@ -1,28 +1,20 @@
-package com.concert_reservation.api.presentation.controller;
-
-import static org.junit.jupiter.api.Assertions.*;
+package com.concert_reservation.api.interfaces.controller;
 
 import com.concert_reservation.api.application.dto.request.ConcertRequest;
 import com.concert_reservation.api.application.dto.response.ConcertResponse;
 import com.concert_reservation.api.application.facade.ConcertFacade;
-import com.concert_reservation.common.model.WebResponseData;
-import com.concert_reservation.api.presentation.controller.ConcertController;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 import java.util.Collections;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;

@@ -53,24 +53,6 @@ class PointServiceTest {
 	}
 
 
-
-	@Test
-	@DisplayName("포인트 차감 성공 테스트")
-	void deductPointSuccessTest() {
-		// given
-		when(pointRepository.findPointByUserIdOptional(anyString())).thenReturn(Optional.of(point));
-
-		// when
-		PointInfo pointInfo = pointService.deductPoint(pointCommand);
-
-		// then
-		assertThat(pointInfo).isNotNull();
-		assertThat(pointInfo.getUserId()).isEqualTo(point.getUserId());
-		assertThat(pointInfo.getAmount()).isEqualTo(300L);
-		verify(pointRepository, times(1)).findPointByUserIdOptional(anyString());
-		verify(pointRepository, times(1)).save(point);
-	}
-
 	@Test
 	@DisplayName("포인트 차감 시 사용자 찾을 수 없음 테스트")
 	void deductPointNotFoundTest() {

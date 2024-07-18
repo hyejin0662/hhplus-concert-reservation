@@ -1,6 +1,4 @@
-package com.concert_reservation.api.presentation.controller;
-
-import static org.junit.jupiter.api.Assertions.*;
+package com.concert_reservation.api.interfaces.controller;
 
 import com.concert_reservation.api.application.dto.request.TokenRequest;
 import com.concert_reservation.api.application.dto.response.TokenResponse;
@@ -10,7 +8,6 @@ import com.concert_reservation.common.type.TokenStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

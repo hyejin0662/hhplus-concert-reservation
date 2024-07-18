@@ -1,4 +1,4 @@
-package com.concert_reservation.api.presentation.controller;
+package com.concert_reservation.api.interfaces.controller;
 
 import com.concert_reservation.api.application.dto.request.AvailableDatesRequest;
 import com.concert_reservation.api.application.dto.request.BookingRequest;
@@ -15,7 +15,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -30,9 +32,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(BookingController.class)
-@DisplayName("BookingController 테스트")
+@SpringBootTest
+@AutoConfigureMockMvc
+@DisplayName("BookingControllerTest 단위 테스트")
 class BookingControllerTest {
 
 	@Autowired
