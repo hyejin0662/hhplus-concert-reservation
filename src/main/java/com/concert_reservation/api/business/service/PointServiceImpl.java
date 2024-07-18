@@ -7,6 +7,8 @@ import com.concert_reservation.api.business.model.entity.Point;
 import com.concert_reservation.api.business.repo.PointRepository;
 import com.concert_reservation.api.business.service.PointService;
 
+import com.concert_reservation.common.exception.CustomException;
+import com.concert_reservation.common.type.GlobalResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +20,13 @@ public class PointServiceImpl implements PointService {
 
   @Override
   public PointInfo chargePoint(PointCommand pointCommand) {
-
     Point point = pointRepository.findPointByUserIdOptional(pointCommand.getUserId())
-        .orElse(pointCommand.toEntity());
+        .map(existingPoint -> {
+          existingPoint.addAmount(pointCommand.getAmount());
+          return existingPoint;
+        })
+        .orElseGet(pointCommand::toEntity);
 
-    point.addAmount(pointCommand.getAmount());
     pointRepository.save(point);
     return PointInfo.from(point);
   }
@@ -30,7 +34,7 @@ public class PointServiceImpl implements PointService {
   @Override
   public PointInfo getPoint(Long pointId) {
     Point point = pointRepository.findById(pointId)
-        .orElseThrow(() -> new RuntimeException("Point not found"));
+        .orElseThrow(() -> new CustomException(GlobalResponseCode.USER_NOT_FOUND));
     return PointInfo.from(point);
   }
 

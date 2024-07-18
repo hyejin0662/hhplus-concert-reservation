@@ -14,6 +14,8 @@ import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDateTime;
 
+import com.concert_reservation.api.business.model.dto.info.TokenInfo;
+import com.concert_reservation.api.business.model.dto.info.TokenValidateInfo;
 import com.concert_reservation.common.type.TokenStatus;
 
 import jakarta.persistence.OneToOne;
@@ -24,7 +26,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Token")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -52,16 +53,41 @@ public class Token {
     private int waitingNumber;
 
 
-    public void updateTokenStatus(TokenStatus tokenStatus) {
-        this.tokenStatus = tokenStatus;
-    }
 
-    public void extendExpirationAt(LocalDateTime newExpiration) {
-        this.expirationAt = newExpiration;
+    public void updateStatusToProcessing() {
+        if (this.tokenStatus == TokenStatus.WAITING) {
+            this.tokenStatus = TokenStatus.PROCESSING;
+        }
     }
 
     public void doExpire() {
-        this.tokenStatus = TokenStatus.COMPLETE;
+        this.tokenStatus = TokenStatus.EXPIRED;
+    }
 
+    public boolean isExpired() {
+        return this.expirationAt.isBefore(LocalDateTime.now());
+    }
+
+    public boolean isProcessing() {
+        return this.tokenStatus == TokenStatus.PROCESSING;
+    }
+
+    public TokenInfo toTokenInfoWithWaitingNumber(int waitingNumber) {
+        return TokenInfo.builder()
+            .tokenId(this.tokenId)
+            .userId(this.user.getUserId())
+            .expirationAt(this.expirationAt)
+            .tokenStatus(this.tokenStatus)
+            .waitingNumber(waitingNumber)
+            .build();
+    }
+
+    public TokenValidateInfo toTokenValidateInfo() {
+        return TokenValidateInfo.builder()
+            .tokenId(this.tokenId)
+            .userId(this.user.getUserId())
+            .expirationAt(this.expirationAt)
+            .tokenStatus(this.tokenStatus)
+            .build();
     }
 }

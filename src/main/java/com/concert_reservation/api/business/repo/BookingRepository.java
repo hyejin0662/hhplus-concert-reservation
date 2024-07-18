@@ -3,7 +3,9 @@ package com.concert_reservation.api.business.repo;
 import java.util.List;
 import java.util.Optional;
 
+import com.concert_reservation.api.business.model.dto.info.BookingInfo;
 import com.concert_reservation.api.business.model.entity.Booking;
+import com.concert_reservation.common.type.BookingStatus;
 
 public interface BookingRepository {
 
@@ -15,4 +17,8 @@ public interface BookingRepository {
 	void deleteById(Long bookingId);
 
 	Optional<Booking> findByUserId(String userId);
+
+	List<BookingInfo> findAll(BookingStatus bookingStatus);
+
+	void deleteByUserId(String userId);
 }

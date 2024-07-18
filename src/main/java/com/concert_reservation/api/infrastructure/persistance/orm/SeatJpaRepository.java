@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface SeatJpaRepository extends JpaRepository<Seat, Long> {
 
+	Seat findSeatBySeatId(Long seatId);
 }

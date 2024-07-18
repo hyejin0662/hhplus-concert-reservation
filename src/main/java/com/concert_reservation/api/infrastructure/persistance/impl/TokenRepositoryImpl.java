@@ -70,4 +70,9 @@ public class TokenRepositoryImpl implements TokenRepository {
     return tokenJpaRepository.countByTokenStatusAndWaitingAtBefore(tokenStatus, waitingAt);
   }
 
+  @Override
+  public void deleteByUserId(String userId) {
+    tokenJpaRepository.deleteByUserUserId(userId);
+  }
+
 }

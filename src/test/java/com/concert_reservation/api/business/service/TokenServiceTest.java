@@ -43,7 +43,7 @@ class TokenServiceTest {
 	private WaitingCountRepository waitingCountRepository;
 
 	@InjectMocks
-	private TokenService tokenService;
+	private TokenServiceImpl tokenService;
 
 	private Token token;
 	private User user;
@@ -116,7 +116,6 @@ class TokenServiceTest {
 
 		// then
 		verify(tokenRepository, times(1)).findFirstByTokenStatusOrderByWaitingAtAsc();
-		verify(tokenRepository, times(1)).updateStatusProcessing(token);
 	}
 
 	@Test
@@ -132,7 +131,7 @@ class TokenServiceTest {
 		// then
 		verify(tokenRepository, times(1)).findByUserId(anyString());
 		verify(waitingCountRepository, times(1)).findById(anyLong());
-		assertThat(token.getTokenStatus()).isEqualTo(TokenStatus.COMPLETE);
+		assertThat(token.getTokenStatus()).isEqualTo(TokenStatus.EXPIRED);
 	}
 
 	@Test
@@ -148,7 +147,7 @@ class TokenServiceTest {
 		// then
 		verify(tokenRepository, times(1)).findAllByTokenStatusAndExpirationAtBefore(eq(TokenStatus.PROCESSING), any(LocalDateTime.class));
 		verify(tokenRepository, times(1)).saveAll(tokensToBeExpired);
-		assertThat(tokensToBeExpired.get(0).getTokenStatus()).isEqualTo(TokenStatus.COMPLETE);
+		assertThat(tokensToBeExpired.get(0).getTokenStatus()).isEqualTo(TokenStatus.EXPIRED);
 	}
 
 	@Test
@@ -164,6 +163,6 @@ class TokenServiceTest {
 		// then
 		verify(tokenRepository, times(1)).findAllByTokenStatusAndExpirationAtBefore(eq(TokenStatus.WAITING), any(LocalDateTime.class));
 		verify(tokenRepository, times(1)).saveAll(tokensToBeExpired);
-		assertThat(tokensToBeExpired.get(0).getTokenStatus()).isEqualTo(TokenStatus.COMPLETE);
+		assertThat(tokensToBeExpired.get(0).getTokenStatus()).isEqualTo(TokenStatus.EXPIRED);
 	}
 }

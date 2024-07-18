@@ -59,4 +59,11 @@ public class BookingFacade {
 			.map(AvailableDatesResponse::from)
 			.collect(Collectors.toList());
 	}
+
+	public void updateAvailableSeat() {
+		 bookingService.updateAvailableSeat();
+
+	}
+
+
 }

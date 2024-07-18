@@ -28,10 +28,8 @@ public class UserFacade {
 	private final UserService userService;
 	private final PointService pointService;
 
-
-
 	public PointResponse chargePoint(PointRequest pointRequest) {
-		PointCommand pointCommand = new PointCommand(null, pointRequest.getUserId(), pointRequest.getBalance(), pointRequest.getAmount(), pointRequest.getPaymentTime(), pointRequest.getPaymentMethod());
+		PointCommand pointCommand = new PointCommand(null, pointRequest.getUserId(), pointRequest.getAmount(), pointRequest.getPaymentTime(), pointRequest.getPaymentMethod());
 		PointInfo pointInfo = pointService.chargePoint(pointCommand);
 		return PointResponse.from(pointInfo);
 	}
@@ -41,9 +39,6 @@ public class UserFacade {
 		return PointResponse.from(pointInfo);
 	}
 
-	public PointResponse deductPoint(PointRequest pointRequest) {
-		return PointResponse.from(pointService.deductPoint(pointRequest.toCommand()));
-	}
 
 	public UserResponse createUser(UserRequest userRequest) {
 		UserCommand userCommand = UserCommand.builder()

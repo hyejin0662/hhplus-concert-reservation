@@ -27,17 +27,7 @@ public class UserInfo {
             .name(user.getName())
             .email(user.getEmail())
             .phoneNumber(user.getPhoneNumber())
-            .balance(user.getBalance())
             .build();
     }
 
-    public User toEntity() {
-        return User.builder()
-            .userId(this.userId)
-            .name(this.name)
-            .email(this.email)
-            .phoneNumber(this.phoneNumber)
-            .balance(this.balance)
-            .build();
-    }
 }

@@ -1,4 +1,4 @@
-package com.concert_reservation.api.presentation.controller;
+package com.concert_reservation.api.interfaces.controller;
 
 import com.concert_reservation.api.application.dto.request.ConcertRequest;
 import com.concert_reservation.api.application.dto.response.ConcertResponse;

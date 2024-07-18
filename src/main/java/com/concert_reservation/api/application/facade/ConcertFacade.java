@@ -20,7 +20,6 @@ public class ConcertFacade {
 
 	private final ConcertService concertService;
 
-	private final UserService userService;
 
 
 

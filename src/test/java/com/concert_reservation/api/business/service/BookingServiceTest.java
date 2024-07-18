@@ -2,6 +2,7 @@ package com.concert_reservation.api.business.service;
 
 import com.concert_reservation.api.business.model.entity.Booking;
 import com.concert_reservation.api.business.repo.BookingRepository;
+import com.concert_reservation.api.infrastructure.persistance.impl.BookingRepositoryImpl;
 import com.concert_reservation.api.infrastructure.persistance.orm.BookingJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +30,7 @@ class BookingServiceTest {
 	private BookingJpaRepository bookingJpaRepository;
 
 	@InjectMocks
-	private BookingRepository bookingRepository;
+	private BookingRepositoryImpl bookingRepository;
 
 	private Booking booking;
 

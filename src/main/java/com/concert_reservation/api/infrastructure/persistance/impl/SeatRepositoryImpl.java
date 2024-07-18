@@ -37,4 +37,14 @@ public class SeatRepositoryImpl implements SeatRepository {
     seatJpaRepository.deleteById(seatId);
   }
 
+  @Override
+  public Seat findSeat(Long seatId) {
+    return seatJpaRepository.findSeatBySeatId(seatId);
+  }
+
+  @Override
+  public void saveAll(List<Seat> seats) {
+    seatJpaRepository.saveAll(seats);
+  }
+
 }

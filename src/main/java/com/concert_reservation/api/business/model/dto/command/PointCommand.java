@@ -15,7 +15,6 @@ import lombok.*;
 public class PointCommand {
     private Long pointId;
     private String userId;
-    private Long balance;
     private Long amount;
     private LocalDateTime paymentTime;
     private String paymentMethod;

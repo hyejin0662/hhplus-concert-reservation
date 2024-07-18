@@ -1,6 +1,5 @@
-package com.concert_reservation.api.presentation.controller;
+package com.concert_reservation.api.interfaces.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.concert_reservation.api.application.dto.request.TokenRequest;
 import com.concert_reservation.api.application.dto.response.TokenResponse;
 import com.concert_reservation.api.application.facade.TokenFacade;
-import com.concert_reservation.api.application.facade.UserFacade;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

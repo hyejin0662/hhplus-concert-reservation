@@ -1,9 +1,9 @@
+-- Recreate tables to ensure the schema is reset
 CREATE TABLE IF NOT EXISTS `User` (
                                       user_id VARCHAR(255) PRIMARY KEY,
                                       name VARCHAR(255) NOT NULL,
                                       email VARCHAR(255) NOT NULL,
-                                      phone_number VARCHAR(255) NOT NULL,
-                                      balance BIGINT NOT NULL
+                                      phone_number VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Seat (
@@ -18,14 +18,14 @@ CREATE TABLE IF NOT EXISTS Concert (
                                        concert_name VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS ConcertOption (
-                                             concert_option_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                             concert_id BIGINT NOT NULL,
-                                             singer_name VARCHAR(255) NOT NULL,
-                                             concert_date DATETIME NOT NULL,
-                                             capacity BIGINT NOT NULL,
-                                             location VARCHAR(255) NOT NULL,
-                                             FOREIGN KEY (concert_id) REFERENCES Concert(concert_id)
+CREATE TABLE IF NOT EXISTS concert_option (
+                                              concert_option_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                              concert_id BIGINT NOT NULL,
+                                              singer_name VARCHAR(255) NOT NULL,
+                                              concert_date DATETIME NOT NULL,
+                                              capacity BIGINT NOT NULL,
+                                              location VARCHAR(255) NOT NULL,
+                                              FOREIGN KEY (concert_id) REFERENCES Concert(concert_id)
 );
 
 CREATE TABLE IF NOT EXISTS Booking (
@@ -41,7 +41,6 @@ CREATE TABLE IF NOT EXISTS Booking (
 CREATE TABLE IF NOT EXISTS Point (
                                      point_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                      user_id VARCHAR(255) NOT NULL,
-                                     balance BIGINT NOT NULL,
                                      amount BIGINT NOT NULL,
                                      payment_time DATETIME NOT NULL,
                                      payment_method VARCHAR(255) NOT NULL,
@@ -58,30 +57,22 @@ CREATE TABLE IF NOT EXISTS Token (
                                      FOREIGN KEY (user_id) REFERENCES `User`(user_id)
 );
 
-CREATE TABLE IF NOT EXISTS WaitingCount (
-                                            count_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                            count BIGINT NOT NULL
+CREATE TABLE IF NOT EXISTS waiting_count (
+                                             count_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                             count BIGINT NOT NULL
 );
 
--- Optional table for mapping seats to concert options if necessary
-CREATE TABLE IF NOT EXISTS ConcertOption_Seat (
-                                                  concert_option_id BIGINT NOT NULL,
-                                                  seat_id BIGINT NOT NULL,
-                                                  PRIMARY KEY (concert_option_id, seat_id),
-                                                  FOREIGN KEY (concert_option_id) REFERENCES ConcertOption(concert_option_id),
-                                                  FOREIGN KEY (seat_id) REFERENCES Seat(seat_id)
-);
-
+SET FOREIGN_KEY_CHECKS = 1;
 
 -- Insert data only if the user does not already exist
-INSERT INTO `User` (user_id, name, email, phone_number, balance) VALUES
-                                                                     ('user1', '김철수', 'chulsoo@example.com', '01012345678', 1000),
-                                                                     ('user2', '이영희', 'younghee@example.com', '01087654321', 500)
+INSERT INTO `User` (user_id, name, email, phone_number) VALUES
+                                                                     ('user1', '김철수', 'chulsoo@example.com', '01012345678'),
+                                                                     ('user2', '이영희', 'younghee@example.com', '01087654321'),
+                                                                     ('user10', '박영수', 'youngsoo@example.com', '01023456789')
 ON DUPLICATE KEY UPDATE
                      name = VALUES(name),
                      email = VALUES(email),
-                     phone_number = VALUES(phone_number),
-                     balance = VALUES(balance);
+                     phone_number = VALUES(phone_number);
 
 -- Insert data only if the concert does not already exist
 INSERT INTO Concert (concert_id, concert_name) VALUES
@@ -91,9 +82,9 @@ ON DUPLICATE KEY UPDATE
     concert_name = VALUES(concert_name);
 
 -- Insert data only if the concert option does not already exist
-INSERT INTO ConcertOption (concert_option_id, concert_id, singer_name, concert_date, capacity, location) VALUES
-                                                                                                             (1, 1, '록 밴드', '2024-08-01 20:00:00', 100, '스타디움'),
-                                                                                                             (2, 2, '재즈 밴드', '2024-08-15 19:00:00', 50, '콘서트 홀')
+INSERT INTO concert_option (concert_option_id, concert_id, singer_name, concert_date, capacity, location) VALUES
+                                                                                                              (1, 1, '록 밴드', '2024-08-01 20:00:00', 100, '스타디움'),
+                                                                                                              (2, 2, '재즈 밴드', '2024-08-15 19:00:00', 50, '콘서트 홀')
 ON DUPLICATE KEY UPDATE
                      singer_name = VALUES(singer_name),
                      concert_date = VALUES(concert_date),
@@ -122,7 +113,29 @@ ON DUPLICATE KEY UPDATE
                      waiting_number = VALUES(waiting_number);
 
 -- Insert data only if the waiting count does not already exist
-INSERT INTO WaitingCount (count_id, count) VALUES
+INSERT INTO waiting_count (count_id, count) VALUES
     (1, 0)
 ON DUPLICATE KEY UPDATE
     count = VALUES(count);
+
+-- Insert a booking for user1
+INSERT INTO Booking (booking_id, user_id, seat_id, booking_status, booking_time) VALUES
+                                                                                     (1, 'user1', 1, 'CONFIRMED', '2024-07-15 10:00:00'),
+                                                                                     (2, 'user2', 2, 'CONFIRMED', '2024-07-16 11:00:00'),
+                                                                                     (3, 'user10', 3, 'CONFIRMED', '2024-07-17 12:00:00')
+ON DUPLICATE KEY UPDATE
+                     user_id = VALUES(user_id),
+                     seat_id = VALUES(seat_id),
+                     booking_status = VALUES(booking_status),
+                     booking_time = VALUES(booking_time);
+
+-- Insert point data only if the point does not already exist
+INSERT INTO Point (point_id, user_id, amount, payment_time, payment_method) VALUES
+                                                                                (1, 'user1', 1000, '2024-07-01 10:00:00', 'CREDIT_CARD'),
+                                                                                (2, 'user2', 500, '2024-07-01 10:00:00', 'BANK_TRANSFER'),
+                                                                                (3, 'user10', 2000, '2024-07-01 11:00:00', 'PAYPAL')
+ON DUPLICATE KEY UPDATE
+                     user_id = VALUES(user_id),
+                     amount = VALUES(amount),
+                     payment_time = VALUES(payment_time),
+                     payment_method = VALUES(payment_method);

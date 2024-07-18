@@ -27,7 +27,7 @@ class UserServiceTest {
 	private UserRepository userRepository;
 
 	@InjectMocks
-	private UserService userService;
+	private UserServiceImpl userService;
 
 	private User user;
 	private UserCommand userCommand;
@@ -39,7 +39,6 @@ class UserServiceTest {
 			.name("김삿갓")
 			.email("doe@example.com")
 			.phoneNumber("123-456-7890")
-			.balance(1000L)
 			.build();
 
 		userCommand = UserCommand.builder()
@@ -53,69 +52,7 @@ class UserServiceTest {
 
 
 
-	@Test
-	@DisplayName("사용자 잔액 조회 성공 테스트")
-	void getUserBalanceSuccessTest() {
-		// given
-		when(userRepository.findById(anyString())).thenReturn(Optional.of(user));
 
-		// when
-		Long balance = userService.getUserBalance("user123");
-
-		// then
-		assertThat(balance).isEqualTo(user.getBalance());
-		verify(userRepository, times(1)).findById(anyString());
-	}
-
-	@Test
-	@DisplayName("사용자 잔액 조회 실패 테스트 - 사용자 없음")
-	void getUserBalanceUserNotFoundTest() {
-		// given
-		when(userRepository.findById(anyString())).thenReturn(Optional.empty());
-
-		// when
-		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-			userService.getUserBalance("user123");
-		});
-
-		// then
-		assertThat(exception.getMessage()).isEqualTo("User not found");
-		verify(userRepository, times(1)).findById(anyString());
-	}
-
-	@Test
-	@DisplayName("사용자 잔액 충전 성공 테스트")
-	void chargeUserBalanceSuccessTest() {
-		// given
-		when(userRepository.findById(anyString())).thenReturn(Optional.of(user));
-		when(userRepository.save(any(User.class))).thenReturn(user);
-
-		// when
-		UserInfo userInfo = userService.chargeUserBalance("user123", 500L);
-
-		// then
-		assertThat(userInfo).isNotNull();
-		assertThat(userInfo.getBalance()).isEqualTo(1500L); // 기존 1000L + 추가 500L
-		verify(userRepository, times(1)).findById(anyString());
-		verify(userRepository, times(1)).save(any(User.class));
-	}
-
-	@Test
-	@DisplayName("사용자 잔액 충전 실패 테스트 - 사용자 없음")
-	void chargeUserBalanceUserNotFoundTest() {
-		// given
-		when(userRepository.findById(anyString())).thenReturn(Optional.empty());
-
-		// when
-		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-			userService.chargeUserBalance("user123", 500L);
-		});
-
-		// then
-		assertThat(exception.getMessage()).isEqualTo("User not found");
-		verify(userRepository, times(1)).findById(anyString());
-		verify(userRepository, never()).save(any(User.class));
-	}
 
 	@Test
 	@DisplayName("사용자 생성 성공 테스트")
@@ -159,7 +96,7 @@ class UserServiceTest {
 		});
 
 		// then
-		assertThat(exception.getMessage()).isEqualTo("User not found");
+		assertThat(exception.getMessage()).isEqualTo("유저를 찾을 수 없습니다.");
 		verify(userRepository, times(1)).findById(anyString());
 	}
 
@@ -192,21 +129,10 @@ class UserServiceTest {
 		});
 
 		// then
-		assertThat(exception.getMessage()).isEqualTo("User not found");
+		assertThat(exception.getMessage()).isEqualTo("유저를 찾을 수 없습니다.");
 		verify(userRepository, times(1)).findById(anyString());
 		verify(userRepository, never()).save(any(User.class));
 	}
 
-	@Test
-	@DisplayName("사용자 삭제 성공 테스트")
-	void deleteUserSuccessTest() {
-		// given
-		doNothing().when(userRepository).deleteById(anyString());
 
-		// when
-		userService.deleteUser("user123");
-
-		// then
-		verify(userRepository, times(1)).deleteById(anyString());
-	}
 }

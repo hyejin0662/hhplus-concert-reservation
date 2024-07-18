@@ -40,6 +40,7 @@ class UserIntegrationTest {
 
     @DisplayName("[API][POST] 사용자 생성 - 정상 호출")
     @Test
+    @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void givenValidRequest_whenCreatingUser_thenReturnsOk() throws Exception {
         // Given
         UserRequest request = new UserRequest("user1", "John Doe", "1234567890", "john.doe@example.com", 1000L);
@@ -63,6 +64,7 @@ class UserIntegrationTest {
 
     @DisplayName("[API][GET] 사용자 조회 - 정상 호출")
     @Test
+    @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void givenValidUserId_whenGettingUser_thenReturnsOk() throws Exception {
         // Given
         String userId = "user1";
@@ -84,6 +86,7 @@ class UserIntegrationTest {
 
     @DisplayName("[API][PUT] 사용자 업데이트 - 정상 호출")
     @Test
+    @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void givenValidRequest_whenUpdatingUser_thenReturnsOk() throws Exception {
         // Given
         String userId = "user1";
@@ -108,6 +111,7 @@ class UserIntegrationTest {
 
     @DisplayName("[API][DELETE] 사용자 삭제 - 정상 호출")
     @Test
+    @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void givenValidUserId_whenDeletingUser_thenReturnsNoContent() throws Exception {
         // Given
         String userId = "user1";
@@ -123,9 +127,10 @@ class UserIntegrationTest {
 
     @DisplayName("[API][PATCH] 포인트 충전 - 정상 호출")
     @Test
+    @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void givenValidRequest_whenChargingPoint_thenReturnsOk() throws Exception {
         // Given
-        PointRequest request = new PointRequest(1L, "user1", "Credit Card", 1000L, 2000L, LocalDateTime.now());
+        PointRequest request = new PointRequest(1L, "user1", "Credit Card",  2000L, LocalDateTime.now());
 
         // When
         var resultActions = mvc.perform(patch("/users/points/charge")
@@ -141,12 +146,12 @@ class UserIntegrationTest {
         assertThat(response.getCode()).isEqualTo(GlobalResponseCode.SUCCESS_CODE);
         assertThat(response.getData()).isNotNull();
         assertThat(response.getData().getUser().getUserId()).isEqualTo("user1");
-        assertThat(response.getData().getAmount()).isEqualTo(1000L);
-        assertThat(response.getData().getBalance()).isEqualTo(2000L);
+        assertThat(response.getData().getAmount()).isEqualTo(3000L); // dummy data = 1000
     }
 
     @DisplayName("[API][GET] 포인트 조회 - 정상 호출")
     @Test
+    @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void givenValidPointId_whenGettingPoint_thenReturnsOk() throws Exception {
         // Given
         Long pointId = 1L;

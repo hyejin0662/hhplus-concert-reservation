@@ -11,12 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.http.MediaType;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ class ConcertIntegrationTest {
 
   @DisplayName("[API][GET] 모든 콘서트 조회 - 정상 호출")
   @Test
-  @Sql(scripts = "/concert.sql")
+  @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void givenNothing_whenGettingAllConcerts_thenReturnsAllConcerts() throws Exception {
     var resultActions = mvc.perform(get("/concerts")
             .contentType(MediaType.APPLICATION_JSON))
@@ -57,14 +57,13 @@ class ConcertIntegrationTest {
 
     assertThat(response).isNotNull();
     assertThat(response.getData()).hasSize(2);
-
     assertThat(response.getData().get(0).getConcertName()).isEqualTo("록 콘서트");
     assertThat(response.getData().get(1).getConcertName()).isEqualTo("재즈 콘서트");
   }
 
   @DisplayName("[API][POST] 콘서트 생성 - 정상 호출")
   @Test
-  @Sql(scripts = "/concert.sql")
+  @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void givenValidRequest_whenCreatingConcert_thenReturnsOk() throws Exception {
     ConcertRequest request = new ConcertRequest();
     request.setConcertName("클래식 콘서트");
@@ -75,15 +74,16 @@ class ConcertIntegrationTest {
         .andExpect(status().isOk());
 
     String responseContent = resultActions.andReturn().getResponse().getContentAsString();
-    ConcertResponse response = objectMapper.readValue(responseContent, ConcertResponse.class);
+    WebResponseData<ConcertResponse> response = objectMapper.readValue(responseContent, new TypeReference<WebResponseData<ConcertResponse>>() {});
 
     assertThat(response).isNotNull();
-    assertThat(response.getConcertName()).isEqualTo("클래식 콘서트");
+    assertThat(response.getData()).isNotNull();
+    assertThat(response.getData().getConcertName()).isEqualTo("클래식 콘서트");
   }
 
   @DisplayName("[API][PUT] 콘서트 수정 - 정상 호출")
   @Test
-  @Sql(scripts = "/concert.sql")
+  @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void givenValidRequest_whenUpdatingConcert_thenReturnsOk() throws Exception {
     ConcertRequest request = new ConcertRequest();
     request.setConcertName("업데이트된 콘서트");
@@ -94,33 +94,35 @@ class ConcertIntegrationTest {
         .andExpect(status().isOk());
 
     String responseContent = resultActions.andReturn().getResponse().getContentAsString();
-    ConcertResponse response = objectMapper.readValue(responseContent, ConcertResponse.class);
+    WebResponseData<ConcertResponse> response = objectMapper.readValue(responseContent, new TypeReference<WebResponseData<ConcertResponse>>() {});
 
     assertThat(response).isNotNull();
-    assertThat(response.getConcertName()).isEqualTo("업데이트된 콘서트");
+    assertThat(response.getData()).isNotNull();
+    assertThat(response.getData().getConcertName()).isEqualTo("업데이트된 콘서트");
   }
 
   @DisplayName("[API][DELETE] 콘서트 삭제 - 정상 호출")
   @Test
-  @Sql(scripts = "/concert.sql")
+  @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void givenValidRequest_whenDeletingConcert_thenReturnsNoContent() throws Exception {
     mvc.perform(delete("/concerts/{concertId}", 1L)
             .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk());
+        .andExpect(status().isNoContent());
   }
 
   @DisplayName("[API][GET] 콘서트 조회 - 정상 호출")
   @Test
-  @Sql(scripts = "/concert.sql")
+  @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void givenValidRequest_whenGettingConcert_thenReturnsConcert() throws Exception {
     var resultActions = mvc.perform(get("/concerts/{concertId}", 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
 
     String responseContent = resultActions.andReturn().getResponse().getContentAsString();
-    ConcertResponse response = objectMapper.readValue(responseContent, ConcertResponse.class);
+    WebResponseData<ConcertResponse> response = objectMapper.readValue(responseContent, new TypeReference<WebResponseData<ConcertResponse>>() {});
 
     assertThat(response).isNotNull();
-    assertThat(response.getConcertName()).isEqualTo("록 콘서트");
+    assertThat(response.getData()).isNotNull();
+    assertThat(response.getData().getConcertName()).isEqualTo("록 콘서트");
   }
 }

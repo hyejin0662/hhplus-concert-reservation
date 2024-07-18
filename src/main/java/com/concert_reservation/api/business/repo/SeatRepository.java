@@ -12,4 +12,7 @@ public interface SeatRepository {
 	Seat save(Seat seat);
 	void deleteById(Long seatId);
 
+	Seat findSeat(Long seatId);
+
+	void saveAll(List<Seat> seats);
 }

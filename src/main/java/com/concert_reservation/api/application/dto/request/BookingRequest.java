@@ -9,15 +9,13 @@ import com.concert_reservation.api.business.model.entity.Seat;
 import com.concert_reservation.common.mapper.DtoConverter;
 import com.concert_reservation.common.type.BookingStatus;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BookingRequest {
 	private String userId;
 	private Long concertOptionId;

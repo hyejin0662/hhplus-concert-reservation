@@ -1,6 +1,7 @@
 
 package com.concert_reservation.api.business.model.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -24,7 +25,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Booking")
 @Getter
 @Builder
 @AllArgsConstructor

@@ -8,8 +8,6 @@ import com.concert_reservation.api.business.model.dto.command.UserCommand;
 import com.concert_reservation.api.business.model.dto.info.UserInfo;
 
 public interface UserService {
-	Long getUserBalance(String userId);
-	UserInfo chargeUserBalance(String userId, Long amount);
 
 
 	UserInfo createUser(UserCommand userCommand);
