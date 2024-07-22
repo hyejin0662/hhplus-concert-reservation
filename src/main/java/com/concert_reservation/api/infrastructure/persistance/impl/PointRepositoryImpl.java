@@ -7,6 +7,9 @@ import java.util.Optional;
 import com.concert_reservation.api.business.model.entity.Point;
 import com.concert_reservation.api.business.repo.PointRepository;
 import com.concert_reservation.api.infrastructure.persistance.orm.PointJpaRepository;
+import com.concert_reservation.common.exception.CustomException;
+import com.concert_reservation.common.type.GlobalResponseCode;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +21,7 @@ public class PointRepositoryImpl implements PointRepository {
 
   @Override
   public Optional<Point> findPointByUserIdOptional(String userId) {
-    return pointJpaRepository.findPointByUserId(userId);
+    return pointJpaRepository.findPointByUserUserId(userId);
   }
 
 
@@ -41,4 +44,16 @@ public class PointRepositoryImpl implements PointRepository {
   public void deleteById(Long pointId) {
     pointJpaRepository.deleteById(pointId);
   }
+
+  @Override
+  public Point findByUserId(String userId) {
+    return pointJpaRepository.findPointByUserUserId(userId)
+        .orElseThrow(() -> new CustomException(GlobalResponseCode.BOOKING_NOT_FOUND_BY_POINT));
+  }
+
+  @Override
+  public void deleteByUserId(String userId) {
+    pointJpaRepository.deleteByUserUserId(userId);
+  }
+
 }

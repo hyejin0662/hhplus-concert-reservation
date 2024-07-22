@@ -1,6 +1,7 @@
 package com.concert_reservation.api.infrastructure.persistance.impl;
 
 import com.concert_reservation.api.business.model.entity.ConcertOption;
+import com.concert_reservation.api.business.model.entity.Seat;
 import com.concert_reservation.api.business.repo.ConcertOptionRepository;
 import com.concert_reservation.api.infrastructure.persistance.orm.ConcertOptionJpaRepository;
 
@@ -42,4 +43,5 @@ public class ConcertOptionRepositoryImpl implements ConcertOptionRepository {
     public List<ConcertOption> findAllByConcertId(Long concertId) {
         return concertOptionJpaRepository.findAllByConcertId(concertId);
     }
+
 }

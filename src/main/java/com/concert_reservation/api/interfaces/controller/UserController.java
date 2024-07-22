@@ -1,12 +1,9 @@
-package com.concert_reservation.api.presentation.controller;
+package com.concert_reservation.api.interfaces.controller;
 
-import com.concert_reservation.api.application.dto.request.PaymentRequest;
 import com.concert_reservation.api.application.dto.request.PointRequest;
 import com.concert_reservation.api.application.dto.request.UserRequest;
-import com.concert_reservation.api.application.dto.response.PaymentResponse;
 import com.concert_reservation.api.application.dto.response.PointResponse;
 import com.concert_reservation.api.application.dto.response.UserResponse;
-import com.concert_reservation.api.application.facade.PaymentFacade;
 import com.concert_reservation.api.application.facade.UserFacade;
 import com.concert_reservation.common.model.WebResponseData;
 

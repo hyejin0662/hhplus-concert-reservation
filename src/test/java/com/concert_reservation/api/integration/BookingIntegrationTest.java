@@ -28,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Sql(scripts = "/concert.sql")
 class BookingIntegrationTest {
 
     @Autowired
@@ -39,19 +38,20 @@ class BookingIntegrationTest {
 
     @DisplayName("[API][POST] 예약 생성 - 정상 호출")
     @Test
+    @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void givenValidRequest_whenCreatingBooking_thenReturnsOk() throws Exception {
         // Given
         BookingRequest request = BookingRequest.builder()
-                .userId("user1")
-                .seatId(1L)
-                .bookingTime(LocalDateTime.now())
-                .build();
+            .userId("user10")
+            .seatId(1L)
+            .bookingTime(LocalDateTime.now())
+            .build();
 
         // When
         var resultActions = mvc.perform(post("/bookings")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk());
 
         // Then
         String responseContent = resultActions.andReturn().getResponse().getContentAsString();
@@ -60,20 +60,21 @@ class BookingIntegrationTest {
         assertThat(response).isNotNull();
         assertThat(response.getCode()).isEqualTo(GlobalResponseCode.SUCCESS_CODE);
         assertThat(response.getData()).isNotNull();
-        assertThat(response.getData().getUser().getUserId()).isEqualTo("user1");
+        assertThat(response.getData().getUser().getUserId()).isEqualTo("user10");
         assertThat(response.getData().getSeat().getSeatId()).isEqualTo(1L);
     }
 
     @DisplayName("[API][GET] 예약 조회 - 정상 호출")
     @Test
+    @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void givenValidUserId_whenGettingBooking_thenReturnsOk() throws Exception {
         // Given
         String userId = "user1";
 
         // When
         var resultActions = mvc.perform(get("/bookings/{userId}", userId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
 
         // Then
         String responseContent = resultActions.andReturn().getResponse().getContentAsString();
@@ -82,37 +83,38 @@ class BookingIntegrationTest {
         assertThat(response).isNotNull();
         assertThat(response.getCode()).isEqualTo(GlobalResponseCode.SUCCESS_CODE);
         assertThat(response.getData()).isNotNull();
-        assertThat(response.getData().getBookingId()).isEqualTo(userId);
+        assertThat(response.getData().getBookingId()).isEqualTo(1L);
     }
 
     @DisplayName("[API][DELETE] 예약 삭제 - 정상 호출")
     @Test
+    @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void givenValidBookingId_whenDeletingBooking_thenReturnsNoContent() throws Exception {
         // Given
         Long bookingId = 1L;
 
         // When
         var resultActions = mvc.perform(delete("/bookings/{bookingId}", bookingId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
 
         // Then
         assertThat(resultActions.andReturn().getResponse().getStatus()).isEqualTo(204);
     }
 
+
     @DisplayName("[API][GET] 사용 가능한 좌석 조회 - 정상 호출")
     @Test
+    @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void givenValidSeatRequest_whenGettingAvailableSeats_thenReturnsOk() throws Exception {
         // Given
-        SeatRequest request = SeatRequest.builder()
-                .concertOptionId(1L)
-                .build();
+        Long concertOptionId = 1L;
 
         // When
-        var resultActions = mvc.perform(post("/bookings/available-seats")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+        var resultActions = mvc.perform(get("/bookings/available-seats")
+                .param("concertOptionId", String.valueOf(concertOptionId))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
 
         // Then
         String responseContent = resultActions.andReturn().getResponse().getContentAsString();

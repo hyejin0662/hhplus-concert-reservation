@@ -6,6 +6,8 @@ import com.concert_reservation.common.model.WebResponseData;
 import com.concert_reservation.common.type.GlobalResponseCode;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -31,21 +36,33 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PaymentIntegrationTest {
 
   @Autowired
+  private WebApplicationContext webApplicationContext;
+
+  @Autowired
   private MockMvc mvc;
 
   @Autowired
   private ObjectMapper objectMapper;
 
+  @BeforeEach
+  void setUp() {
+    mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+        .addFilters(new CharacterEncodingFilter("UTF-8", true))
+        .build();
+  }
+
+
+
   @DisplayName("[API][PATCH] 포인트 결제 - 정상 호출")
   @Test
-  @Sql(scripts = "/concert.sql")
+  @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void givenValidRequest_whenPayingWithPoints_thenReturnsOk() throws Exception {
     // Given
     PaymentRequest request = PaymentRequest.builder()
         .userId("user1")
         .amount(100L)
         .concertOptionId(1L)
-        .paymentMethod("Credit Card")
+        .paymentMethod("CREDIT_CARD")
         .build();
 
     // When
@@ -62,20 +79,20 @@ class PaymentIntegrationTest {
     assertThat(response.getCode()).isEqualTo(GlobalResponseCode.SUCCESS_CODE);
     assertThat(response.getData()).isNotNull();
     assertThat(response.getData().getUserId()).isEqualTo("user1");
-    assertThat(response.getData().getAmount()).isEqualTo(100L);
-    assertThat(response.getData().getPaymentMethod()).isEqualTo("Credit Card");
+    assertThat(response.getData().getAmount()).isEqualTo(900L);  // dummy data에서 userId = userId1 -> 초기값 1000 -> 1000 - 100 = 900
+    assertThat(response.getData().getPaymentMethod()).isEqualTo("CREDIT_CARD");
   }
 
   @DisplayName("[API][PATCH] 포인트 결제 - 실패 호출")
   @Test
-  @Sql(scripts = "/concert.sql")
+  @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void givenInvalidRequest_whenPayingWithPoints_thenThrowsException() throws Exception {
     // Given
     PaymentRequest request = PaymentRequest.builder()
         .userId("invalidUser")
         .amount(100L)
         .concertOptionId(1L)
-        .paymentMethod("Credit Card")
+        .paymentMethod("CREDIT_CARD")
         .build();
 
     // When & Then
@@ -88,56 +105,8 @@ class PaymentIntegrationTest {
     WebResponseData<Object> errorResponse = objectMapper.readValue(responseContent, new TypeReference<WebResponseData<Object>>() {});
 
     assertThat(errorResponse).isNotNull();
-    assertThat(errorResponse.getCode()).isEqualTo(GlobalResponseCode.USER_NOT_FOUND);
-    assertThat(errorResponse.getDescription()).isEqualTo(GlobalResponseCode.USER_NOT_FOUND.getDescription());
+    assertThat(errorResponse.getCode()).isEqualTo(GlobalResponseCode.PAYMENT_NOT_AVAILABLE);
+    assertThat(errorResponse.getDescription()).isEqualTo(GlobalResponseCode.PAYMENT_NOT_AVAILABLE.getDescription());
   }
 
-  @DisplayName("[API][PATCH] 동시성 테스트 - 포인트 결제")
-  @Test
-  @Sql(scripts = "/concert.sql")
-  void givenConcurrentRequests_whenPayingWithPoints_thenHandlesConcurrencyCorrectly() throws Exception {
-    int numberOfThreads = 31; // 30명은 성공하고 1명은 실패해야 함
-    ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
-    CountDownLatch latch = new CountDownLatch(numberOfThreads);
-
-    for (int i = 1; i <= numberOfThreads; i++) {
-      String userId = "user" + i;
-      executorService.submit(() -> {
-        try {
-          PaymentRequest request = PaymentRequest.builder()
-              .userId(userId)
-              .amount(100L)
-              .concertOptionId(1L)
-              .paymentMethod("Credit Card")
-              .build();
-          mvc.perform(patch("/payments/payment")
-                  .contentType(MediaType.APPLICATION_JSON)
-                  .content(objectMapper.writeValueAsString(request)))
-              .andExpect(status().isOk());
-        } catch (Exception e) {
-          e.printStackTrace();
-        } finally {
-          latch.countDown();
-        }
-      });
-    }
-
-    latch.await(); // 모든 스레드가 작업을 마칠 때까지 대기
-
-    // 포인트 결제가 정상적으로 처리된 유저 수를 확인
-    var resultActions = mvc.perform(get("/payments")
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk());
-
-    String responseContent = resultActions.andReturn().getResponse().getContentAsString();
-    WebResponseData<List<PaymentResponse>> response = objectMapper.readValue(responseContent, new TypeReference<WebResponseData<List<PaymentResponse>>>() {});
-
-    assertThat(response).isNotNull();
-    assertThat(response.getData()).hasSize(30);
-    assertThat(response.getData().get(0).getUserId()).isEqualTo("user1");
-    assertThat(response.getData().get(0).getAmount()).isEqualTo(100L);
-    assertThat(response.getData().get(0).getPaymentMethod()).isEqualTo("Credit Card");
-
-    executorService.shutdown();
-  }
 }

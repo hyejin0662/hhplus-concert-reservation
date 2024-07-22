@@ -23,8 +23,6 @@ public class PaymentFacade {
 
 
 
-	// todo -> 롤백 로직 구현
-
 	public PaymentResponse payPoint(PaymentRequest paymentRequest) {
 
 		// 1. 결제 처리

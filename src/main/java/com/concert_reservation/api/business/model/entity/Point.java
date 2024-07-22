@@ -1,18 +1,19 @@
 
 package com.concert_reservation.api.business.model.entity;
 
+import com.concert_reservation.common.exception.CustomException;
+import com.concert_reservation.common.type.GlobalResponseCode;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Point")
 @Getter
 @Setter
 @Builder
@@ -32,11 +32,9 @@ public class Point {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pointId;
 
-    @Column(nullable = false)
-    private String userId;
-
-    @Column(nullable = false)
-    private Long balance;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private Long amount;
@@ -54,9 +52,22 @@ public class Point {
     public void subtractAmount(Long amount) {
 
         if(this.amount < amount){
-            throw new RuntimeException("Insufficient funds");
+            throw new CustomException(GlobalResponseCode.INSUFFICIENT_POINT);
         }
 
         this.amount -= amount;
+    }
+
+
+    public void cancel() {
+        if (this.amount <= 0) {
+            throw new CustomException(GlobalResponseCode.INSUFFICIENT_POINT);
+        }
+
+        // 환불 로직 (예: 환불된 금액을 사용자의 잔액에 더함)
+        this.amount += this.amount;
+
+        // 결제 금액을 0으로 초기화
+        this.amount = 0L;
     }
 }

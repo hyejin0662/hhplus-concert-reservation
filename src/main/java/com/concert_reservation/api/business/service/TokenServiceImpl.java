@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.concert_reservation.api.business.model.dto.command.TokenCommand;
 import com.concert_reservation.api.business.model.dto.info.TokenInfo;
+import com.concert_reservation.api.business.model.dto.info.TokenValidateInfo;
 import com.concert_reservation.api.business.model.entity.Token;
 import com.concert_reservation.api.business.model.entity.User;
 import com.concert_reservation.api.business.model.entity.WaitingCount;
 import com.concert_reservation.api.business.repo.WaitingCountRepository;
 import com.concert_reservation.api.business.repo.TokenRepository;
 import com.concert_reservation.api.business.repo.UserRepository;
-import com.concert_reservation.api.business.service.TokenService;
 import com.concert_reservation.common.exception.CustomException;
 import com.concert_reservation.common.mapper.DtoConverter;
 import com.concert_reservation.common.type.GlobalResponseCode;
@@ -38,7 +38,6 @@ public class TokenServiceImpl implements TokenService {
 		User user = userRepository.findById(tokenCommand.getUserId())
 			.orElseThrow(() -> new CustomException(GlobalResponseCode.USER_NOT_FOUND));
 
-		// todo -> 토큰을 유저의 정보를 이용해서 만드는 것은 나중에 고도화
 		String tokenCode = UUID.randomUUID().toString();
 		var expirationTime = LocalDateTime.now().plusMinutes(5);
 
@@ -71,45 +70,30 @@ public class TokenServiceImpl implements TokenService {
 		Token token = tokenRepository.findByUserId(userId)
 			.orElseThrow(() -> new CustomException(GlobalResponseCode.TOKEN_NOT_FOUND));
 		int waitingNumber = tokenRepository.countByTokenStatusAndWaitingAtBefore(TokenStatus.WAITING, token.getWaitingAt()) + 1;
-		TokenInfo tokenInfo = DtoConverter.convert(token, TokenInfo.class);
-		tokenInfo.setWaitingNumber(waitingNumber);
-		return tokenInfo;
+		return token.toTokenInfoWithWaitingNumber(waitingNumber);
 	}
 
-	/**
-	 *     내부적으로 스케줄링 하여 돌아가는 로직이므로 외부에서 파라미터를 받을 필요가 없음
-	 *     대기열에 있는 항목들 중에서 주기적으로 조회해서
-	 *     가장 최신인 것부터 (선착순) 하나씩 상태를 변경해주는 로직
-	 *     지금 없는 거 = 조회 하는 로직 = 무엇을 처리할지 대상이 없음 = 대상 은 어디서 구함 ? 대상은 대기열에 앞전에 넣어놓은 거를 꺼내다가 선착순 별로 필터링해서
-	 *     가장 최신것을 변경해주어야 함
-	 *     언제? 처리열 혹은 서버가 감당하기로 한 수치보다 현재 감당하고 있는 수치가 적은 경우
-	 *     만약에 꽉 찼다? 그러면 그냥 내비두고 다음 스케줄링에서 판단
-	 */
 
-  @Override
-  @Transactional
-  public void scheduledUpdateTokenStatusToProcessing() {
-
-	  Optional<Token> tokenOptional =tokenRepository.findFirstByTokenStatusOrderByWaitingAtAsc();
-
-	  if (tokenOptional.isEmpty()){
-		  return;
-	  }
-
-    int count = waitingCountRepository.getCount();
-
-    if (count <= 50) {
-
-       tokenRepository.updateStatusProcessing(tokenOptional.get());
-    }
-
-    }
+	@Override
+	@Transactional
+	public void scheduledUpdateTokenStatusToProcessing() {
+		tokenRepository.findFirstByTokenStatusOrderByWaitingAtAsc()
+			.ifPresent(token -> {
+				int count = waitingCountRepository.getCount();
+				if (count <= 50) {
+					token.updateStatusToProcessing();
+					tokenRepository.save(token);
+				}
+			});
+	}
 
 	@Override
 	public void completeProcessingTokens(String userId) {
-		Token token = tokenRepository.findByUserId(userId).orElseThrow();
+		Token token = tokenRepository.findByUserId(userId)
+			.orElseThrow(() -> new CustomException(GlobalResponseCode.TOKEN_NOT_FOUND));
 		token.doExpire();
-		WaitingCount waitingCount = waitingCountRepository.findById(1L).orElseThrow();
+		WaitingCount waitingCount = waitingCountRepository.findById(1L)
+			.orElseThrow(() -> new CustomException(GlobalResponseCode.WAITING_COUNT_NOT_FOUND));
 		waitingCount.decrementCount();
 	}
 
@@ -129,6 +113,22 @@ public class TokenServiceImpl implements TokenService {
 		List<Token> tokensToBeExpired = tokenRepository.findAllByTokenStatusAndExpirationAtBefore(TokenStatus.WAITING, LocalDateTime.now());
 		tokensToBeExpired.forEach(Token::doExpire);
 		tokenRepository.saveAll(tokensToBeExpired);
+	}
+
+	@Override
+	public TokenValidateInfo validateToken(String tokenCode) {
+		// 1. 토큰이 존재하는지 확인
+		// 2. 만료 여부 확인
+		// 3. 상태가 'PROCESSING'인지 확인
+		Token token = tokenRepository.findById(Long.valueOf(tokenCode.replace("-", "").substring(0, 18)))
+			.orElseThrow(() -> new CustomException(GlobalResponseCode.TOKEN_NOT_FOUND));
+		if (token.isExpired()) {
+			throw new CustomException(GlobalResponseCode.TOKEN_EXPIRED);
+		}
+		if (!token.isProcessing()) {
+			throw new CustomException(GlobalResponseCode.TOKEN_NOT_PROCESSING);
+		}
+		return token.toTokenValidateInfo();
 	}
 
 }

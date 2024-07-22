@@ -3,8 +3,11 @@ package com.concert_reservation.api.business.service;
 import com.concert_reservation.api.business.model.dto.command.PaymentCommand;
 import com.concert_reservation.api.business.model.dto.info.PaymentInfo;
 import com.concert_reservation.api.business.model.entity.Point;
+import com.concert_reservation.api.business.model.entity.User;
 import com.concert_reservation.api.business.repo.PointRepository;
 import com.concert_reservation.api.business.service.PaymentService;
+import com.concert_reservation.common.exception.CustomException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,17 +33,20 @@ class PaymentServiceTest {
 	private PointRepository pointRepository;
 
 	@InjectMocks
-	private PaymentService paymentService;
+	private PaymentServiceImpl paymentService;
 
 	private Point point;
 	private PaymentCommand paymentCommand;
 
 	@BeforeEach
 	void setUp() {
+		User user = User.builder()
+			.userId("user123")
+			.build();
+
 		point = Point.builder()
 			.pointId(1L)
-			.userId("user123")
-			.balance(1000L)
+			.user(user)
 			.amount(500L)
 			.paymentTime(LocalDateTime.now())
 			.paymentMethod("Credit Card")
@@ -65,7 +71,7 @@ class PaymentServiceTest {
 
 		// then
 		assertThat(paymentInfo).isNotNull();
-		assertThat(paymentInfo.getUserId()).isEqualTo(point.getUserId());
+		assertThat(paymentInfo.getUserId()).isEqualTo(point.getUser().getUserId());
 		assertThat(paymentInfo.getAmount()).isEqualTo(300L);
 		verify(pointRepository, times(1)).findPointByUserIdOptional(anyString());
 		verify(pointRepository, times(1)).save(point);
@@ -78,7 +84,7 @@ class PaymentServiceTest {
 		when(pointRepository.findPointByUserIdOptional(anyString())).thenReturn(Optional.empty());
 
 		// when
-		NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
+		CustomException exception = assertThrows(CustomException.class, () -> {
 			paymentService.payPoint(paymentCommand);
 		});
 

@@ -26,4 +26,6 @@ public interface TokenRepository {
 	List<Token> saveAll(List<Token> tokensToBeExpired);
 
 	int countByTokenStatusAndWaitingAtBefore(TokenStatus tokenStatus, LocalDateTime waitingAt);
+
+	void deleteByUserId(String userId);
 }

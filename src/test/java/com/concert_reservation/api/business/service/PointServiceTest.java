@@ -3,6 +3,7 @@ package com.concert_reservation.api.business.service;
 import com.concert_reservation.api.business.model.dto.command.PointCommand;
 import com.concert_reservation.api.business.model.dto.info.PointInfo;
 import com.concert_reservation.api.business.model.entity.Point;
+import com.concert_reservation.api.business.model.entity.User;
 import com.concert_reservation.api.business.repo.PointRepository;
 import com.concert_reservation.api.business.service.PointService;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,16 +32,20 @@ class PointServiceTest {
 	private PointRepository pointRepository;
 
 	@InjectMocks
-	private PointService pointService;
+	private PointServiceImpl pointService;
 
 	private Point point;
 	private PointCommand pointCommand;
 
 	@BeforeEach
 	void setUp() {
+		User user = User.builder()
+			.userId("user123")
+			.build();
+
 		point = Point.builder()
 			.pointId(1L)
-			.userId("user123")
+			.user(user)
 			.amount(500L)
 			.paymentTime(LocalDateTime.now())
 			.paymentMethod("Credit Card")

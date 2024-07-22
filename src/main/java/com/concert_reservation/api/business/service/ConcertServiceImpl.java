@@ -4,6 +4,8 @@ import com.concert_reservation.api.business.model.dto.command.ConcertCommand;
 import com.concert_reservation.api.business.model.dto.info.ConcertInfo;
 import com.concert_reservation.api.business.model.entity.Concert;
 
+import com.concert_reservation.common.exception.CustomException;
+import com.concert_reservation.common.type.GlobalResponseCode;
 import java.util.List;
 
 import com.concert_reservation.api.business.repo.ConcertRepository;
@@ -32,14 +34,14 @@ public class ConcertServiceImpl implements ConcertService {
   @Override
   public ConcertInfo getConcert(Long concertId) {
     Concert concert = concertRepository.findById(concertId)
-        .orElseThrow(() -> new RuntimeException("Concert not found"));
+        .orElseThrow(() -> new CustomException(GlobalResponseCode.CONCERT_NOT_FOUND));
     return ConcertInfo.from(concert);
   }
 
   @Override
   public ConcertInfo updateConcert(Long concertId, ConcertCommand concertCommand) {
     Concert concert = concertRepository.findById(concertId)
-        .orElseThrow(() -> new RuntimeException("Concert not found"));
+        .orElseThrow(() -> new CustomException(GlobalResponseCode.CONCERT_NOT_FOUND));
     concert.setConcertName(concertCommand.getConcertName());
     concertRepository.save(concert);
     return ConcertInfo.from(concert);
@@ -57,7 +59,7 @@ public class ConcertServiceImpl implements ConcertService {
 
   }
 
-  // 콘서트 조건조회는 추후 구현
-  // ConcertRequest 필터링 조건을 사용하여 콘서트 목록을 불러오는 로직 구현
+
+
 
 }

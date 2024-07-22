@@ -14,7 +14,7 @@ import lombok.*;
 @Builder
 public class ConcertOptionCommand {
     private Long concertOptionId;
-    private String concertId;
+    private Long concertId;
     private String singerName;
     private LocalDateTime concertDate;
     private Long capacity;

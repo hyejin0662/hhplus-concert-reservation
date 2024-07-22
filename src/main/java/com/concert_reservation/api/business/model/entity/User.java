@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "User")
 @Getter
 @Setter
 @Builder
@@ -35,20 +34,4 @@ public class User {
     @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(nullable = false)
-    private Long balance;
-
-    // @OneToMany(mappedBy = "userId")
-    // private List<Point> points;
-    //
-    // @OneToMany(mappedBy = "userId")
-    // private List<Booking> bookings;
-
-    public void updateBalance(Long balance) {
-        this.balance = balance;
-    }
-
-    public void updatePhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 }

@@ -25,7 +25,7 @@ public class PaymentInfo {
 	public static PaymentInfo from(Point point) {
 		return PaymentInfo.builder()
 			.paymentId(point.getPointId())
-			.userId(point.getUserId())
+			.userId(point.getUser().getUserId())
 			.amount(point.getAmount())
 			.paymentTime(point.getPaymentTime())
 			.paymentMethod(point.getPaymentMethod())

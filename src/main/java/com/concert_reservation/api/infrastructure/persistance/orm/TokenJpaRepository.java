@@ -16,8 +16,6 @@ public interface TokenJpaRepository extends JpaRepository<Token, Long> {
 
 	Optional<Token> findByUserUserId(String userId);
 
-
-	// TODO : 파라미터로 넘어온 token의 token 아이디와 sql의 tokenId가 일치한 것을 확인하고자합니다.
 	@Modifying
 	@Query("UPDATE Token t SET t.tokenStatus = 'PROCESSING' WHERE t.tokenId = :tokenId AND t.tokenStatus = com.concert_reservation.common.type.TokenStatus.WAITING")
 	int updateStatusProcessing(Long tokenId);
@@ -29,4 +27,7 @@ public interface TokenJpaRepository extends JpaRepository<Token, Long> {
 
 	@Query("SELECT COUNT(t) FROM Token t WHERE t.tokenStatus = :tokenStatus AND t.waitingAt < :waitingAt")
 	int countByTokenStatusAndWaitingAtBefore(TokenStatus tokenStatus, LocalDateTime waitingAt);
+
+
+	void deleteByUserUserId(String userId);
 }

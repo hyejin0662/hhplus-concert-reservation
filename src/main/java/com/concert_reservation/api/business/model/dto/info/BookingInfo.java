@@ -1,5 +1,7 @@
 package com.concert_reservation.api.business.model.dto.info;
 
+import com.concert_reservation.common.exception.CustomException;
+import com.concert_reservation.common.type.GlobalResponseCode;
 import java.time.LocalDateTime;
 
 import com.concert_reservation.api.business.model.entity.Booking;
@@ -38,5 +40,24 @@ public class BookingInfo {
 
 	public static BookingInfo from(Booking booking) {
 		return DtoConverter.convert(booking, BookingInfo.class);
+	}
+
+	public void cancel() {
+		this.bookingStatus = BookingStatus.CANCELLED;
+	}
+
+	public void reserve() {
+		this.bookingStatus = BookingStatus.PENDING;
+	}
+
+	public void complete() {
+		this.bookingStatus = BookingStatus.CONFIRMED;
+	}
+
+	public String getUserId() {
+		if (this.user == null){
+			throw new CustomException(GlobalResponseCode.USER_NOT_FOUND);
+		}
+		return this.user.getUserId();
 	}
 }

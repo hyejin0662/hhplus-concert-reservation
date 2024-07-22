@@ -19,7 +19,6 @@ public class PointRequest {
     private String userId;
     private String paymentMethod;
     private Long amount;
-    private Long balance;
     private LocalDateTime paymentTime;
 
     public PointCommand toCommand() {

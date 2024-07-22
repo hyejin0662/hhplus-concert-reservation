@@ -13,4 +13,8 @@ public interface PointRepository {
   List<Point> findAll();
   Point save(Point point);
   void deleteById(Long pointId);
+
+	Point findByUserId(String bookingId);
+
+	void deleteByUserId(String userId);
 }

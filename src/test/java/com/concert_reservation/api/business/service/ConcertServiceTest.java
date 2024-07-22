@@ -30,7 +30,7 @@ class ConcertServiceTest {
 	private ConcertRepository concertRepository;
 
 	@InjectMocks
-	private ConcertService concertService;
+	private ConcertServiceImpl concertService;
 
 	private Concert concert;
 	private ConcertCommand concertCommand;
@@ -72,7 +72,7 @@ class ConcertServiceTest {
 		});
 
 		// then
-		assertThat(exception.getMessage()).isEqualTo("Concert not found");
+		assertThat(exception.getMessage()).isEqualTo("콘서트를 찾을 수 없습니다.");
 		verify(concertRepository, times(1)).findById(anyLong());
 	}
 
@@ -105,7 +105,7 @@ class ConcertServiceTest {
 		});
 
 		// then
-		assertThat(exception.getMessage()).isEqualTo("Concert not found");
+		assertThat(exception.getMessage()).isEqualTo("콘서트를 찾을 수 없습니다.");
 		verify(concertRepository, times(1)).findById(anyLong());
 	}
 

@@ -19,7 +19,6 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "WaitingCount")
 @Getter
 @Setter
 @Builder
