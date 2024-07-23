@@ -108,14 +108,14 @@ class TokenServiceTest {
 	@DisplayName("scheduledUpdateTokenStatusToProcessing: 대기중인 토큰 상태를 처리중으로 업데이트하는 테스트")
 	void scheduledUpdateTokenStatusToProcessingTest() {
 		// given
-		when(tokenRepository.findFirstByTokenStatusOrderByWaitingAtAsc()).thenReturn(Optional.of(token));
+		when(tokenRepository.getFirstWaitingToken()).thenReturn(Optional.of(token));
 		when(waitingCountRepository.getCount()).thenReturn(40);
 
 		// when
 		tokenService.scheduledUpdateTokenStatusToProcessing();
 
 		// then
-		verify(tokenRepository, times(1)).findFirstByTokenStatusOrderByWaitingAtAsc();
+		verify(tokenRepository, times(1)).getFirstWaitingToken();
 	}
 
 	@Test

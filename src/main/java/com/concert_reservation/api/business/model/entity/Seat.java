@@ -26,7 +26,7 @@ public class Seat {
     private int seatNumber;
 
     @Column(nullable = false)
-    private boolean isReserved;
+    private boolean isReserved; // 좌석에 status 값을 넣으면 안된다
 
     @Column(nullable = false)
     private int price;

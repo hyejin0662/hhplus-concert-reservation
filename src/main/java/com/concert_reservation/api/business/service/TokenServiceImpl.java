@@ -2,7 +2,6 @@ package com.concert_reservation.api.business.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -77,15 +76,11 @@ public class TokenServiceImpl implements TokenService {
 	@Override
 	@Transactional
 	public void scheduledUpdateTokenStatusToProcessing() {
-		tokenRepository.findFirstByTokenStatusOrderByWaitingAtAsc()
-			.ifPresent(token -> {
-				int count = waitingCountRepository.getCount();
-				if (count <= 50) {
-					token.updateStatusToProcessing();
-					tokenRepository.save(token);
-				}
-			});
+		tokenRepository.getFirstWaitingToken()
+			.filter(token -> waitingCountRepository.getCount() <= 50)
+			.ifPresent(token -> tokenRepository.save(token.markAsProcessing()));
 	}
+
 
 	@Override
 	public void completeProcessingTokens(String userId) {
