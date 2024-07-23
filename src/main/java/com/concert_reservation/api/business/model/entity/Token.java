@@ -1,11 +1,9 @@
 package com.concert_reservation.api.business.model.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,8 +16,6 @@ import com.concert_reservation.api.business.model.dto.info.TokenInfo;
 import com.concert_reservation.api.business.model.dto.info.TokenValidateInfo;
 import com.concert_reservation.common.type.TokenStatus;
 
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,11 +49,11 @@ public class Token {
     private int waitingNumber;
 
 
-
-    public void updateStatusToProcessing() {
+    public Token markAsProcessing() {
         if (this.tokenStatus == TokenStatus.WAITING) {
             this.tokenStatus = TokenStatus.PROCESSING;
         }
+        return this;
     }
 
     public void doExpire() {

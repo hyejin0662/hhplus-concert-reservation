@@ -13,10 +13,6 @@ public interface TokenRepository {
 
 	Optional<Token> findByUserId(String userId);
 
-	void updateStatusProcessing(Token token);
-
-	Optional<Token> findFirstByTokenStatusOrderByWaitingAtAsc();
-
 	Optional<Token> findById(Long tokenId);
 	List<Token> findAll();
 	void deleteById(Long tokenId);
@@ -28,4 +24,6 @@ public interface TokenRepository {
 	int countByTokenStatusAndWaitingAtBefore(TokenStatus tokenStatus, LocalDateTime waitingAt);
 
 	void deleteByUserId(String userId);
+
+	Optional<Token> getFirstWaitingToken();
 }

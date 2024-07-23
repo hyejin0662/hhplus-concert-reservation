@@ -1,5 +1,7 @@
 package com.concert_reservation.api.infrastructure.persistance.impl;
 
+import static com.concert_reservation.common.type.TokenStatus.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -28,16 +30,6 @@ public class TokenRepositoryImpl implements TokenRepository {
     return tokenJpaRepository.findByUserUserId(userID);
   }
 
-
-  @Override
-  public void updateStatusProcessing(Token token) {
-    tokenJpaRepository.updateStatusProcessing(token.getTokenId());
-  }
-
-  @Override
-  public Optional<Token> findFirstByTokenStatusOrderByWaitingAtAsc() {
-    return tokenJpaRepository.findFirstByTokenStatusOrderByWaitingAtAsc();
-  }
 
   @Override
   public Optional<Token> findById(Long tokenId) {
@@ -75,4 +67,8 @@ public class TokenRepositoryImpl implements TokenRepository {
     tokenJpaRepository.deleteByUserUserId(userId);
   }
 
+  @Override
+  public Optional<Token> getFirstWaitingToken() {
+    return tokenJpaRepository.findFirstByTokenStatusOrderByWaitingAtAsc(WAITING);
+  }
 }
