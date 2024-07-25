@@ -128,10 +128,10 @@ class PaymentIntegrationTest {
 
 
 
-  @DisplayName("[API][PATCH] 포인트 결제 - 동시성 테스트")
+
   @Test
   @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-  void givenConcurrentRequests_whenPayingWithPoints_thenHandlesCorrectly() throws Exception {
+  void 동시에_10건_콘서트_결제시_1건_성공_9건_실패() throws Exception {
     // Given
     int times = 10;  // 동시 요청 수
     String userId = "user1";

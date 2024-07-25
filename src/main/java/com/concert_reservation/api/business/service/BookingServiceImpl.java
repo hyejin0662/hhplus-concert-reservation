@@ -44,11 +44,6 @@ public class BookingServiceImpl implements BookingService {
   private final PointRepository pointRepository;
 
 
-  public void print() {
-    System.out.println("안녕안녕");
-  }
-
-
   @Override
   @Transactional
   public BookingInfo createBooking(BookingCommand bookingCommand) {
