@@ -20,7 +20,7 @@
         <param name="locationInfo" value="true"/>
         <param name="neverBlock" value="true"/>
         <param name="includeCallerData" value="false"/>
-        <param name="discardingThreshold" value="0"/>
+        <param name="discardingThreshold" value="0"/>ㅌ
         <appender-ref ref="STDOUT"/>
     </appender>
 
@@ -28,3 +28,5 @@
         <appender-ref ref="ASYNC-STDOUT" />
     </root>
 </configuration>
+
+

@@ -125,4 +125,8 @@ class ConcertIntegrationTest {
     assertThat(response.getData()).isNotNull();
     assertThat(response.getData().getConcertName()).isEqualTo("록 콘서트");
   }
+
+
+
+
 }

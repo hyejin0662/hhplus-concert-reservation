@@ -1,9 +1,6 @@
-
-
 api:
   slack:
     url: https://hooks.slack.com/services/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
-
 
 server:
   port: 8055
@@ -23,3 +20,6 @@ spring:
         show-sql: true
         generate-ddl: true
 
+redis:
+  host: localhost
+  port: 6379

@@ -43,20 +43,32 @@ public class BookingServiceImpl implements BookingService {
   private final ConcertOptionRepository concertOptionRepository;
   private final PointRepository pointRepository;
 
+
+  public void print() {
+    System.out.println("안녕안녕");
+  }
+
+
   @Override
   @Transactional
   public BookingInfo createBooking(BookingCommand bookingCommand) {
+
+
     User user = userRepository.findById(bookingCommand.getUserId())
         .orElseThrow(() -> new CustomException(GlobalResponseCode.USER_NOT_FOUND));
 
-    Seat seat = seatRepository.findById(bookingCommand.getSeatId())
+    // 애초에 찾아올 때 이미 선점이 안된 것만 찾아온다 + EXPIRE가 안된 것만 찾아온다 = 유효한 좌석만 찾는다
+    Seat seat = seatRepository.findByIdWithLock(bookingCommand.getSeatId())
         .orElseThrow(() -> new CustomException(GlobalResponseCode.SEAT_NOT_FOUND));
+
+     // 이 내부에서 이미 선점이 되었거나 혹은 만료되었다면 -> 예외 발생
+    seat.doReserve();
 
     Booking booking = Booking.builder()
         .user(user)
         .seat(seat)
         .bookingTime(bookingCommand.getBookingTime())
-        .bookingStatus(BookingStatus.PENDING)
+        .bookingStatus(BookingStatus.PENDING)  // 좌석 임시예약
         .build();
     bookingRepository.save(booking);
     return BookingInfo.from(booking);

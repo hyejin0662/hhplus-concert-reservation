@@ -6,6 +6,7 @@ import com.concert_reservation.api.application.dto.response.PointResponse;
 import com.concert_reservation.api.application.dto.response.UserResponse;
 import com.concert_reservation.common.model.WebResponseData;
 import com.concert_reservation.common.type.GlobalResponseCode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +19,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -169,5 +178,49 @@ class UserIntegrationTest {
         assertThat(response.getCode()).isEqualTo(GlobalResponseCode.SUCCESS_CODE);
         assertThat(response.getData()).isNotNull();
         assertThat(response.getData().getPointId()).isEqualTo(pointId);
+    }
+
+    @DisplayName("[API][PATCH] 포인트 충전 - 동시성 테스트")
+    @Test
+    @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void givenConcurrentRequests_whenChargingPoints_thenHandlesCorrectly() throws Exception {
+        // Given
+        int times = 10;  // 동시 요청 수
+        String userId = "user1";
+        Long amount = 100L;
+        Long pointId = 1L;
+        String paymentMethod = "Credit Card";
+
+        PointRequest chargeRequest = new PointRequest(pointId, userId, paymentMethod, amount, LocalDateTime.now());
+
+        ExecutorService executorService = Executors.newFixedThreadPool(times);
+        CountDownLatch latch = new CountDownLatch(times);
+
+        AtomicInteger successCount = new AtomicInteger(0);
+        AtomicInteger failCount = new AtomicInteger(0);
+
+        IntStream.range(0, times).forEach(i -> {
+            executorService.submit(() -> {
+                try {
+                    mvc.perform(patch("/users/points/charge")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(chargeRequest)))
+                        .andExpect(status().isOk());
+
+                    successCount.incrementAndGet();
+
+                } catch (Exception e) {
+                    failCount.incrementAndGet();
+                } finally {
+                    latch.countDown();
+                }
+            });
+        });
+        latch.await();// 메인스레드가 기다려줘야 count 적재됨 메인스레드보다 서브스레드가 느림
+        executorService.shutdown();
+
+        // Then
+        assertThat(failCount.get()).isEqualTo(9);
+        assertThat(successCount.get()).isEqualTo(1);
     }
 }

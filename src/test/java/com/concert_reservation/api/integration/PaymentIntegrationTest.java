@@ -4,9 +4,19 @@ import com.concert_reservation.api.application.dto.request.PaymentRequest;
 import com.concert_reservation.api.application.dto.response.PaymentResponse;
 import com.concert_reservation.common.model.WebResponseData;
 import com.concert_reservation.common.type.GlobalResponseCode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,11 +29,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
+
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -33,6 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Slf4j
 class PaymentIntegrationTest {
 
   @Autowired
@@ -50,8 +63,6 @@ class PaymentIntegrationTest {
         .addFilters(new CharacterEncodingFilter("UTF-8", true))
         .build();
   }
-
-
 
   @DisplayName("[API][PATCH] 포인트 결제 - 정상 호출")
   @Test
@@ -73,13 +84,16 @@ class PaymentIntegrationTest {
 
     // Then
     String responseContent = resultActions.andReturn().getResponse().getContentAsString();
-    WebResponseData<PaymentResponse> response = objectMapper.readValue(responseContent, new TypeReference<WebResponseData<PaymentResponse>>() {});
+    WebResponseData<PaymentResponse> response = objectMapper.readValue(responseContent,
+        new TypeReference<WebResponseData<PaymentResponse>>() {
+        });
 
     assertThat(response).isNotNull();
     assertThat(response.getCode()).isEqualTo(GlobalResponseCode.SUCCESS_CODE);
     assertThat(response.getData()).isNotNull();
     assertThat(response.getData().getUserId()).isEqualTo("user1");
-    assertThat(response.getData().getAmount()).isEqualTo(900L);  // dummy data에서 userId = userId1 -> 초기값 1000 -> 1000 - 100 = 900
+    assertThat(response.getData().getAmount()).isEqualTo(
+        900L);  // dummy data에서 userId = userId1 -> 초기값 1000 -> 1000 - 100 = 900
     assertThat(response.getData().getPaymentMethod()).isEqualTo("CREDIT_CARD");
   }
 
@@ -102,11 +116,67 @@ class PaymentIntegrationTest {
         .andExpect(status().isBadRequest());
 
     String responseContent = resultActions.andReturn().getResponse().getContentAsString();
-    WebResponseData<Object> errorResponse = objectMapper.readValue(responseContent, new TypeReference<WebResponseData<Object>>() {});
+
+    WebResponseData<Object> errorResponse = objectMapper.readValue(responseContent,
+        new TypeReference<WebResponseData<Object>>() {
+        });
 
     assertThat(errorResponse).isNotNull();
     assertThat(errorResponse.getCode()).isEqualTo(GlobalResponseCode.PAYMENT_NOT_AVAILABLE);
     assertThat(errorResponse.getDescription()).isEqualTo(GlobalResponseCode.PAYMENT_NOT_AVAILABLE.getDescription());
   }
+
+
+
+  @DisplayName("[API][PATCH] 포인트 결제 - 동시성 테스트")
+  @Test
+  @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void givenConcurrentRequests_whenPayingWithPoints_thenHandlesCorrectly() throws Exception {
+    // Given
+    int times = 10;  // 동시 요청 수
+    String userId = "user1";
+    Long amount = 100L;
+    Long concertOptionId = 1L;
+    String paymentMethod = "CREDIT_CARD";
+
+    PaymentRequest request = PaymentRequest.builder()
+        .userId(userId)
+        .amount(amount)
+        .concertOptionId(concertOptionId)
+        .paymentMethod(paymentMethod)
+        .build();
+
+    ExecutorService executorService = Executors.newFixedThreadPool(times);
+    CountDownLatch latch = new CountDownLatch(times);
+
+    AtomicInteger successCount = new AtomicInteger(0);
+    AtomicInteger failCount = new AtomicInteger(0);
+
+    IntStream.range(0, times).forEach(i -> {
+      executorService.submit(() -> {
+        try {
+          mvc.perform(patch("/payments/payment")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+              .andExpect(status().isOk());
+
+          successCount.incrementAndGet();
+
+        } catch (Exception e) {
+          failCount.incrementAndGet();
+        } finally {
+          latch.countDown();
+        }
+      });
+    });
+
+    latch.await(10, TimeUnit.SECONDS);
+    executorService.shutdown();
+
+    // Then
+    assertThat(successCount.get()).isEqualTo(1);
+    assertThat(failCount.get()).isEqualTo(9);
+  }
+
 
 }

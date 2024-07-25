@@ -3,9 +3,14 @@ package com.concert_reservation.api.integration;
 import com.concert_reservation.api.application.dto.request.BookingRequest;
 import com.concert_reservation.api.application.dto.request.SeatRequest;
 import com.concert_reservation.api.application.dto.response.BookingResponse;
+import com.concert_reservation.api.application.dto.response.PaymentResponse;
 import com.concert_reservation.api.application.dto.response.SeatResponse;
+import com.concert_reservation.api.business.model.dto.command.BookingCommand;
+import com.concert_reservation.api.business.service.BookingService;
+import com.concert_reservation.api.business.service.BookingServiceImpl;
 import com.concert_reservation.common.model.WebResponseData;
 import com.concert_reservation.common.type.GlobalResponseCode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -18,12 +23,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -35,6 +45,9 @@ class BookingIntegrationTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private BookingServiceImpl bookingService;
 
     @DisplayName("[API][POST] 예약 생성 - 정상 호출")
     @Test
@@ -124,4 +137,47 @@ class BookingIntegrationTest {
         assertThat(response.getCode()).isEqualTo(GlobalResponseCode.SUCCESS_CODE);
         assertThat(response.getData()).isNotEmpty();
     }
+
+    @Test
+    @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 동시에_10건_콘서트_예약시_1건_성공_9건_실패() throws Exception {
+
+        // Given
+        int times = 10; // 동시 요청 수
+
+        BookingCommand command = BookingCommand.builder()
+            .userId("user1")
+            .concertOptionId(1L)
+            .seatId(1L)
+            .bookingTime(LocalDateTime.now())
+            .build();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(times);
+        CountDownLatch latch = new CountDownLatch(times);
+        AtomicInteger successCount = new AtomicInteger(0);
+        AtomicInteger failCount = new AtomicInteger(0);
+
+
+        for (int i = 0; i < times; i++) {
+            executorService.execute(() -> {
+                try {
+                    bookingService.createBooking(command);
+                    successCount.incrementAndGet();
+                } catch (Exception e) {
+                    failCount.incrementAndGet();
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+        executorService.shutdown();
+
+        // Then
+        assertThat(successCount.get()).isEqualTo(1);
+        assertThat(failCount.get()).isEqualTo(9);
+
+    }
+
 }

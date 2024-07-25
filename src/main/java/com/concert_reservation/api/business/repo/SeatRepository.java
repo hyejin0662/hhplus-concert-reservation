@@ -15,4 +15,6 @@ public interface SeatRepository {
 	Seat findSeat(Long seatId);
 
 	void saveAll(List<Seat> seats);
+
+	Optional<Seat> findByIdWithLock(Long seatId);
 }

@@ -34,7 +34,8 @@ public enum GlobalResponseCode {
   // 콘서트
   CONCERT_NOT_FOUND("콘서트를 찾을 수 없습니다.", 1213, HttpStatus.NOT_FOUND),
   // 좌석
-  SEAT_NOT_FOUND("좌석을 찾을 수 없습니다.", 1314, HttpStatus.NOT_FOUND)
+  SEAT_NOT_FOUND("좌석을 찾을 수 없습니다.", 1314, HttpStatus.NOT_FOUND),
+  ALREADY_RESERVED("이미 선택된 좌석입니다", 1315,HttpStatus.NOT_FOUND)
 
   ;
 

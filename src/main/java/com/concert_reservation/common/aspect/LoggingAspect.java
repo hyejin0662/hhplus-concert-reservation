@@ -13,8 +13,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.concert_reservation.config.slack.SlackColor;
-import com.concert_reservation.config.slack.SlackUtils;
+import com.concert_reservation.support.config.slack.SlackColor;
+import com.concert_reservation.support.config.slack.SlackUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
