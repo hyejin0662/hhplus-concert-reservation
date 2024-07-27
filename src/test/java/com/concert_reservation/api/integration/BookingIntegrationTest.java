@@ -1,16 +1,11 @@
 package com.concert_reservation.api.integration;
 
-import com.concert_reservation.api.application.dto.request.BookingRequest;
-import com.concert_reservation.api.application.dto.request.SeatRequest;
-import com.concert_reservation.api.application.dto.response.BookingResponse;
-import com.concert_reservation.api.application.dto.response.PaymentResponse;
-import com.concert_reservation.api.application.dto.response.SeatResponse;
-import com.concert_reservation.api.business.model.dto.command.BookingCommand;
-import com.concert_reservation.api.business.service.BookingService;
-import com.concert_reservation.api.business.service.BookingServiceImpl;
+import com.concert_reservation.api.interfaces.controller.conert.dto.BookingRequest;
+import com.concert_reservation.api.interfaces.controller.conert.dto.BookingResponse;
+import com.concert_reservation.api.domain.concert.BookingCommand;
+import com.concert_reservation.api.domain.concert.BookingServiceImpl;
 import com.concert_reservation.common.model.WebResponseData;
 import com.concert_reservation.common.type.GlobalResponseCode;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -23,14 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

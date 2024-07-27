@@ -1,7 +1,7 @@
 package com.concert_reservation.api.integration;
 
-import com.concert_reservation.api.application.dto.request.ConcertRequest;
-import com.concert_reservation.api.application.dto.response.ConcertResponse;
+import com.concert_reservation.api.interfaces.controller.conert.dto.ConcertDto;
+import com.concert_reservation.api.interfaces.controller.conert.dto.ConcertResponse;
 import com.concert_reservation.common.model.WebResponseData;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,7 +65,7 @@ class ConcertIntegrationTest {
   @Test
   @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void givenValidRequest_whenCreatingConcert_thenReturnsOk() throws Exception {
-    ConcertRequest request = new ConcertRequest();
+    ConcertDto request = new ConcertDto();
     request.setConcertName("클래식 콘서트");
 
     var resultActions = mvc.perform(post("/concerts")
@@ -85,7 +85,7 @@ class ConcertIntegrationTest {
   @Test
   @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void givenValidRequest_whenUpdatingConcert_thenReturnsOk() throws Exception {
-    ConcertRequest request = new ConcertRequest();
+    ConcertDto request = new ConcertDto();
     request.setConcertName("업데이트된 콘서트");
 
     var resultActions = mvc.perform(put("/concerts/{concertId}", 1L)

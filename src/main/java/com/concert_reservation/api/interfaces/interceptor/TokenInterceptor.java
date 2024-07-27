@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.concert_reservation.api.application.dto.response.TokenValidateResponse;
+import com.concert_reservation.api.interfaces.controller.queue.dto.TokenValidateResponse;
 import com.concert_reservation.api.application.facade.TokenFacade;
 import com.concert_reservation.common.annotation.ValidatedToken;
 import com.concert_reservation.common.exception.CustomException;
