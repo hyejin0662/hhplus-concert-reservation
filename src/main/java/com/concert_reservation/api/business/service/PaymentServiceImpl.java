@@ -20,6 +20,9 @@ public class PaymentServiceImpl implements PaymentService {
 
 	private final PointRepository pointRepository;
 
+	/**
+	 * 결제 : 낙관락
+	 */
 	@Override
 	@Transactional
 	public PaymentInfo payPoint(PaymentCommand command) {

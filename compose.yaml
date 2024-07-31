@@ -1,1 +1,10 @@
 #services:
+version: '3.8'
+services:
+  redis:
+    image: redis:latest
+    container_name: redis_test
+    volumes:
+      - ./data:/data
+    ports:
+      - "6379:6379"

@@ -1,10 +1,10 @@
-package com.concert_reservation.config;
+package com.concert_reservation.support.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.concert_reservation.config.slack.SlackUtils;
+import com.concert_reservation.support.config.slack.SlackUtils;
 
 @Configuration
 public class AppConfig {

@@ -1,5 +1,8 @@
 package com.concert_reservation.api.business.model.entity;
 
+import com.concert_reservation.common.exception.CustomException;
+import com.concert_reservation.common.type.GlobalResponseCode;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -48,6 +51,13 @@ public class Seat {
 
     public boolean isNotReserved(){
         return !isReserved;
+    }
+
+    public void doReserve() {
+        if (isReserved) { // 이선좌
+            throw new CustomException(GlobalResponseCode.ALREADY_RESERVED);
+        }
+        this.isReserved = true;
     }
 
 

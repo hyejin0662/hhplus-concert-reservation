@@ -1,4 +1,4 @@
-package com.concert_reservation.config.slack;
+package com.concert_reservation.support.config.slack;
 
 import com.slack.api.Slack;
 import com.slack.api.webhook.WebhookPayloads;

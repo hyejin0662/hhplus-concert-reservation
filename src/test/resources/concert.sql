@@ -1,4 +1,4 @@
--- Recreate tables to ensure the schema is reset
+
 CREATE TABLE IF NOT EXISTS `User` (
                                       user_id VARCHAR(255) PRIMARY KEY,
                                       name VARCHAR(255) NOT NULL,
@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS Point (
                                      amount BIGINT NOT NULL,
                                      payment_time DATETIME NOT NULL,
                                      payment_method VARCHAR(255) NOT NULL,
+                                     version BIGINT NOT NULL DEFAULT 0,
                                      FOREIGN KEY (user_id) REFERENCES `User`(user_id)
 );
 
@@ -64,7 +65,7 @@ CREATE TABLE IF NOT EXISTS waiting_count (
 
 SET FOREIGN_KEY_CHECKS = 1;
 
--- Insert data only if the user does not already exist
+
 INSERT INTO `User` (user_id, name, email, phone_number) VALUES
                                                                      ('user1', '김철수', 'chulsoo@example.com', '01012345678'),
                                                                      ('user2', '이영희', 'younghee@example.com', '01087654321'),
@@ -74,14 +75,14 @@ ON DUPLICATE KEY UPDATE
                      email = VALUES(email),
                      phone_number = VALUES(phone_number);
 
--- Insert data only if the concert does not already exist
+
 INSERT INTO Concert (concert_id, concert_name) VALUES
                                                    (1, '록 콘서트'),
                                                    (2, '재즈 콘서트')
 ON DUPLICATE KEY UPDATE
     concert_name = VALUES(concert_name);
 
--- Insert data only if the concert option does not already exist
+
 INSERT INTO concert_option (concert_option_id, concert_id, singer_name, concert_date, capacity, location) VALUES
                                                                                                               (1, 1, '록 밴드', '2024-08-01 20:00:00', 100, '스타디움'),
                                                                                                               (2, 2, '재즈 밴드', '2024-08-15 19:00:00', 50, '콘서트 홀')
@@ -91,7 +92,7 @@ ON DUPLICATE KEY UPDATE
                      capacity = VALUES(capacity),
                      location = VALUES(location);
 
--- Insert data only if the seat does not already exist
+
 INSERT INTO Seat (seat_id, seat_number, is_reserved, price) VALUES
                                                                 (1, 1, FALSE, 100),
                                                                 (2, 2, FALSE, 100),
@@ -102,7 +103,7 @@ ON DUPLICATE KEY UPDATE
                      is_reserved = VALUES(is_reserved),
                      price = VALUES(price);
 
--- Insert data only if the token does not already exist
+
 INSERT INTO Token (token_id, user_id, waiting_at, expiration_at, token_status, waiting_number) VALUES
     (1, 'user1', '2024-07-01 10:00:00', '2024-07-01 10:30:00', 'WAITING', 1)
 ON DUPLICATE KEY UPDATE
@@ -112,13 +113,13 @@ ON DUPLICATE KEY UPDATE
                      token_status = VALUES(token_status),
                      waiting_number = VALUES(waiting_number);
 
--- Insert data only if the waiting count does not already exist
+
 INSERT INTO waiting_count (count_id, count) VALUES
     (1, 0)
 ON DUPLICATE KEY UPDATE
     count = VALUES(count);
 
--- Insert a booking for user1
+
 INSERT INTO Booking (booking_id, user_id, seat_id, booking_status, booking_time) VALUES
                                                                                      (1, 'user1', 1, 'CONFIRMED', '2024-07-15 10:00:00'),
                                                                                      (2, 'user2', 2, 'CONFIRMED', '2024-07-16 11:00:00'),
@@ -129,13 +130,14 @@ ON DUPLICATE KEY UPDATE
                      booking_status = VALUES(booking_status),
                      booking_time = VALUES(booking_time);
 
--- Insert point data only if the point does not already exist
-INSERT INTO Point (point_id, user_id, amount, payment_time, payment_method) VALUES
-                                                                                (1, 'user1', 1000, '2024-07-01 10:00:00', 'CREDIT_CARD'),
-                                                                                (2, 'user2', 500, '2024-07-01 10:00:00', 'BANK_TRANSFER'),
-                                                                                (3, 'user10', 2000, '2024-07-01 11:00:00', 'PAYPAL')
+
+INSERT INTO Point (point_id, user_id, amount, payment_time, payment_method, version) VALUES
+                                                                                         (1, 'user1', 1000, '2024-07-01 10:00:00', 'CREDIT_CARD', 0),
+                                                                                         (2, 'user2', 500, '2024-07-01 10:00:00', 'BANK_TRANSFER', 0),
+                                                                                         (3, 'user10', 2000, '2024-07-01 11:00:00', 'PAYPAL', 0)
 ON DUPLICATE KEY UPDATE
                      user_id = VALUES(user_id),
                      amount = VALUES(amount),
                      payment_time = VALUES(payment_time),
-                     payment_method = VALUES(payment_method);
+                     payment_method = VALUES(payment_method),
+                     version = VALUES(version);

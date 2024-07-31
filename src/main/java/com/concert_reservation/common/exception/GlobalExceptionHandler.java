@@ -27,7 +27,8 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<WebResponseData<Object>> globalExceptionHandler(Exception e) {
 		log.error("서버 내부적 오류가 발생했습니다. -> " + e);
 		WebResponseData<Object> response = WebResponseData.error(GlobalResponseCode.SERVER_INTERVAL_ERROR);
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		throw new RuntimeException(e);
+		// return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
 }
