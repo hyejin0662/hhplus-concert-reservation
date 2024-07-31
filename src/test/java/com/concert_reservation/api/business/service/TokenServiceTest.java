@@ -2,7 +2,6 @@ package com.concert_reservation.api.business.service;
 
 import static org.mockito.Mockito.*;
 
-import com.concert_reservation.api.business.service.TokenService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -112,7 +111,7 @@ class TokenServiceTest {
 		when(waitingCountRepository.getCount()).thenReturn(40);
 
 		// when
-		tokenService.scheduledUpdateTokenStatusToProcessing();
+		tokenService.transfer();
 
 		// then
 		verify(tokenRepository, times(1)).getFirstWaitingToken();

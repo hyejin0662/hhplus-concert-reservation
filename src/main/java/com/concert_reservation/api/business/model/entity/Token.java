@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDateTime;
 
+import com.concert_reservation.api.business.model.domain.WaitingToken;
 import com.concert_reservation.api.business.model.dto.info.TokenInfo;
 import com.concert_reservation.api.business.model.dto.info.TokenValidateInfo;
 import com.concert_reservation.common.type.TokenStatus;
@@ -26,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Token {
+public class Token extends WaitingToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tokenId;
@@ -34,6 +35,9 @@ public class Token {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    private String userId;  // redis 사용시
+    private String tokenValue;  // redis 사용시
 
     @Column(nullable = false)
     private LocalDateTime waitingAt; // 토큰이 시작된 시간
@@ -48,6 +52,14 @@ public class Token {
     @Column(nullable = false)
     private int waitingNumber;
 
+    public Token(String tokenId, String userId, TokenStatus status, LocalDateTime expirationAt, LocalDateTime waitingAt) {
+        this.tokenId = tokenId != null ? Long.valueOf(tokenId) : null;
+        this.user = new User();
+        user.setUserId(userId);
+        this.tokenStatus = status;
+        this.expirationAt = expirationAt;
+        this.waitingAt = waitingAt;
+    }
 
     public Token markAsProcessing() {
         if (this.tokenStatus == TokenStatus.WAITING) {

@@ -21,13 +21,15 @@ public class WaitingQueueScheduler {
 	}
 
 
-	@Scheduled(fixedRate = 2000)// 2초마다
+	// @Scheduled(fixedRate = 2000)// 2초마다
+	@Deprecated
 	public void scheduledExpireProcessingTokens() {
 		tokenFacade.scheduledExpireProcessingTokens();
 	}
 
 
-	@Scheduled(fixedRate = 2000)// 2초마다
+	// @Scheduled(fixedRate = 2000)// 2초마다
+	@Deprecated
 	public void scheduledExpireWaitingTokens() {
 		tokenFacade.scheduledExpireWaitingTokens();
 	}

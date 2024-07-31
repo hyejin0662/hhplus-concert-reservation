@@ -1,5 +1,6 @@
 package com.concert_reservation.api.business.model.dto.info;
 
+import com.concert_reservation.api.business.model.domain.WaitingToken;
 import com.concert_reservation.api.business.model.entity.Token;
 import com.concert_reservation.api.business.model.entity.User;
 import com.concert_reservation.common.type.TokenStatus;
@@ -21,6 +22,11 @@ public class TokenInfo {
     private TokenStatus tokenStatus;
     private int waitingNumber;
 
+
+    private String tokenValue; // redis 구현으로 추가
+    private boolean enqueued; // redis 구현으로 추가
+    private Long rank; // redis 구현으로 추가
+
     public static TokenInfo from(Token token) {
         return TokenInfo.builder()
             .tokenId(token.getTokenId())
@@ -32,7 +38,12 @@ public class TokenInfo {
             .build();
     }
 
-    public Token toEntity() {
+    public static TokenInfo from(WaitingToken enqueue) {
+        return TokenInfo.builder().userId(enqueue.getUserId()).tokenValue(enqueue.getTokenValue()).enqueued(
+            enqueue.isEnqueued()).build();
+    }
+
+	public Token toEntity() {
         User user = new User();
         user.setUserId(this.userId);
 

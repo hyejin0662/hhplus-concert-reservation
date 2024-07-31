@@ -4,12 +4,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.concert_reservation.api.business.model.domain.WaitingToken;
 import com.concert_reservation.api.business.model.entity.Token;
 import com.concert_reservation.common.type.TokenStatus;
 
 public interface TokenRepository {
 
 	Token save(Token token);
+
+	WaitingToken enqueue(String userId);
 
 	Optional<Token> findByUserId(String userId);
 
@@ -26,4 +29,8 @@ public interface TokenRepository {
 	void deleteByUserId(String userId);
 
 	Optional<Token> getFirstWaitingToken();
+
+
+
+	Long getTokenRank(String userId);
 }
