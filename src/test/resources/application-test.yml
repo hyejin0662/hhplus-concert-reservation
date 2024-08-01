@@ -1,0 +1,51 @@
+api:
+  slack:
+    url: https://hooks.slack.com/services/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
+
+server:
+  port: 8055
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/hhplus_concert_reservation
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:1234}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: localhost
+      port: 6379
+#  docker:
+#    compose:
+#      file:
+#        - classpath:docker-compose-kafka.yml
+#        - classpath:docker-compose-redis.yml
+#        - classpath:docker-compose-ui.yml
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show-sql: true
+        generate-ddl: true
+
+
+
+
+
+token:
+  processing-queue:
+    policy:
+      max-limit: 1000
