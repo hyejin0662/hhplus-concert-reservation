@@ -20,7 +20,7 @@ public class TokenFacade {
 	private final TokenService tokenService;
 
 	public TokenResponse getToken(String userId) {
-		TokenInfo tokenInfo = tokenService.getToken(userId);
+		TokenInfo tokenInfo = tokenService.getWaitingToken(userId);
 		return TokenResponse.from(tokenInfo);
 	}
 
@@ -32,22 +32,16 @@ public class TokenFacade {
 		return TokenResponse.from(tokenInfo);
 	}
 
-	public void updateTokenStatusToProcessing() {
+	public void transfer() {
 		tokenService.transfer();
-	}
-
-
-	public void scheduledExpireProcessingTokens() {
-		tokenService.scheduledExpireProcessingTokens();
-	}
-
-
-	@Deprecated
-	public void scheduledExpireWaitingTokens() {
-		tokenService.scheduledExpireWaitingTokens();
 	}
 
 	public TokenValidateResponse validate(String token) {
 		return TokenValidateResponse.from(tokenService.validateToken(token));
+	}
+
+
+	public void decrementCounter() {
+		tokenService.decrementCounter();
 	}
 }
