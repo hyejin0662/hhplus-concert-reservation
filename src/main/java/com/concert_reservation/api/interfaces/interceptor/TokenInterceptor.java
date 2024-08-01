@@ -37,7 +37,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 
 				TokenValidateResponse validate = tokenFacade.validate(token);
 
-				if (!validate.isValidate()) {
+				if (!validate.isValid()) {
 					throw new CustomException(GlobalResponseCode.INVALID_TOKEN);
 				}
 
