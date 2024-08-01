@@ -12,4 +12,7 @@ public class WaitingToken {
 	private String tokenValue;
 	private boolean enqueued;
 
+	public WaitingToken(String tokenValue) {
+		this.tokenValue = tokenValue;
+	}
 }

@@ -36,8 +36,8 @@ public class Token extends WaitingToken {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private String userId;  // redis 사용시
-    private String tokenValue;  // redis 사용시
+    // private String userId;  // redis 사용시
+    // private String tokenValue;  // redis 사용시
 
     @Column(nullable = false)
     private LocalDateTime waitingAt; // 토큰이 시작된 시간

@@ -18,4 +18,11 @@ public class TokenValidateInfo {
 	private String userId;
 	private LocalDateTime expirationAt;
 	private TokenStatus tokenStatus;
+
+	private String tokenValue;  // redis 사용시
+	private boolean isValid; // redis 사용시
+
+	public static TokenValidateInfo of(String tokenValue, boolean isValid) {
+		return TokenValidateInfo.builder().tokenValue(tokenValue).isValid(isValid).build();
+	}
 }
