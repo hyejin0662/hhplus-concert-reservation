@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.concert_reservation.api.application.dto.response.TokenValidateResponse;
-import com.concert_reservation.api.application.facade.TokenFacade;
+import com.concert_reservation.api.interfaces.controller.queue.dto.TokenResponse;
+import com.concert_reservation.api.application.queue.TokenFacade;
 import com.concert_reservation.common.annotation.ValidatedToken;
 import com.concert_reservation.common.exception.CustomException;
 import com.concert_reservation.common.type.GlobalResponseCode;
@@ -35,7 +35,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 					throw new CustomException(GlobalResponseCode.INVALID_TOKEN);
 				}
 
-				TokenValidateResponse validate = tokenFacade.validate(token);
+				TokenResponse.TokenValidateResponse validate = tokenFacade.validate(token);
 
 				if (!validate.isValid()) {
 					throw new CustomException(GlobalResponseCode.INVALID_TOKEN);
