@@ -6,17 +6,17 @@ import com.concert_reservation.api.domain.queue.model.WaitingToken;
 
 public interface TokenRepository {
 
-	WaitingToken enqueue(String userId);
+	WaitingToken issueToken(String userId);
 
 	Long getTokenRank(String userId);
 
-	void incrementCounter();
+	void increaseCounter();
 
 	void decrease();
 
-	long getActiveTokenCount();
+	long getActiveTokens();
 
-	void transfer(WaitingToken token);
+	void activateTokens(WaitingToken token);
 
 	void removeFromProcessingQueue(String token);
 

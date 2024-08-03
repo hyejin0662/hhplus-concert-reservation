@@ -17,15 +17,11 @@ public class PointService {
   private final PointRepository pointRepository;
 
 
-  public PointInfo chargePoint(PointCommand pointCommand) {
-    Point point = pointRepository.getPoint(pointCommand.getUserId())
-        .map(existingPoint -> {
-          existingPoint.charge(pointCommand.getAmount());
-          return existingPoint;
-        })
-        .orElseGet(pointCommand::toEntity);
-
-    pointRepository.save(point);
+  public PointInfo charge(PointCommand pointCommand) {
+    Point point = pointRepository
+        .findPointByUserId(pointCommand.getUserId())
+        .orElseThrow();
+    point.addAmount(pointCommand.getAmount());
     return PointInfo.from(point);
   }
 
@@ -37,12 +33,11 @@ public class PointService {
   }
 
 
-  public PointInfo pay(PointCommand pointCommand) {
-    Point point = pointRepository.getPoint(pointCommand.getUserId())
+  public PointInfo use(PointCommand pointCommand) {
+    Point point = pointRepository
+        .findPointByUserId(pointCommand.getUserId())
         .orElseThrow();
-
-    point.pay(pointCommand.getAmount());
-    pointRepository.save(point);
+    point.use(pointCommand.getAmount());
     return PointInfo.from(point);
   }
 

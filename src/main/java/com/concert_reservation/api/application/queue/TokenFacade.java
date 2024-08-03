@@ -25,12 +25,12 @@ public class TokenFacade {
 		TokenCommand tokenCommand = TokenCommand.builder()
 			.userId(tokenRequest.getUserId())
 			.build();
-		TokenInfo tokenInfo = tokenService.enqueue(tokenCommand);
+		TokenInfo tokenInfo = tokenService.issueToken(tokenCommand);
 		return TokenResponse.from(tokenInfo);
 	}
 
 	public void transfer() {
-		tokenService.transfer();
+		tokenService.activateTokens();
 	}
 
 	public TokenResponse.TokenValidateResponse validate(String token) {
@@ -39,6 +39,6 @@ public class TokenFacade {
 
 
 	public void decrementCounter() {
-		tokenService.decrementCounter();
+		tokenService.decreaseCounter();
 	}
 }

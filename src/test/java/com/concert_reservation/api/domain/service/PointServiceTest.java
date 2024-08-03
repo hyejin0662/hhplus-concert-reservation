@@ -61,16 +61,16 @@ class PointServiceTest {
 	@DisplayName("포인트 차감 시 사용자 찾을 수 없음 테스트")
 	void deductPointNotFoundTest() {
 		// given
-		when(pointRepository.getPoint(anyString())).thenReturn(Optional.empty());
+		when(pointRepository.findPointByUserId(anyString())).thenReturn(Optional.empty());
 
 		// when
 		NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
-			pointService.pay(pointCommand);
+			pointService.use(pointCommand);
 		});
 
 		// then
 		assertThat(exception).isNotNull();
-		verify(pointRepository, times(1)).getPoint(anyString());
+		verify(pointRepository, times(1)).findPointByUserId(anyString());
 		verify(pointRepository, never()).save(any(Point.class));
 	}
 
@@ -79,16 +79,16 @@ class PointServiceTest {
 	void deductPointInsufficientFundsTest() {
 		// given
 		pointCommand.setAmount(600L); // More than available balance
-		when(pointRepository.getPoint(anyString())).thenReturn(Optional.of(point));
+		when(pointRepository.findPointByUserId(anyString())).thenReturn(Optional.of(point));
 
 		// when
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			pointService.pay(pointCommand);
+			pointService.use(pointCommand);
 		});
 
 		// then
 		assertThat(exception).isNotNull();
-		verify(pointRepository, times(1)).getPoint(anyString());
+		verify(pointRepository, times(1)).findPointByUserId(anyString());
 		verify(pointRepository, never()).save(any(Point.class));
 	}
 }

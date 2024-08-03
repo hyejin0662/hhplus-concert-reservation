@@ -48,11 +48,11 @@ public class Point {
     @Version
     private Long version;
 
-    public void charge(Long amount) {
+    public void addAmount(Long amount) {
         this.amount += amount;
     }
 
-    public void pay(Long amount) {
+    public void use(Long amount) {
 
         if(this.amount < amount){
             throw new CustomException(GlobalResponseCode.INSUFFICIENT_POINT);

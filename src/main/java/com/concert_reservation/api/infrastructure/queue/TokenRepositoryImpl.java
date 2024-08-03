@@ -28,7 +28,7 @@ public class TokenRepositoryImpl implements TokenRepository {
 
 
   @Override
-  public WaitingToken enqueue(String userId){
+  public WaitingToken issueToken(String userId){
     String tokenValue = generateToken(userId);
     redisTemplate.opsForZSet().remove(RedisKeys.QUEUE_KEY.getKey(), tokenValue);
     Boolean result = redisTemplate.opsForZSet().add(RedisKeys.QUEUE_KEY.getKey(), tokenValue, System.currentTimeMillis());
@@ -56,7 +56,7 @@ public class TokenRepositoryImpl implements TokenRepository {
    * 이를 통해 처리 중인 토큰의 수를 관리합니다.</p>
    */
   @Override
-  public void incrementCounter() {
+  public void increaseCounter() {
     redisTemplate.opsForValue().increment(String.valueOf(COUNTER_KEY));
   }
 
@@ -80,13 +80,13 @@ public class TokenRepositoryImpl implements TokenRepository {
    * @return 현재 처리열에 있는 활성 토큰의 수
    */
   @Override
-  public long getActiveTokenCount() {
+  public long getActiveTokens() {
     Long counterValue = (Long)redisTemplate.opsForValue().get(COUNTER_KEY.getKey());
     return counterValue != null ? counterValue : 0;
   }
 
   @Override
-  public void transfer(WaitingToken token) {
+  public void activateTokens(WaitingToken token) {
     redisTemplate.opsForZSet().remove(RedisKeys.QUEUE_KEY.getKey(), token.getTokenValue());
     redisTemplate.opsForValue().set(token.getTokenValue(),String.valueOf(System.currentTimeMillis() + ACTIVE_TOKEN_EXPIRATION.getValue() * 1000) , ACTIVE_TOKEN_EXPIRATION.getValue(), TimeUnit.SECONDS);
   }

@@ -32,7 +32,7 @@ public class PaymentFacade {
 			paymentRequest.getConcertOptionId());
 
 		// 3. 토큰 처리
-		tokenService.completeProcessingTokens(paymentRequest.getUserId());
+		tokenService.expireProcessingTokens(paymentRequest.getUserId());
 
 
 		return PaymentResponse.from(paymentInfo);

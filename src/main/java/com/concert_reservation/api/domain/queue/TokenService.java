@@ -25,8 +25,8 @@ public class TokenService {
 
 
 	@Transactional
-	public TokenInfo enqueue(TokenCommand tokenCommand) {
-		WaitingToken enqueue = tokenRepository.enqueue(tokenCommand.getUserId());
+	public TokenInfo issueToken(TokenCommand tokenCommand) {
+		WaitingToken enqueue = tokenRepository.issueToken(tokenCommand.getUserId());
 		return TokenInfo.from(enqueue);
 
 	}
@@ -64,9 +64,9 @@ public class TokenService {
 	 */
 
 	@Transactional
-	public void transfer() {
+	public void activateTokens() {
 
-		long activeTokenCount = tokenRepository.getActiveTokenCount();
+		long activeTokenCount = tokenRepository.getActiveTokens();
 
 		if (activeTokenCount > ACTIVE_USER_LIMIT.getValue()) {
 			return;
@@ -75,8 +75,8 @@ public class TokenService {
 		List<WaitingToken> tokens = tokenRepository.getTopWaitingTokens(activeTokenCount);
 
 		for (WaitingToken token : tokens) {
-			tokenRepository.transfer(token);
-			tokenRepository.incrementCounter();
+			tokenRepository.activateTokens(token);
+			tokenRepository.increaseCounter();
 		}
 	}
 
@@ -118,14 +118,14 @@ public class TokenService {
 	 */
 
 	@Transactional
-	public void completeProcessingTokens(String userId) {
+	public void expireProcessingTokens(String userId) {
 		tokenRepository.removeFromProcessingQueue(String.valueOf(generateToken(userId)));
 		tokenRepository.decrease();
 	}
 
 
 	@Transactional
-	public void decrementCounter() {
+	public void decreaseCounter() {
 		tokenRepository.decrease();
 	}
 

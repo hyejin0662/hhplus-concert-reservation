@@ -21,7 +21,7 @@ public class UserFacade {
 
 	public PointResponse chargePoint(PointRequest pointRequest) {
 		PointCommand pointCommand = new PointCommand(null, pointRequest.getUserId(), pointRequest.getAmount(), pointRequest.getPaymentTime(), pointRequest.getPaymentMethod());
-		PointInfo pointInfo = pointService.chargePoint(pointCommand);
+		PointInfo pointInfo = pointService.charge(pointCommand);
 		return PointResponse.from(pointInfo);
 	}
 
