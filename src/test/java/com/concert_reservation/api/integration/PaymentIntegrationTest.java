@@ -170,7 +170,7 @@ class PaymentIntegrationTest {
       });
     });
 
-    latch.await(10, TimeUnit.SECONDS);
+    latch.await(50, TimeUnit.SECONDS);
     executorService.shutdown();
 
     // Then

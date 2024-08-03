@@ -9,6 +9,8 @@ import com.concert_reservation.common.type.GlobalResponseCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,6 +123,7 @@ class UserIntegrationTest {
     @DisplayName("[API][DELETE] 사용자 삭제 - 정상 호출")
     @Test
     @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Disabled("Token Rdb 미사용으로 인한 테스트 불필요")
     void givenValidUserId_whenDeletingUser_thenReturnsNoContent() throws Exception {
         // Given
         String userId = "user1";
