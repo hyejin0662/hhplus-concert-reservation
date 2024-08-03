@@ -19,7 +19,8 @@ public class TokenValidateResponse {
 	private String userId;
 	private LocalDateTime expirationAt;
 	private TokenStatus tokenStatus;
-	private boolean isValidate;
+	private String tokenValue;  // redis 사용시
+	private boolean isValid; // redis 사용시
 
 	public static TokenValidateResponse from(TokenValidateInfo tokenValidateInfo) {
 		return DtoConverter.convert(tokenValidateInfo,TokenValidateResponse.class);

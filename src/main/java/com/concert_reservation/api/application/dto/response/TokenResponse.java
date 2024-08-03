@@ -24,6 +24,7 @@ public class TokenResponse {
 	private LocalDateTime waitingAt;
 	private LocalDateTime expirationAt;
 	private TokenStatus tokenStatus;
+	private String tokenValue;
 
 	public static TokenResponse from(TokenInfo token) {
 		return TokenResponse.builder()
@@ -32,6 +33,7 @@ public class TokenResponse {
 			.waitingAt(token.getWaitingAt())
 			.expirationAt(token.getExpirationAt())
 			.tokenStatus(token.getTokenStatus())
+			.tokenValue(token.getTokenValue())
 			.build();
 	}
 

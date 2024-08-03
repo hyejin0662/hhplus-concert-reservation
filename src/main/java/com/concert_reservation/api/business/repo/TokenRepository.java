@@ -4,26 +4,29 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.concert_reservation.api.business.model.domain.ActiveToken;
+import com.concert_reservation.api.business.model.domain.WaitingToken;
 import com.concert_reservation.api.business.model.entity.Token;
 import com.concert_reservation.common.type.TokenStatus;
 
 public interface TokenRepository {
 
-	Token save(Token token);
+	WaitingToken enqueue(String userId);
 
-	Optional<Token> findByUserId(String userId);
+	Long getTokenRank(String userId);
 
-	Optional<Token> findById(Long tokenId);
-	List<Token> findAll();
-	void deleteById(Long tokenId);
+	void incrementCounter();
 
-	List<Token> findAllByTokenStatusAndExpirationAtBefore(TokenStatus tokenStatus, LocalDateTime now);
+	void decrementCounter();
 
-	List<Token> saveAll(List<Token> tokensToBeExpired);
+	long getActiveTokenCount();
 
-	int countByTokenStatusAndWaitingAtBefore(TokenStatus tokenStatus, LocalDateTime waitingAt);
+	void transfer(WaitingToken token);
 
-	void deleteByUserId(String userId);
+	void removeFromProcessingQueue(String token);
 
-	Optional<Token> getFirstWaitingToken();
+	boolean isActive(String token);
+
+	List<WaitingToken> getTopWaitingTokens(long activeTokenCount);
+
 }

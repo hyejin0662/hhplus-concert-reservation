@@ -1,0 +1,12 @@
+#services:
+version: '3.8'
+services:
+  redis:
+    image: redis:latest
+    container_name: redis_test
+    volumes:
+      - ./data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf  # Mount the custom redis.conf file
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]  # Use the custom redis.conf
