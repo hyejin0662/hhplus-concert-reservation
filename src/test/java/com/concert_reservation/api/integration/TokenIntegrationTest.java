@@ -1,12 +1,8 @@
 package com.concert_reservation.api.integration;
 
-import com.concert_reservation.api.application.dto.request.TokenRequest;
-import com.concert_reservation.api.application.dto.response.TokenResponse;
-import com.concert_reservation.api.application.dto.response.TokenValidateResponse;
-import com.concert_reservation.api.application.facade.TokenFacade;
-import com.concert_reservation.common.model.WebResponseData;
-import com.concert_reservation.testhelpers.TokenRequestFixture;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.concert_reservation.api.interfaces.controller.queue.dto.TokenRequest;
+import com.concert_reservation.api.interfaces.controller.queue.dto.TokenResponse;
+import com.concert_reservation.api.application.queue.TokenFacade;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;

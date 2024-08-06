@@ -1,6 +1,6 @@
 package com.concert_reservation.testhelpers;
 
-import com.concert_reservation.api.application.dto.request.TokenRequest;
+import com.concert_reservation.api.interfaces.controller.queue.dto.TokenRequest;
 import java.time.LocalDateTime;
 
 public class TokenRequestFixture {

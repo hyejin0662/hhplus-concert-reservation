@@ -1,7 +1,7 @@
 package com.concert_reservation.api.integration;
 
-import com.concert_reservation.api.application.dto.request.ConcertRequest;
-import com.concert_reservation.api.application.dto.response.ConcertResponse;
+import com.concert_reservation.api.interfaces.controller.concert.dto.request.ConcertRequest;
+import com.concert_reservation.api.interfaces.controller.concert.dto.response.ConcertResponse;
 import com.concert_reservation.common.model.WebResponseData;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

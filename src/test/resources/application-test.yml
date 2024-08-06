@@ -21,6 +21,12 @@ spring:
 #        - classpath:docker-compose-kafka.yml
 #        - classpath:docker-compose-redis.yml
 #        - classpath:docker-compose-ui.yml
+  task:
+    execution:
+      pool:
+        core-size: 12
+        max-size: 20
+        queue-capacity: 100
 
 logging:
   level:

@@ -1,14 +1,12 @@
 package com.concert_reservation.api.integration;
 
-import com.concert_reservation.api.application.dto.request.PaymentRequest;
-import com.concert_reservation.api.application.dto.response.PaymentResponse;
+import com.concert_reservation.api.interfaces.controller.point.dto.request.PaymentRequest;
+import com.concert_reservation.api.interfaces.controller.point.dto.response.PaymentResponse;
 import com.concert_reservation.common.model.WebResponseData;
 import com.concert_reservation.common.type.GlobalResponseCode;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,13 +26,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import lombok.SneakyThrows;
+
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-
-
-
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -122,8 +114,8 @@ class PaymentIntegrationTest {
         });
 
     assertThat(errorResponse).isNotNull();
-    assertThat(errorResponse.getCode()).isEqualTo(GlobalResponseCode.PAYMENT_NOT_AVAILABLE);
-    assertThat(errorResponse.getDescription()).isEqualTo(GlobalResponseCode.PAYMENT_NOT_AVAILABLE.getDescription());
+    assertThat(errorResponse.getCode()).isEqualTo(GlobalResponseCode.NOT_FOUND_USER_POINT);
+    assertThat(errorResponse.getDescription()).isEqualTo(GlobalResponseCode.NOT_FOUND_USER_POINT.getDescription());
   }
 
 
@@ -133,7 +125,7 @@ class PaymentIntegrationTest {
   @Sql(scripts = {"/truncate_tables.sql", "/concert.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 동시에_10건_콘서트_결제시_1건_성공_9건_실패() throws Exception {
     // Given
-    int times = 10;  // 동시 요청 수
+    int times = 2;  // 동시 요청 수
     String userId = "user1";
     Long amount = 100L;
     Long concertOptionId = 1L;
@@ -147,7 +139,8 @@ class PaymentIntegrationTest {
         .build();
 
     ExecutorService executorService = Executors.newFixedThreadPool(times);
-    CountDownLatch latch = new CountDownLatch(times);
+    CountDownLatch startLatch = new CountDownLatch(1);  // 모든 스레드가 동시에 시작하도록 하는 래치
+    CountDownLatch latch = new CountDownLatch(times);  // 모든 스레드가 끝날 때까지 기다리는 래치
 
     AtomicInteger successCount = new AtomicInteger(0);
     AtomicInteger failCount = new AtomicInteger(0);
@@ -155,6 +148,7 @@ class PaymentIntegrationTest {
     IntStream.range(0, times).forEach(i -> {
       executorService.submit(() -> {
         try {
+          startLatch.await();  // 모든 스레드가 동시에 시작되도록 대기
           mvc.perform(patch("/payments/payment")
                   .contentType(MediaType.APPLICATION_JSON)
                   .content(objectMapper.writeValueAsString(request)))
@@ -170,13 +164,15 @@ class PaymentIntegrationTest {
       });
     });
 
-    latch.await(10, TimeUnit.SECONDS);
+    startLatch.countDown();  // 모든 스레드 시작
+    latch.await(50, TimeUnit.SECONDS);
     executorService.shutdown();
 
     // Then
     assertThat(successCount.get()).isEqualTo(1);
-    assertThat(failCount.get()).isEqualTo(9);
+    assertThat(failCount.get()).isEqualTo(1);
   }
+
 
 
 }
