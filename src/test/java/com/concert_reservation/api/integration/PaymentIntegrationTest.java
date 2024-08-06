@@ -114,8 +114,8 @@ class PaymentIntegrationTest {
         });
 
     assertThat(errorResponse).isNotNull();
-    assertThat(errorResponse.getCode()).isEqualTo(GlobalResponseCode.PAYMENT_NOT_AVAILABLE);
-    assertThat(errorResponse.getDescription()).isEqualTo(GlobalResponseCode.PAYMENT_NOT_AVAILABLE.getDescription());
+    assertThat(errorResponse.getCode()).isEqualTo(GlobalResponseCode.NOT_FOUND_USER_POINT);
+    assertThat(errorResponse.getDescription()).isEqualTo(GlobalResponseCode.NOT_FOUND_USER_POINT.getDescription());
   }
 
 

@@ -63,7 +63,7 @@ public class Token  {
 
     public Token markAsProcessing() {
         if (this.tokenStatus == TokenStatus.WAITING) {
-            this.tokenStatus = TokenStatus.PROCESSING;
+            this.tokenStatus = TokenStatus.ACTIVE;
         }
         return this;
     }
@@ -77,7 +77,7 @@ public class Token  {
     }
 
     public boolean isProcessing() {
-        return this.tokenStatus == TokenStatus.PROCESSING;
+        return this.tokenStatus == TokenStatus.ACTIVE;
     }
 
     public TokenInfo toTokenInfoWithWaitingNumber(int waitingNumber) {

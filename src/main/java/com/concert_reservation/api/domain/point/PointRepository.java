@@ -8,8 +8,8 @@ import com.concert_reservation.api.domain.point.model.Point;
 
 public interface PointRepository {
 
-  Optional<Point> findPointByUserId(String userId);
-  Optional<Point> findById(Long pointId);
+  Optional<Point> getPoint(String userId);
+  Optional<Point> getPoint(Long pointId);
   List<Point> findAll();
   Point save(Point point);
   void deleteById(Long pointId);

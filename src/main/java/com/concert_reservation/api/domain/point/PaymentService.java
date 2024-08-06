@@ -24,7 +24,7 @@ public class PaymentService {
 	@Transactional
 	public PaymentInfo payPoint(PaymentCommand command) {
 
-		Point point = pointRepository.findPointByUserId(command.getUserId()).orElseThrow( () -> new CustomException(GlobalResponseCode.PAYMENT_NOT_AVAILABLE));
+		Point point = pointRepository.getPoint(command.getUserId()).orElseThrow( () -> new CustomException(GlobalResponseCode.NOT_FOUND_USER_POINT));
 		point.use(command.getAmount());
 		pointRepository.save(point);
 

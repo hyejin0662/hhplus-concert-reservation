@@ -3,6 +3,7 @@ package com.concert_reservation.api.infrastructure.concert;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.concert_reservation.api.application.concert.BookingInfo;
 import com.concert_reservation.api.domain.concert.model.Booking;
@@ -51,7 +52,8 @@ public class BookingRepositoryImpl implements BookingRepository {
 
   @Override
   public List<BookingInfo> findAll(BookingStatus bookingStatus) {
-    return bookingJpaRepository.findAllByBookingStatusIs(bookingStatus);
+    return bookingJpaRepository.findAllByBookingStatusIs(bookingStatus).stream().map(BookingInfo::from).collect(
+        Collectors.toList());
   }
 
   @Override

@@ -5,6 +5,7 @@ import com.concert_reservation.api.application.user.UserCommand;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,7 @@ public class User {
 
     @Column(nullable = false)
     private String phoneNumber;
+
 
 	public User update(UserCommand userCommand) {
 

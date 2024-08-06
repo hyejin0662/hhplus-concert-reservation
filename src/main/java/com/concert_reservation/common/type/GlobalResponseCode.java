@@ -29,7 +29,7 @@ public enum GlobalResponseCode {
   INVALID_CONCERT_OPTION("콘서트 옵션이 유효하지 않습니다.", 1011, HttpStatus.BAD_REQUEST),
   // 포인트
   INSUFFICIENT_POINT("잔액이 부족합니다.", 1012, HttpStatus.BAD_REQUEST),
-  PAYMENT_NOT_AVAILABLE("결제를 할 수 없습니다.", 1013, HttpStatus.BAD_REQUEST),
+  NOT_FOUND_USER_POINT("결제를 할 수 없습니다.", 1013, HttpStatus.BAD_REQUEST),
 
   // 콘서트
   CONCERT_NOT_FOUND("콘서트를 찾을 수 없습니다.", 1213, HttpStatus.NOT_FOUND),

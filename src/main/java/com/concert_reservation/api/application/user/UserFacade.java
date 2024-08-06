@@ -2,12 +2,11 @@ package com.concert_reservation.api.application.user;
 
 import org.springframework.stereotype.Component;
 
-import com.concert_reservation.api.interfaces.controller.point.dto.request.PointRequest;
-import com.concert_reservation.api.interfaces.controller.point.dto.response.PointResponse;
-import com.concert_reservation.api.application.point.PointCommand;
 import com.concert_reservation.api.application.point.PointInfo;
 import com.concert_reservation.api.domain.point.PointService;
 import com.concert_reservation.api.domain.user.UserService;
+import com.concert_reservation.api.interfaces.controller.point.dto.request.PointRequest;
+import com.concert_reservation.api.interfaces.controller.point.dto.response.PointResponse;
 import com.concert_reservation.api.interfaces.controller.user.dto.UserRequest;
 import com.concert_reservation.api.interfaces.controller.user.dto.UserResponse;
 
@@ -20,8 +19,7 @@ public class UserFacade {
 	private final PointService pointService;
 
 	public PointResponse chargePoint(PointRequest pointRequest) {
-		PointCommand pointCommand = new PointCommand(null, pointRequest.getUserId(), pointRequest.getAmount(), pointRequest.getPaymentTime(), pointRequest.getPaymentMethod());
-		PointInfo pointInfo = pointService.charge(pointCommand);
+		PointInfo pointInfo = pointService.charge(pointRequest.toCommand());
 		return PointResponse.from(pointInfo);
 	}
 
@@ -29,7 +27,6 @@ public class UserFacade {
 		PointInfo pointInfo = pointService.getPoint(pointId);
 		return PointResponse.from(pointInfo);
 	}
-
 
 	public UserResponse createUser(UserRequest userRequest) {
 		UserCommand userCommand = UserCommand.builder()
@@ -63,6 +60,5 @@ public class UserFacade {
 	public void deleteUser(String userId) {
 		userService.deleteUser(userId);
 	}
-
 
 }

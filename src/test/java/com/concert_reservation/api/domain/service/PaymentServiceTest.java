@@ -63,7 +63,7 @@ class PaymentServiceTest {
 	@DisplayName("포인트 결제 성공 테스트")
 	void payPointSuccessTest() {
 		// given
-		when(pointRepository.findPointByUserId(anyString())).thenReturn(Optional.of(point));
+		when(pointRepository.getPoint(anyString())).thenReturn(Optional.of(point));
 
 		// when
 		PaymentInfo paymentInfo = paymentService.payPoint(paymentCommand);
@@ -72,7 +72,7 @@ class PaymentServiceTest {
 		assertThat(paymentInfo).isNotNull();
 		assertThat(paymentInfo.getUserId()).isEqualTo(point.getUser().getUserId());
 		assertThat(paymentInfo.getAmount()).isEqualTo(300L);
-		verify(pointRepository, times(1)).findPointByUserId(anyString());
+		verify(pointRepository, times(1)).getPoint(anyString());
 		verify(pointRepository, times(1)).save(point);
 	}
 
@@ -80,7 +80,7 @@ class PaymentServiceTest {
 	@DisplayName("포인트 결제 시 사용자 찾을 수 없음 테스트")
 	void payPointUserNotFoundTest() {
 		// given
-		when(pointRepository.findPointByUserId(anyString())).thenReturn(Optional.empty());
+		when(pointRepository.getPoint(anyString())).thenReturn(Optional.empty());
 
 		// when
 		CustomException exception = assertThrows(CustomException.class, () -> {
@@ -89,7 +89,7 @@ class PaymentServiceTest {
 
 		// then
 		assertThat(exception).isNotNull();
-		verify(pointRepository, times(1)).findPointByUserId(anyString());
+		verify(pointRepository, times(1)).getPoint(anyString());
 		verify(pointRepository, never()).save(any(Point.class));
 	}
 
@@ -98,7 +98,7 @@ class PaymentServiceTest {
 	void payPointInsufficientFundsTest() {
 		// given
 		paymentCommand.setAmount(600L); // More than available balance
-		when(pointRepository.findPointByUserId(anyString())).thenReturn(Optional.of(point));
+		when(pointRepository.getPoint(anyString())).thenReturn(Optional.of(point));
 
 		// when
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
@@ -107,7 +107,7 @@ class PaymentServiceTest {
 
 		// then
 		assertThat(exception).isNotNull();
-		verify(pointRepository, times(1)).findPointByUserId(anyString());
+		verify(pointRepository, times(1)).getPoint(anyString());
 		verify(pointRepository, never()).save(any(Point.class));
 	}
 }

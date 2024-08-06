@@ -48,7 +48,7 @@ public class Point {
     @Version
     private Long version;
 
-    public void addAmount(Long amount) {
+    public void charge(Long amount) {
         this.amount += amount;
     }
 

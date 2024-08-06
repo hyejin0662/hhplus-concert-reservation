@@ -38,7 +38,7 @@ public class TokenFacade {
 	}
 
 
-	public void decrementCounter() {
+	public void decreaseCounter() {
 		tokenService.decreaseCounter();
 	}
 }

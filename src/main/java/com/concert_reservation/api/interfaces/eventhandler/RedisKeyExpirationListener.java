@@ -36,7 +36,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
         String expiredKey = new String(message.getBody());
         log.info("Key expired: {}", expiredKey);
 
-        tokenFacade.decrementCounter();
+        tokenFacade.decreaseCounter();
 
 
     }
