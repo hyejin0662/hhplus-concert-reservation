@@ -22,6 +22,16 @@ spring:
 #        - classpath:docker-compose-redis.yml
 #        - classpath:docker-compose-ui.yml
 
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show-sql: true
+        generate-ddl: true
+        format_sql: true
+        use_sql_comments: true
+
 logging:
   level:
     org:
@@ -33,13 +43,6 @@ logging:
               BasicBinder: TRACE
 
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        show-sql: true
-        generate-ddl: true
 
 
 
