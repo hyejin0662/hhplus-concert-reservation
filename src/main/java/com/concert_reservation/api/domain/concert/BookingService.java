@@ -93,7 +93,7 @@ public class BookingService {
   @Transactional(readOnly = true)
   public List<AvailableDatesInfo> getAvailableDates(AvailableDatesCommand command) {
 
-    List<ConcertOption> concertOptions = concertOptionRepository.findConcertOptions(command.getConcertId());
+    List<ConcertOption> concertOptions = concertOptionRepository.findConcertOptions(command.getConcertOptionId());
 
     return concertOptions.stream().filter(item->item.isAfter(now())).map(AvailableDatesInfo::from).collect(Collectors.toList());
 

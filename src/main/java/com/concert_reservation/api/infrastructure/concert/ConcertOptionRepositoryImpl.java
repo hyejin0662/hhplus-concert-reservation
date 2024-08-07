@@ -38,8 +38,8 @@ public class ConcertOptionRepositoryImpl implements ConcertOptionRepository {
     }
 
     @Override
-    public List<ConcertOption> findConcertOptions(Long concertId) {
-        return concertOptionJpaRepository.findAllByConcertId(concertId);
+    public List<ConcertOption> findConcertOptions(Long concertOptionId) {
+        return concertOptionJpaRepository.findAllByConcertOptionId(concertOptionId);
     }
 
 }
