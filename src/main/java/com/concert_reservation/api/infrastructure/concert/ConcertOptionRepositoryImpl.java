@@ -5,6 +5,7 @@ import com.concert_reservation.api.domain.concert.ConcertOptionRepository;
 
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +41,11 @@ public class ConcertOptionRepositoryImpl implements ConcertOptionRepository {
     @Override
     public List<ConcertOption> findConcertOptions(Long concertOptionId) {
         return concertOptionJpaRepository.findAllByConcertOptionId(concertOptionId);
+    }
+
+    @Override
+    public List<ConcertOption> getAvailableDates(Long concertOptionId) {
+        return concertOptionJpaRepository.findAvailableDates(concertOptionId, LocalDateTime.now());
     }
 
 }

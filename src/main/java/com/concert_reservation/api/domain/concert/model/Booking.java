@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDateTime;
 
+import com.concert_reservation.api.application.concert.BookingCommand;
 import com.concert_reservation.api.domain.user.model.User;
 import com.concert_reservation.common.type.BookingStatus;
 
@@ -48,11 +49,20 @@ public class Booking {
     @Column(nullable = false)
     private LocalDateTime bookingTime;
 
+    public static Booking createBooking(User user, Seat seat, BookingCommand bookingCommand) {
+        return Booking.builder()
+                .user(user)
+                .seat(seat)
+                .bookingTime(bookingCommand.getBookingTime())
+                .bookingStatus(BookingStatus.PENDING)
+                .build();
+    }
+
     public void updateBookingStatus(BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
     }
 
-    public void doConfirm() {
+    public void confirm() {
         this.bookingStatus= BookingStatus.CONFIRMED;
     }
 }

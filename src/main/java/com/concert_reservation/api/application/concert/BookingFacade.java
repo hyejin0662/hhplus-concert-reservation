@@ -23,13 +23,11 @@ public class BookingFacade {
 
 	public BookingResponse createBooking(BookingRequest bookingRequest) {
 
-		BookingInfo bookingInfo = bookingService.createBooking(bookingRequest.toCommand());
-		return BookingResponse.from(bookingInfo);
+		return BookingResponse.from(bookingService.createBooking(bookingRequest.toCommand()));
 	}
 
 	public BookingResponse getBooking(String userId) {
-		BookingInfo bookingInfo = bookingService.getBooking(userId);
-		return BookingResponse.from(bookingInfo);
+		return BookingResponse.from(bookingService.getBooking(userId));
 	}
 
 

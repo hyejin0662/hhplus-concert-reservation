@@ -68,4 +68,8 @@ public class ConcertOption {
     this.location = command.getLocation();
   }
 
+  public ConcertOption withSeats(List<Seat> seats) {
+    this.seats=seats;
+    return this;
+  }
 }

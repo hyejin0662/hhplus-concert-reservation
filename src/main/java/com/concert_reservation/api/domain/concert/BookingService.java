@@ -1,13 +1,14 @@
 package com.concert_reservation.api.domain.concert;
 
 
+import static com.concert_reservation.common.type.GlobalResponseCode.*;
 import static java.time.LocalDateTime.*;
 
 import com.concert_reservation.api.domain.concert.model.Booking;
 import com.concert_reservation.api.domain.concert.model.ConcertOption;
 import com.concert_reservation.api.domain.concert.model.Seat;
 import com.concert_reservation.common.exception.CustomException;
-import com.concert_reservation.common.type.GlobalResponseCode;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,37 +42,22 @@ public class BookingService {
 
 
 
+  /**
+   * 애초에 찾아올 때 이미 선점이 안된 것만 찾아온다
+   * 이 내부에서 이미 선점이 되었거나 혹은 만료되었다면 -> 예외 발생
+   */
   @Transactional
   public BookingInfo createBooking(BookingCommand bookingCommand) {
-
-
-    User user = userRepository.getUser(bookingCommand.getUserId())
-        .orElseThrow(() -> new CustomException(GlobalResponseCode.USER_NOT_FOUND));
-
-    // 애초에 찾아올 때 이미 선점이 안된 것만 찾아온다 + EXPIRE가 안된 것만 찾아온다 = 유효한 좌석만 찾는다
-    Seat seat = seatRepository.findByIdWithLock(bookingCommand.getSeatId())
-        .orElseThrow(() -> new CustomException(GlobalResponseCode.SEAT_NOT_FOUND));
-
-     // 이 내부에서 이미 선점이 되었거나 혹은 만료되었다면 -> 예외 발생
-    seat.doReserve();
-
-    Booking booking = Booking.builder()
-        .user(user)
-        .seat(seat)
-        .bookingTime(bookingCommand.getBookingTime())
-        .bookingStatus(BookingStatus.PENDING)  // 좌석 임시예약
-        .build();
-    bookingRepository.save(booking);
-    return BookingInfo.from(booking);
+    User user = userRepository.getUser(bookingCommand.getUserId()).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    Seat seat = seatRepository.getValidSeats(bookingCommand.getSeatId()).orElseThrow(() -> new CustomException(ALREADY_RESERVED));
+    seat.reserve();
+    return BookingInfo.from(bookingRepository.save(Booking.createBooking(user, seat, bookingCommand)));
   }
 
-  @Transactional
+  @Transactional(readOnly = true)
   public BookingInfo getBooking(String userId) {
-    Booking booking = bookingRepository.findByUserId(userId)
-        .orElseThrow(() -> new CustomException(GlobalResponseCode.BOOKING_NOT_FOUND));
-    return BookingInfo.from(booking);
+    return BookingInfo.from(bookingRepository.findByUserId(userId).orElseThrow(() -> new CustomException(BOOKING_NOT_FOUND)));
   }
-
 
   @Transactional
   public void deleteBooking(Long bookingId) {
@@ -80,29 +66,18 @@ public class BookingService {
 
   @Transactional(readOnly = true)
   public List<SeatInfo> getAvailableSeats(SeatCommand seatCommand) {
-
-    ConcertOption concertOption = concertOptionRepository.findById(seatCommand.getConcertOptionId())
-        .orElseThrow(() -> new CustomException(GlobalResponseCode.INVALID_CONCERT_OPTION));
-
-    return concertOption.getSeats().stream()
-        .filter(Seat::isNotReserved)
-        .map(SeatInfo::from)
-        .collect(Collectors.toList());
+    return seatRepository.getAvailableSeats(seatCommand.getConcertOptionId()).stream().map(SeatInfo::from).collect(Collectors.toList());
   }
 
   @Transactional(readOnly = true)
   public List<AvailableDatesInfo> getAvailableDates(AvailableDatesCommand command) {
-
-    List<ConcertOption> concertOptions = concertOptionRepository.findConcertOptions(command.getConcertOptionId());
-
-    return concertOptions.stream().filter(item->item.isAfter(now())).map(AvailableDatesInfo::from).collect(Collectors.toList());
-
+    return concertOptionRepository.getAvailableDates(command.getConcertOptionId()).stream().map(AvailableDatesInfo::from).collect(Collectors.toList());
   }
 
   @Transactional
   public BookingInfo confirmBooking(String userId, Long concertOptionId) {
     Booking booking = bookingRepository.findByUserId(userId).orElseThrow();
-    booking.doConfirm();
+    booking.confirm();
     return BookingInfo.from(booking);
   }
 

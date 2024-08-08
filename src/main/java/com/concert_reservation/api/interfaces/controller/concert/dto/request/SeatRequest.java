@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SeatRequest {
 	private Long concertOptionId;
+	private LocalDateTime concertDate;
 }

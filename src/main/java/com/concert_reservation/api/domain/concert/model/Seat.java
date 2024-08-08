@@ -4,10 +4,15 @@ import com.concert_reservation.common.exception.CustomException;
 import com.concert_reservation.common.type.GlobalResponseCode;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,7 +38,9 @@ public class Seat {
     @Column(nullable = false)
     private int price;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "concert_option_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT) )
+    private ConcertOption concertOption;
 
     public void isReserved(boolean isReserved) {
         this.isReserved = isReserved;
@@ -52,7 +59,7 @@ public class Seat {
         return !isReserved;
     }
 
-    public void doReserve() {
+    public void reserve() {
         if (isReserved) { // 이선좌
             throw new CustomException(GlobalResponseCode.ALREADY_RESERVED);
         }
