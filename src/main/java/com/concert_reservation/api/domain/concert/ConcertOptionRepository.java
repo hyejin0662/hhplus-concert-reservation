@@ -1,5 +1,6 @@
 package com.concert_reservation.api.domain.concert;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +11,8 @@ public interface ConcertOptionRepository {
     List<ConcertOption> findAll();
     ConcertOption save(ConcertOption concertOption);
     void deleteById(Long concertOptionId);
-	List<ConcertOption> findConcertOptions(Long concertId);
+	List<ConcertOption> findConcertOptions(Long concertOptionId);
+
+	List<ConcertOption> getAvailableDates(Long concertOptionId);
 
 }

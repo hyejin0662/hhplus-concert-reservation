@@ -10,7 +10,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +20,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Table(name = "concert_option", indexes = {
+    @Index(name = "idx_concert_id", columnList = "concertId"),
+    @Index(name = "idx_concert_date", columnList = "concertDate")
+})
 @Getter
 @Setter
 @Builder
@@ -62,4 +68,8 @@ public class ConcertOption {
     this.location = command.getLocation();
   }
 
+  public ConcertOption withSeats(List<Seat> seats) {
+    this.seats=seats;
+    return this;
+  }
 }

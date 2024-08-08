@@ -1,5 +1,7 @@
 package com.concert_reservation.api.interfaces.controller.concert;
 
+import static com.concert_reservation.common.model.WebResponseData.*;
+
 import com.concert_reservation.api.interfaces.controller.concert.dto.ConcertOptionDto;
 import com.concert_reservation.api.application.concert.ConcertOptionFacade;
 import com.concert_reservation.common.model.WebResponseData;
@@ -22,22 +24,19 @@ public class ConcertOptionController {
     @PostMapping
     @Operation(summary = "콘서트 옵션 생성", description = "새로운 콘서트 옵션을 생성합니다.")
     public WebResponseData<ConcertOptionDto.Response> createConcertOption(@Valid @RequestBody ConcertOptionDto.Request concertOptionDto) {
-        ConcertOptionDto.Response response = concertOptionFacade.createConcertOption(concertOptionDto);
-        return WebResponseData.ok(response);
+        return ok(concertOptionFacade.createConcertOption(concertOptionDto));
     }
 
     @GetMapping("/{concertOptionId}")
     @Operation(summary = "콘서트 옵션 조회", description = "콘서트 옵션 ID로 콘서트 옵션 정보를 조회합니다.")
     public WebResponseData<ConcertOptionDto.Response> getConcertOption(@PathVariable Long concertOptionId) {
-        ConcertOptionDto.Response response = concertOptionFacade.getConcertOption(concertOptionId);
-        return WebResponseData.ok(response);
+        return ok(concertOptionFacade.getConcertOption(concertOptionId));
     }
 
     @PutMapping("/{concertOptionId}")
     @Operation(summary = "콘서트 옵션 업데이트", description = "콘서트 옵션 ID로 콘서트 옵션 정보를 업데이트합니다.")
     public WebResponseData<ConcertOptionDto.Response> updateConcertOption(@PathVariable Long concertOptionId, @Valid @RequestBody ConcertOptionDto.Request concertOptionDto) {
-        ConcertOptionDto.Response response = concertOptionFacade.updateConcertOption(concertOptionId, concertOptionDto);
-        return WebResponseData.ok(response);
+        return ok(concertOptionFacade.updateConcertOption(concertOptionId, concertOptionDto));
     }
 
     @DeleteMapping("/{concertOptionId}")
@@ -50,7 +49,6 @@ public class ConcertOptionController {
     @GetMapping
     @Operation(summary = "모든 콘서트 옵션 조회")
     public WebResponseData<List<ConcertOptionDto.Response>> getConcertOptions() {
-        List<ConcertOptionDto.Response> responses = concertOptionFacade.getConcertOptions();
-        return WebResponseData.ok(responses);
+        return ok(concertOptionFacade.getConcertOptions());
     }
 }

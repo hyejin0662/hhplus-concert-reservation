@@ -21,10 +21,7 @@ public class ConcertFacade {
 
 
 	public ConcertResponse createConcert(ConcertRequest concertRequest) {
-		ConcertCommand concertCommand = ConcertCommand.builder()
-			.concertName(concertRequest.getConcertName())
-			.build();
-		ConcertInfo concertInfo = concertService.createConcert(concertCommand);
+		ConcertInfo concertInfo = concertService.createConcert(concertRequest.toCommand());
 		return ConcertResponse.from(concertInfo);
 	}
 

@@ -27,8 +27,6 @@ public class ConcertOptionService {
 
     @Transactional
     public ConcertOptionInfo createConcertOption(ConcertOptionCommand concertOptionCommand) {
-        ConcertOption concertOption = concertOptionCommand.toEntity();
-
         List<Seat> seats = IntStream.rangeClosed(1, 50)
             .mapToObj(i -> Seat.builder()
                 .seatNumber(i)
@@ -37,12 +35,7 @@ public class ConcertOptionService {
                 .build())
             .collect(Collectors.toList());
 
-
-        seatRepository.saveAll(seats);
-        concertOption.setSeats(seats);
-        concertOptionRepository.save(concertOption);
-
-        return ConcertOptionInfo.from(concertOption);
+        return ConcertOptionInfo.from(concertOptionRepository.save(concertOptionCommand.toEntity().withSeats(seats)));
     }
 
 

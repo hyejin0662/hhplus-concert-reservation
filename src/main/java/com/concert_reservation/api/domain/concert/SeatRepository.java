@@ -17,4 +17,9 @@ public interface SeatRepository {
 	void saveAll(List<Seat> seats);
 
 	Optional<Seat> findByIdWithLock(Long seatId);
+
+	Optional<Seat> getValidSeats(Long seatId);
+
+	List<Seat> getAvailableSeats(Long concertOptionId);
+
 }

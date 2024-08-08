@@ -1,4 +1,4 @@
-// package com.concert_reservation.api.infrastructure.persistance.impl;
+package com.concert_reservation.api.infrastructure.queue;// package com.concert_reservation.api.infrastructure.persistance.impl;
 //
 // import static com.concert_reservation.common.token.QueueTokenGenerator.*;
 // import static com.concert_reservation.common.type.RedisKeys.*;

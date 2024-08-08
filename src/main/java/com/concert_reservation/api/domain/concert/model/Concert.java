@@ -1,5 +1,7 @@
 package com.concert_reservation.api.domain.concert.model;
 
+import com.concert_reservation.api.application.concert.ConcertCommand;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,5 +29,10 @@ public class Concert {
   @Column(nullable = false)
   private String concertName;
 
-
+	public Concert update(ConcertCommand concertCommand) {
+		return Concert.builder()
+			.concertId(concertId)
+			.concertName(concertCommand.getConcertName())
+			.build();
+	}
 }

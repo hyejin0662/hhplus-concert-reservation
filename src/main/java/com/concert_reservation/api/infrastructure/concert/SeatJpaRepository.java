@@ -1,5 +1,7 @@
 package com.concert_reservation.api.infrastructure.concert;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import com.concert_reservation.api.domain.concert.model.Seat;
@@ -19,4 +21,13 @@ public interface SeatJpaRepository extends JpaRepository<Seat, Long> {
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query(value = "SELECT s FROM Seat s WHERE s.seatId = :seatId")
 	Optional<Seat> findByIdWithLock(@Param("seatId") Long seatId);
+
+
+
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query(value = "SELECT s FROM Seat s WHERE s.seatId = :seatId AND s.isReserved = false")
+	Optional<Seat> findByIdWithLockAndNotReserved(@Param("seatId") Long seatId);
+
+	List<Seat> findByConcertOptionConcertOptionIdAndIsReservedFalse(Long concertOptionId);
 }

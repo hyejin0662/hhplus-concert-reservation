@@ -1,4 +1,4 @@
-// package com.concert_reservation.api.business.service;
+package com.concert_reservation.api.infrastructure.queue;// package com.concert_reservation.api.business.service;
 //
 // import static com.concert_reservation.common.type.QueuePolicy.*;
 //
