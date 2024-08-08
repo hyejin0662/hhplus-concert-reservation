@@ -71,8 +71,9 @@ public class Point {
 
         // 환불 로직 (예: 환불된 금액을 사용자의 잔액에 더함)
         this.amount += this.amount;
+    }
 
-        // 결제 금액을 0으로 초기화
-        this.amount = 0L;
+    public void cancel(String cancelReason) {
+        cancel();
     }
 }

@@ -1314,63 +1314,49 @@ private void handleTransactionFailure(PaymentRequest paymentRequest) {
 ### 예시 코드 - try catch 구문으로 보상 메커니즘 구현하기
 
 ```java
+
+@Component
+@RequiredArgsConstructor
 public class PaymentFacade {
 
-    private final PaymentService paymentService;
-    private final BookingService bookingService;
-    private final TokenService tokenService;
+	private final PaymentService paymentService;
+	private final BookingService bookingService;
+	private final TokenService tokenService;
+	private final BookingPublisher bookingPublisher;
 
-    @Transactional
-    public PaymentResponse payPoint(PaymentRequest paymentRequest) {
-        PaymentInfo paymentInfo = null;
-        BookingInfo bookingInfo = null;
+	public PaymentResponse payPoint(PaymentRequest paymentRequest) {
 
-        try {
-            // 1. 결제 처리
-            paymentInfo = paymentService.payPoint(paymentRequest.toCommand());
+		PaymentInfo paymentInfo = null;
+		
+		try {
+			// 1. 결제 처리
+			paymentInfo = paymentService.payPoint(paymentRequest.toCommand());
+		} catch (Exception e){
+			paymentService.cancelPayment(paymentRequest.getUserId(), paymentRequest.getConcertOptionId());
+			throw new RuntimeException("결제 실패");
+		}
 
-            // 2. booking 처리
-            bookingInfo = bookingService.confirmBooking(paymentRequest.getUserId(), paymentRequest.getConcertOptionId());
+		// 2. booking 처리
+		BookingInfo bookingInfo = bookingService.confirmBooking(paymentRequest.getUserId(), paymentRequest.getConcertOptionId());
 
-            // 3. 토큰 처리
-            tokenService.expireProcessingTokens(paymentRequest.getUserId());
+		// 3. 토큰 처리 및 기타 데이터 플랫폼 전송을 위한 이벤트 발행  
+		bookingPublisher.publishBookingCompletedEvent(paymentRequest.getUserId(), paymentRequest.getConcertOptionId());
 
-        } catch (CustomException e) {
-            handleTransactionCompensation(paymentRequest, paymentInfo, bookingInfo);
-            throw e;  // 예외를 다시 던져 호출자에게 알림
-        }
+		// tokenService.expireProcessingTokens(paymentRequest.getUserId());
 
-        return PaymentResponse.from(paymentInfo);
-    }
-
-    private void handleTransactionCompensation(PaymentRequest paymentRequest, PaymentInfo paymentInfo, BookingInfo bookingInfo) {
-        if (paymentInfo != null) {
-            try {
-                paymentService.rollbackPayment(paymentRequest.toCommand());
-            } catch (Exception e) {
-                // 로그를 남기거나 알림을 보내는 등 추가 보상 메커니즘 처리
-            }
-        }
-
-        if (bookingInfo != null) {
-            try {
-                bookingService.rollbackBooking(paymentRequest.getUserId(), paymentRequest.getConcertOptionId());
-            } catch (Exception e) {
-                // 로그를 남기거나 알림을 보내는 등 추가 보상 메커니즘 처리
-            }
-        }
-    }
+		return PaymentResponse.from(paymentInfo);
+	}
 }
-
 ```
 
 
 
 
 
-# 5. 서비스 확장에 대한 대응을 위한 예시 코드 구현
+# 5. 서비스 확장에 대한 대응하기
 
-## 데이터 플랫폼으로 확장해야 한다는 추가 요구사항이 발생한다면?
+## 결제에 따른 좌석 예약 완료를 이벤트로 발행하기
+
 
 다음과 같은 새로운 요구 사항이 발생한다고 가정해보자.
 
@@ -1482,43 +1468,207 @@ public class MockApiClient {
 좌석예약 완료 후 이벤트를 발행하도록 PaymentFacade를 수정한다.
 
 ```java
-package com.concert_reservation.api.application.point;
-
-import org.springframework.stereotype.Component;
-import com.concert_reservation.api.interfaces.controller.point.dto.request.PaymentRequest;
-import com.concert_reservation.api.interfaces.controller.point.dto.response.PaymentResponse;
-import com.concert_reservation.api.application.concert.BookingInfo;
-import com.concert_reservation.api.domain.concert.BookingService;
-import com.concert_reservation.api.domain.point.PaymentService;
-import com.concert_reservation.api.domain.queue.TokenService;
-import com.concert_reservation.api.application.concert.BookingPublisher;
-import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class PaymentFacade {
-    private final PaymentService paymentService;
-    private final BookingService bookingService;
-    private final TokenService tokenService;
-    private final BookingPublisher bookingPublisher;
 
-    public PaymentResponse payPoint(PaymentRequest paymentRequest) {
-        // 1. 결제 처리
-        PaymentInfo paymentInfo = paymentService.payPoint(paymentRequest.toCommand());
+	private final PaymentService paymentService;
+	private final BookingService bookingService;
+	private final BookingPublisher bookingPublisher;
 
-        // 2. booking 처리
-        BookingInfo bookingInfo = bookingService.confirmBooking(paymentRequest.getUserId(), paymentRequest.getConcertOptionId());
+	public PaymentResponse payPoint(PaymentRequest paymentRequest) {
 
-        // 3. 토큰 처리
-        tokenService.expireProcessingTokens(paymentRequest.getUserId());
+		PaymentInfo paymentInfo = null;
+		
+		try {
+			// 1. 결제 처리
+			paymentInfo = paymentService.payPoint(paymentRequest.toCommand());
+		} catch (Exception e){
+			paymentService.cancelPayment(paymentRequest.getUserId(), paymentRequest.getConcertOptionId());
+			throw new RuntimeException("결제 실패");
+		}
 
-        // 4. 이벤트 발행
-        bookingPublisher.publishBookingCompletedEvent(paymentRequest.getUserId(), paymentRequest.getConcertOptionId());
+		// 2. booking 처리
+		BookingInfo bookingInfo = bookingService.confirmBooking(paymentRequest.getUserId(), paymentRequest.getConcertOptionId());
 
-        return PaymentResponse.from(paymentInfo);
+		// 3. 토큰 처리 및 기타 데이터 플랫폼 전송을 위한 이벤트 발행  
+		bookingPublisher.publishBookingCompletedEvent(paymentRequest.getUserId(), paymentRequest.getConcertOptionId());
+
+		return PaymentResponse.from(paymentInfo);
+	}
+}
+```
+
+
+## 실시간 좌석 정보를 데이터 플랫폼에 전달하기
+
+현재 구현된 서비스와 엔티티 코드를 고려할 때, 좌석 정보가 변경되는 경우는 주로 두 가지 상황에서 발생한다.
+
+1) 임시 예약 API를 호출할 때
+2) 특정 시간까지 예약이 확정되지 않아 임시 예약이 취소될 때
+
+위와 같은 경우에 좌석 정보가 변경된다.
+
+좌석 정보를 전달하는 방식에는 두 가지가 있을 것이다. 전체 좌석 정보를 전달하거나 개별 좌석 변경 사항을 전달하는 것이다.
+전체 좌석 정보를 전달하려면 매 전송시마다 전체에 대한 해주어야 한다. 여기서는 개별적인 좌석 변경 사항을 전닳하는 것이 요구사항이라고 가정하고 방법을 탐구해보도록 한다.
+
+그렇다면 좌석 변경 사항을 어떻게 감지하고 이를 이벤트로 발행할 수 있을까? 또 기존의 로직에 영향을 주지 않으면서 어떻게 할 수 있을까?
+
+두 가지 접근 방식을 고려할 수 있다.
+
+### 첫 번째 방식: 개별적으로 Publisher 구현
+
+좌석 변경이 발생하는 메서드나 API에 대해 개별적으로 Publisher를 구현하여 이벤트를 발행하는 방식다. 이 방법은 각 좌석 변경 지점에서 직접 이벤트를 발행하는 방법이다.
+
+예를 들면 다음과 같은 publisher를 구현하고 이를 필요로 하는 api에서 사용한다.
+
+```java
+public class SeatChangePublisher {
+    private final ApplicationEventPublisher eventPublisher;
+
+    public void publishSeatChangedEvent(Long seatId, boolean isReserved) {
+        SeatChangedEvent event = new SeatChangedEvent(seatId, isReserved);
+        eventPublisher.publishEvent(event);
     }
 }
 ```
+
+```java
+  public BookingInfo createBooking(BookingCommand bookingCommand) {
+    User user = userRepository.getUser(bookingCommand.getUserId()).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    Seat seat = seatRepository.getValidSeats(bookingCommand.getSeatId()).orElseThrow(() -> new CustomException(ALREADY_RESERVED));
+    seat.reserve();
+    // 여기서 publisher가 발행 
+    return BookingInfo.from(bookingRepository.save(Booking.createBooking(user, seat, bookingCommand)));
+  }
+```
+
+
+### 두 번째 방식: 도메인 이벤트 사용
+
+도메인 이벤트를 사용하면 보다 포괄적이면서 효율적으로 이벤트를 발행할 수 있다. 이때 Spring에서 제공해주는 기능으로서 AbstractAggregateRoot를 활용할 수 있다.
+
+AbstractAggregateRoot는 도메인 객체의 상태 변화를 추적하고 이벤트를 발행할 수 있게 해주는 Spring Data의 클래스이다. 이를 활용하면 객체 내에서 상태 변화 시 자동으로 이벤트를 등록하고 처리할 수 있다.
+
+
+
+#### 예시 코드: 도메인 이벤트와 리스너 구현
+
+먼저 엔티티에서 AbstractAggregateRoot를 사용하도록 다음과 같이 구현한다.
+
+1. 도메인 이벤트 정의
+
+```java
+
+public class Seat extends AbstractAggregateRoot<Seat> {
+
+    // ... 생략 
+    @PostPersist
+    @PostUpdate
+    @PostRemove
+    private void publishSeatChangedEvent() {
+        registerEvent(new SeatChangedEvent(seatId, isReserved));
+    }
+
+    // ... 생략
+
+
+}
+```
+
+publishSeatChangedEvent 메서드에 의해 seat 에 대한 변경 감지에 따라 이벤트가 발행된다. 해당 이벤트를 컨슘할 listener를 다음과 같이 구현한다.
+
+2. 이벤트 리스너 구현
+
+```java
+@Component
+@RequiredArgsConstructor
+public class SeatChangedListener {
+    private final MockApiClient mockApiClient;
+
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleSeatChangedEvent(SeatChangedEvent event) {
+        mockApiClient.sendSeatInfo(event.getSeatId(), event.isReserved());
+    }
+}
+```
+@TransactionalEventListener의 phase = TransactionPhase.AFTER_COMMIT를 사용하는 이유는 트랜잭션이 커밋된 후에 이벤트를 처리함으로써, 트랜잭션이 성공적으로 완료되지 않은 경우에는 이벤트가 발행되지 않도록 보장하기 위함이다. 만약 트랜잭션이 롤백되면 이벤트가 발행되지 않아, 잘못된 데이터가 전송되는 것을 방지할 수 있다.
+
+
+만약 `BeforeCommit`을 사용하면 어떻게 될까?
+
+`BeforeCommit`을 사용하면 트랜잭션이 커밋되기 전에 이벤트가 발행된다. 이는 트랜잭션이 아직 완료되지 않은 상태에서 이벤트가 발생할 수 있음을 의미한다. 이렇게 되면 트랜잭션과 이벤트 발행이 한 트랜잭션으로 묶이게 되어, 이벤트 발행의 의미가 퇴색된다. 이벤트 발행은 원래 느슨한 결합을 위해 사용하는 것인데, `BeforeCommit`을 사용하면 실제로 한 트랜잭션으로 묶여버린다. 따라서 이벤트 발행에서 실패하면 메인 로직이 영향을 받아 전체 트랜잭션이 롤백될 수 있으며, 이는 메인 비즈니스 로직의 안정성에 큰 영향을 미칠 수 있다.
+
+따라서, 현재와 같은 요구 사항에서는 트랜잭션 완료 후에 이벤트가 발행되도록 `AfterCommit`을 사용하는 것이 안정성과 일관성을 유지하는 데 적절한 방식이다.
+
+
+3. Mock API Client 구현
+
+```java
+@Component
+@Slf4j
+public class MockApiClient {
+
+    public void sendSeatInfo(Long seatId, boolean isReserved) {
+        // Mock API 호출 로직 구현
+        log.info("좌석 정보를 데이터 플랫폼에 보낸다: seatId=" + seatId + ", isReserved=" + isReserved);
+    }
+}
+```
+
+### 결론
+위에서 제시한 두 번째 방식인 도메인 이벤트 방식을 사용하면 기존 로직에 영향을 주지 않고, 트랜잭션 커밋 후에만 이벤트가 발행되도록 보장할 수 있다. 이로서 이벤트 발행에 실패해도 좌석 변경에는 영향을 미치지 않기 때문에 안정적입니다.
+
+
+
+# 6. 부록
+
+## 현재 시스템에 트랜잭션이 묶여 있는 사례 분석
+
+현재 `ConcertOption`을 생성할 때 좌석을 함께 생성하는 방식이 사용되고 있다. 이 과정은 하나의 트랜잭션으로 묶여 있다. 코드를 살펴보자.
+
+```java
+@Transactional
+public ConcertOptionInfo createConcertOption(ConcertOptionCommand concertOptionCommand) {
+    List<Seat> seats = IntStream.rangeClosed(1, 50)
+        .mapToObj(i -> Seat.builder()
+            .seatNumber(i)
+            .isReserved(false)
+            .price(100)
+            .build())
+        .collect(Collectors.toList());
+
+    return ConcertOptionInfo.from(concertOptionRepository.save(concertOptionCommand.toEntity().withSeats(seats)));
+}
+```
+
+### 서비스 확장과 도메인 분리
+
+서비스가 확장되어 현재의 모놀리틱 아키텍처를 MSA 아키텍처로 구성한다고 가정해보자.
+이에 따라 `ConcertOption`과 `Seat` 도메인을 분리하는 것이 적절할까?
+결론적으로, 그렇지 않다. 그 이유는 다음과 같다.
+
+1. **트랜잭션 관리**: `ConcertOption`과 `Seat`는 서로 강하게 결합된 도메인이다. 하나의 콘서트 옵션이 여러 좌석을 가지며, 이들 좌석 정보는 콘서트 옵션의 중요한 구성 요소이다. 이들을 별도의 트랜잭션으로 관리하면 데이터 일관성 문제와 트랜잭션 경계 문제로 인해 복잡성이 증가한다.
+
+2. **일관성 유지**: `ConcertOption`과 `Seat`의 데이터 일관성을 유지하기 위해서는 이들 간의 변경이 동시에 이루어져야 한다. 트랜잭션이 분리되면, 예를 들어 `ConcertOption`이 생성되었지만 좌석 생성에 실패할 경우, 데이터의 일관성이 깨지게 된다. 이는 시스템 안정성을 저해하는 요인이 된다.
+
+3. **복잡성 증가**: 도메인 분리는 단순히 데이터베이스 스키마의 변경을 넘어 애플리케이션 레벨에서의 복잡성을 증가시킨다. 이를 관리하기 위해 추가적인 동기화 로직, 메시지 큐 또는 이벤트 기반의 비동기 통신 등이 필요해지며, 이는 개발 및 유지보수 비용을 증가시킨다.
+
+즉, 트랜잭션이 결합된 현재 시스템에서 `ConcertOption`과 `Seat`의 트랜잭션을 하나로 묶어 처리하는 방식은 다음과 같은 장점을 가지기 때문이다.
+
+- **원자성 보장**: 트랜잭션 내에서 모든 작업이 성공적으로 완료되거나 모두 실패하도록 보장하여 데이터의 원자성을 유지할 수 있다.
+- **간단한 예외 처리**: 하나의 트랜잭션 내에서 예외가 발생하면 전체 트랜잭션을 롤백하면 되므로, 예외 처리가 간단해진다.
+- **개발 편의성**: 트랜잭션 경계를 명확하게 설정하고, 여러 도메인 객체 간의 일관성을 쉽게 유지할 수 있다.
+
+
+### 결론
+
+현재 시스템에서 `ConcertOption`과 `Seat`를 하나의 트랜잭션으로 묶어 처리하는 방식은 데이터 일관성 및 원자성을 보장하고, 개발 및 유지보수의 복잡성을 줄이는 데 효과적이다.
+
+따라서, 서비스가 확장되더라도 이 경우에는 가급적 두 도메인을 분리하지 않고 함께 관리하는 편이 나을 수 있다.
+
 
 
 
@@ -1527,6 +1677,7 @@ public class PaymentFacade {
 
 
 - https://medium.com/@greg.shiny82/%EB%A7%88%EC%9D%B4%ED%81%AC%EB%A1%9C%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%82%AC%EA%B0%80-%ED%8C%A8%ED%84%B4-544fc1adf5f3
+
 
 
 
