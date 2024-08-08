@@ -14,7 +14,6 @@ import lombok.*;
 @Builder
 public class SeatCommand {
     private Long concertOptionId;
-    private LocalDateTime concertDate;
 
     public Seat toEntity() {
         return DtoConverter.convert(this, Seat.class);

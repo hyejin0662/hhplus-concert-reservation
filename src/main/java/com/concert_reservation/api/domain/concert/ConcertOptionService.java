@@ -35,7 +35,8 @@ public class ConcertOptionService {
                 .build())
             .collect(Collectors.toList());
 
-        return ConcertOptionInfo.from(concertOptionRepository.save(concertOptionCommand.toEntity().withSeats(seats)));
+        seatRepository.saveAll(seats);
+        return ConcertOptionInfo.from(concertOptionRepository.save(concertOptionCommand.toEntity()));
     }
 
 
