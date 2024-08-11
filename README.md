@@ -1344,6 +1344,7 @@ public class PaymentFacade {
         return PaymentResponse.from(paymentInfo);
     }
 
+
     private void handleTransactionCompensation(PaymentRequest paymentRequest, PaymentInfo paymentInfo, BookingInfo bookingInfo) {
         if (paymentInfo != null) {
             try {
