@@ -49,8 +49,6 @@ public class ConcertOption {
   @Column(nullable = false)
   private String location;
 
-  @OneToMany(mappedBy = "seatId")
-  private List<Seat> seats;
 
   public void updateCapacity(Long capacity) {
     this.capacity = capacity;
@@ -68,8 +66,4 @@ public class ConcertOption {
     this.location = command.getLocation();
   }
 
-  public ConcertOption withSeats(List<Seat> seats) {
-    this.seats=seats;
-    return this;
-  }
 }

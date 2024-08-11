@@ -12,4 +12,10 @@ public class MockApiClient {
         // Mock API 호출 로직 구현
         log.info("예약 정보를 데이터 플랫폼에 보낸다: userId=" + userId + ", concertOptionId=" + concertOptionId);
     }
+
+
+    public void sendSeatInfo(Long seatId, boolean isReserved) {
+        // Mock API 호출 로직 구현
+        log.info("좌석 정보를 데이터 플랫폼에 보낸다: seatId=" + seatId + ", isReserved=" + isReserved);
+    }
 }
