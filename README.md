@@ -329,6 +329,7 @@
 }
 ```
 
+
 ## 잔액 조회 API
 
 ### Request
@@ -1344,8 +1345,29 @@ public class PaymentFacade {
 
 		// tokenService.expireProcessingTokens(paymentRequest.getUserId());
 
+
 		return PaymentResponse.from(paymentInfo);
 	}
+
+
+    private void handleTransactionCompensation(PaymentRequest paymentRequest, PaymentInfo paymentInfo, BookingInfo bookingInfo) {
+        if (paymentInfo != null) {
+            try {
+                paymentService.rollbackPayment(paymentRequest.toCommand());
+            } catch (Exception e) {
+                // 로그를 남기거나 알림을 보내는 등 추가 보상 메커니즘 처리
+            }
+        }
+
+        if (bookingInfo != null) {
+            try {
+                bookingService.rollbackBooking(paymentRequest.getUserId(), paymentRequest.getConcertOptionId());
+            } catch (Exception e) {
+                // 로그를 남기거나 알림을 보내는 등 추가 보상 메커니즘 처리
+            }
+        }
+    }
+
 }
 ```
 
@@ -1677,8 +1699,6 @@ public ConcertOptionInfo createConcertOption(ConcertOptionCommand concertOptionC
 
 
 - https://medium.com/@greg.shiny82/%EB%A7%88%EC%9D%B4%ED%81%AC%EB%A1%9C%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%82%AC%EA%B0%80-%ED%8C%A8%ED%84%B4-544fc1adf5f3
-
-
 
 
 
