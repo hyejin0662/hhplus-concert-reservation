@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,37 +19,29 @@ public class ConcertService {
 
   private final ConcertRepository concertRepository;
 
-
+  @Transactional
   public ConcertInfo createConcert(ConcertCommand concertCommand) {
-    Concert concert = Concert.builder()
-        .concertName(concertCommand.getConcertName())
-        .build();
-    concertRepository.save(concert);
-    return ConcertInfo.from(concert);
+    return ConcertInfo.from(concertRepository.save(concertCommand.toEntity()));
   }
 
-
+  @Transactional(readOnly = true)
   public ConcertInfo getConcert(Long concertId) {
-    Concert concert = concertRepository.getConcert(concertId)
-        .orElseThrow(() -> new CustomException(GlobalResponseCode.CONCERT_NOT_FOUND));
+    Concert concert = concertRepository.getConcert(concertId).orElseThrow(() -> new CustomException(GlobalResponseCode.CONCERT_NOT_FOUND));
     return ConcertInfo.from(concert);
   }
 
-
+  @Transactional
   public ConcertInfo updateConcert(Long concertId, ConcertCommand concertCommand) {
-    Concert concert = concertRepository.getConcert(concertId)
-        .orElseThrow(() -> new CustomException(GlobalResponseCode.CONCERT_NOT_FOUND));
-    concert.setConcertName(concertCommand.getConcertName());
-    concertRepository.save(concert);
-    return ConcertInfo.from(concert);
+    Concert concert = concertRepository.getConcert(concertId).orElseThrow(() -> new CustomException(GlobalResponseCode.CONCERT_NOT_FOUND));
+    return ConcertInfo.from(concertRepository.save(concert.update(concertCommand)));
   }
 
-
+  @Transactional
   public void deleteConcert(Long concertId) {
     concertRepository.deleteById(concertId);
   }
 
-
+  @Transactional(readOnly = true)
   public List<ConcertInfo> getConcerts() {
     List<Concert> concerts = concertRepository.findAll();
     return concerts.stream().map(ConcertInfo::from).collect(Collectors.toList());

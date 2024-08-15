@@ -12,5 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class AvailableDatesCommand {
+	private Long concertOptionId;
 	private Long concertId;
 }

@@ -1,4 +1,4 @@
-// package com.concert_reservation.api.business.service;
+package com.concert_reservation.api.domain.queue;// package com.concert_reservation.api.business.service;
 //
 // import org.springframework.transaction.annotation.Transactional;
 //

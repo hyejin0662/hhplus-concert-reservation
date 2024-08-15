@@ -2,6 +2,7 @@ package com.concert_reservation.api.interfaces.controller.concert.dto;
 
 import java.time.LocalDateTime;
 
+import com.concert_reservation.api.application.concert.ConcertOptionCommand;
 import com.concert_reservation.api.application.concert.ConcertOptionInfo;
 import com.concert_reservation.api.domain.concert.model.ConcertOption;
 import com.concert_reservation.common.mapper.DtoConverter;
@@ -25,6 +26,10 @@ public class ConcertOptionDto {
 		private LocalDateTime concertDate;
 		private Long capacity;
 		private String location;
+
+		public ConcertOptionCommand toCommand() {
+			return DtoConverter.convert(this,ConcertOptionCommand.class);
+		}
 	}
 	@Getter
 	@Setter
@@ -38,10 +43,10 @@ public class ConcertOptionDto {
 		private Long capacity;
 		private String location;
 
-		public static ConcertOptionDto.Response from(
+		public static Response from(
 			ConcertOptionInfo concertOption) {
 			return DtoConverter.convert(concertOption,
-				ConcertOptionDto.Response.class);
+				Response.class);
 		}
 
 		public ConcertOption toEntity() {

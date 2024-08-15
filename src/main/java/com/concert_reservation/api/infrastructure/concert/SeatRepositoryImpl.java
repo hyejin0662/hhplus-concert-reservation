@@ -52,4 +52,14 @@ public class SeatRepositoryImpl implements SeatRepository {
     return seatJpaRepository.findByIdWithLock(seatId);
   }
 
+  @Override
+  public Optional<Seat> getValidSeats(Long seatId) {
+    return seatJpaRepository.findByIdWithLockAndNotReserved(seatId);
+  }
+
+  @Override
+  public List<Seat> getAvailableSeats(Long concertOptionId) {
+    return seatJpaRepository.findByConcertOptionConcertOptionIdAndIsReservedFalse(concertOptionId);
+  }
+
 }

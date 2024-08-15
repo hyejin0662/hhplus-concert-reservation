@@ -7,7 +7,9 @@ import com.concert_reservation.common.type.GlobalResponseCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,7 +37,7 @@ public class Point {
     private Long pointId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
     @Column(nullable = false)
@@ -71,8 +73,9 @@ public class Point {
 
         // 환불 로직 (예: 환불된 금액을 사용자의 잔액에 더함)
         this.amount += this.amount;
+    }
 
-        // 결제 금액을 0으로 초기화
-        this.amount = 0L;
+    public void cancel(String cancelReason) {
+        cancel();
     }
 }

@@ -1,5 +1,7 @@
 package com.concert_reservation.api.interfaces.controller.concert;
 
+import static com.concert_reservation.common.model.WebResponseData.*;
+
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -33,15 +35,13 @@ public class BookingController {
     @PostMapping
     @Operation(summary = "예약 생성", description = "사용자가 예약을 생성합니다.")
     public WebResponseData<BookingResponse> createBooking(@Valid @RequestBody BookingRequest bookingRequest) {
-        BookingResponse response = bookingFacade.createBooking(bookingRequest);
-        return WebResponseData.ok(response);
+        return ok(bookingFacade.createBooking(bookingRequest));
     }
 
     @GetMapping("/{userId}")
     @Operation(summary = "예약 조회", description = "사용자의 예약을 조회합니다.")
     public WebResponseData<BookingResponse> getBooking(@PathVariable String userId) {
-        BookingResponse response = bookingFacade.getBooking(userId);
-        return WebResponseData.ok(response);
+        return ok(bookingFacade.getBooking(userId));
     }
 
     @DeleteMapping("/{bookingId}")
@@ -61,7 +61,7 @@ public class BookingController {
     @Operation(summary = "예약 가능한 날짜 조회", description = "예약 가능한 날짜를 조회합니다.")
     public WebResponseData<List<BookingResponse.AvailableDates>> getAvailableDates(@ModelAttribute BookingRequest.AvailableDates seatRequest) {
         List<BookingResponse.AvailableDates> seatResponses = bookingFacade.getAvailableDates(seatRequest);
-        return WebResponseData.ok(seatResponses);
+        return ok(seatResponses);
     }
 
 
@@ -69,7 +69,7 @@ public class BookingController {
     @Operation(summary = "예약 가능한 좌석 조회", description = "예약 가능한 좌석을 조회합니다.")
     public WebResponseData<List<SeatResponse>> getAvailableSeats(@ModelAttribute SeatRequest seatRequest) {
         List<SeatResponse> seatResponses = bookingFacade.getAvailableSeats(seatRequest);
-        return WebResponseData.ok(seatResponses);
+        return ok(seatResponses);
     }
 
 

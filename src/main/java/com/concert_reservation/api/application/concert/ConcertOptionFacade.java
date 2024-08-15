@@ -16,33 +16,15 @@ public class ConcertOptionFacade {
     private final ConcertOptionService concertOptionService;
 
     public ConcertOptionDto.Response createConcertOption(ConcertOptionDto.Request concertOptionDto) {
-        ConcertOptionCommand concertOptionCommand = ConcertOptionCommand.builder()
-                .concertId(concertOptionDto.getConcertId())
-                .singerName(concertOptionDto.getSingerName())
-                .concertDate(concertOptionDto.getConcertDate())
-                .capacity(concertOptionDto.getCapacity())
-                .location(concertOptionDto.getLocation())
-                .build();
-        ConcertOptionInfo concertOptionInfo = concertOptionService.createConcertOption(concertOptionCommand);
-        return ConcertOptionDto.Response.from(concertOptionInfo);
+        return ConcertOptionDto.Response.from(concertOptionService.createConcertOption(concertOptionDto.toCommand()));
     }
 
     public ConcertOptionDto.Response getConcertOption(Long concertOptionId) {
-        ConcertOptionInfo concertOptionInfo = concertOptionService.getConcertOption(concertOptionId);
-        return ConcertOptionDto.Response.from(concertOptionInfo);
+        return ConcertOptionDto.Response.from( concertOptionService.getConcertOption(concertOptionId));
     }
 
     public ConcertOptionDto.Response updateConcertOption(Long concertOptionId, ConcertOptionDto.Request concertOptionDto) {
-        ConcertOptionCommand concertOptionCommand = ConcertOptionCommand.builder()
-                .concertOptionId(concertOptionId)
-                .concertId(concertOptionDto.getConcertId())
-                .singerName(concertOptionDto.getSingerName())
-                .concertDate(concertOptionDto.getConcertDate())
-                .capacity(concertOptionDto.getCapacity())
-                .location(concertOptionDto.getLocation())
-                .build();
-        ConcertOptionInfo concertOptionInfo = concertOptionService.updateConcertOption(concertOptionId, concertOptionCommand);
-        return ConcertOptionDto.Response.from(concertOptionInfo);
+        return ConcertOptionDto.Response.from(concertOptionService.updateConcertOption(concertOptionId, concertOptionDto.toCommand()));
     }
 
     public void deleteConcertOption(Long concertOptionId) {

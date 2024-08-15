@@ -38,4 +38,14 @@ public class PaymentService {
 		return PaymentInfo.from(point);
 
 	}
+
+	/**
+	 * cancelReason은 enum으로 구현 예정이나 현재는 슈도 코드 개념으로 작성
+	 */
+	@Transactional
+	public void cancelPayment(String userId, String cancelReason) {
+		Point point = pointRepository.getPoint(userId).orElseThrow( () -> new CustomException(GlobalResponseCode.NOT_FOUND_USER_POINT));
+		point.cancel(cancelReason);
+		pointRepository.save(point);
+	}
 }

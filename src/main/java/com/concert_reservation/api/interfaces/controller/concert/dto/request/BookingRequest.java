@@ -29,6 +29,7 @@ public class BookingRequest {
 	@AllArgsConstructor
 	public static class AvailableDates {
 		private Long concertOptionId;
+		private Long concertId;
 
 		public AvailableDatesCommand toCommand() {
 			return DtoConverter.convert(this, AvailableDatesCommand.class);
