@@ -15,12 +15,16 @@ spring:
     redis:
       host: localhost
       port: 6379
-#  docker:
-#    compose:
-#      file:
-#        - classpath:docker-compose-kafka.yml
-#        - classpath:docker-compose-redis.yml
-#        - classpath:docker-compose-ui.yml
+
+#   kafka 의존성 추가
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: group_id
+      auto-offset-reset: earliest
+    admin:
+      auto-create: true
+
 
   jpa:
     hibernate:
