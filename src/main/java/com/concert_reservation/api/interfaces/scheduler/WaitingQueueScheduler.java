@@ -32,7 +32,7 @@ public class WaitingQueueScheduler {
 	 *
 	 * <p>이 메서드는 2초마다 한 번씩 실행됩니다.</p>
 	 */
-	// @Scheduled(fixedRate = 1000)// 2초마다
+	@Scheduled(fixedRate = 10000)// 2초마다
 	public void transfer() {
 		tokenFacade.transfer();
 	}

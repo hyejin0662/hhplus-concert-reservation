@@ -16,7 +16,7 @@ public class SeatScheduler {
 	private final BookingFacade bookingFacade;
 
 
-	// @Scheduled(fixedRate = 2000)// 2초마다
+	// @Scheduled(fixedRate = 20000)// 2초마다
 	public void updateAvailableSeat()  {
 		bookingFacade.updateAvailableSeat();
 	}
