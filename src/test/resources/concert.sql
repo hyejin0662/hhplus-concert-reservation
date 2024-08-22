@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS concert_option (
                                               singer_name VARCHAR(255) NOT NULL,
                                               concert_date DATETIME NOT NULL,
                                               capacity BIGINT NOT NULL,
-                                              location VARCHAR(255) NOT NULL,
-                                              FOREIGN KEY (concert_id) REFERENCES Concert(concert_id)
+                                              location VARCHAR(255) NOT NULL
+
 );
 
 CREATE TABLE IF NOT EXISTS Booking (
@@ -33,9 +33,8 @@ CREATE TABLE IF NOT EXISTS Booking (
                                        user_id VARCHAR(255) NOT NULL,
                                        seat_id BIGINT NOT NULL,
                                        booking_status VARCHAR(255) NOT NULL,
-                                       booking_time DATETIME NOT NULL,
-                                       FOREIGN KEY (user_id) REFERENCES `User`(user_id),
-                                       FOREIGN KEY (seat_id) REFERENCES Seat(seat_id)
+                                       booking_time DATETIME NOT NULL
+
 );
 
 CREATE TABLE IF NOT EXISTS Point (
@@ -44,8 +43,8 @@ CREATE TABLE IF NOT EXISTS Point (
                                      amount BIGINT NOT NULL,
                                      payment_time DATETIME NOT NULL,
                                      payment_method VARCHAR(255) NOT NULL,
-                                     version BIGINT NOT NULL DEFAULT 0,
-                                     FOREIGN KEY (user_id) REFERENCES `User`(user_id)
+                                     version BIGINT NOT NULL DEFAULT 0
+
 );
 
 CREATE TABLE IF NOT EXISTS Token (
@@ -54,8 +53,8 @@ CREATE TABLE IF NOT EXISTS Token (
                                      waiting_at DATETIME NOT NULL,
                                      expiration_at DATETIME NOT NULL,
                                      token_status VARCHAR(255) NOT NULL,
-                                     waiting_number INT NOT NULL,
-                                     FOREIGN KEY (user_id) REFERENCES `User`(user_id)
+                                     waiting_number INT NOT NULL
+
 );
 
 CREATE TABLE IF NOT EXISTS waiting_count (
