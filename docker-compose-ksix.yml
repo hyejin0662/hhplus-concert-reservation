@@ -1,0 +1,9 @@
+#services:
+version: '3.8'
+services:
+  k6:
+    image: loadimpact/k6
+    volumes:
+      - ./scripts:/scripts
+#    command: run /scripts/booking.js
+    command: run /scripts/queue.js
